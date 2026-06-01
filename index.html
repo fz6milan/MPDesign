@@ -1364,6 +1364,313 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 .cs-thumb:hover img{filter:brightness(1)}
 .cs-thumb.active{border-color:#1a9fff}
 .cs-thumb.active img{filter:brightness(1)}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE STYLES — applied below 768px width
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px){
+
+  /* Hide custom cursor on mobile — touch devices don't need it */
+  #cursor{display:none !important}
+  * {cursor:auto !important}
+  button, a, .gcard, .cat-card, .peugeot-part, .grid-card, .gn-link, .gn-brand,
+  .lang-opt, .h-btn, .nav-back, .tb-back, .case-study-btn, .services-cta-btn,
+  .slide-arrow, .carousel-arrow, .cs-arrow, .cs-thumb, .v3d-link {cursor:pointer !important}
+
+  /* ─── GLOBAL NAV ─── */
+  .global-nav{
+    height:48px !important;
+    padding:0 14px !important;
+  }
+  .gn-brand-logo{height:26px !important}
+  .gn-links{gap:14px !important}
+  .gn-link{font-size:9px !important; letter-spacing:.18em !important; padding:6px 4px !important}
+  .gn-link::after{display:none !important}
+  #gnLangToggle{font-size:9px !important; padding:5px 9px !important; gap:6px !important}
+  #gnLangToggle .lang-sep{margin:0 2px}
+
+  /* Shift content down for smaller nav */
+  body:has(.global-nav:not(.hidden-nav)) .grid-screen,
+  body:has(.global-nav:not(.hidden-nav)) #scanList,
+  body:has(.global-nav:not(.hidden-nav)) #designList,
+  body:has(.global-nav:not(.hidden-nav)) #printedList{
+    padding-top:96px !important;
+  }
+  body:has(.global-nav:not(.hidden-nav)) .grid-screen .topbar,
+  body:has(.global-nav:not(.hidden-nav)) #scanList .topbar,
+  body:has(.global-nav:not(.hidden-nav)) #designList .topbar,
+  body:has(.global-nav:not(.hidden-nav)) #printedList .topbar,
+  body:has(.global-nav:not(.hidden-nav)) #scanDetail .topbar,
+  body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
+    top:48px !important;
+    height:48px !important;
+    padding:0 12px !important;
+  }
+  body:has(.global-nav:not(.hidden-nav)) .scan-video-bg,
+  body:has(.global-nav:not(.hidden-nav)) .design-video-bg,
+  body:has(.global-nav:not(.hidden-nav)) .printed-video-bg{
+    inset:96px 0 0 0 !important;
+    height:calc(100% - 96px) !important;
+  }
+  body:has(.global-nav:not(.hidden-nav)) #scanDetail,
+  body:has(.global-nav:not(.hidden-nav)) #printedDetail{
+    padding-top:96px !important;
+  }
+
+  .topbar .tb-back{
+    font-size:10px !important; padding:7px 12px !important; letter-spacing:.18em !important;
+  }
+  .topbar .tb-tag{
+    font-size:9px !important; letter-spacing:.16em !important; margin-left:auto;
+    max-width:50%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .topbar .tb-divider{display:none !important}
+
+  /* ─── INTRO ─── */
+  .hero-emboss-text{display:none}
+  .hero-top{display:none}
+  .hero-center{
+    padding-bottom:6vh !important;
+  }
+  .hero-logo-wrap{margin-bottom:18px !important}
+  .intro-logo{
+    width:clamp(180px, 60vw, 260px) !important;
+  }
+  .h-btn{
+    font-size:11px !important; letter-spacing:.32em !important;
+    padding:16px 56px !important;
+  }
+  .hero-bottom{
+    bottom:18px !important; padding:0 18px !important;
+  }
+  .h-story{
+    font-size:11px !important; line-height:1.6 !important;
+    max-width:90% !important; margin:0 auto 14px !important;
+  }
+  .h-tag{
+    font-size:9px !important; letter-spacing:.22em !important;
+  }
+  .h-tag::before, .h-tag::after{width:14px !important; margin:0 8px !important}
+  .h-sub{font-size:8px !important; letter-spacing:.28em !important; margin-top:4px}
+  .intro-lang-toggle{top:14px !important; right:14px !important; font-size:9px !important; padding:5px 9px !important}
+
+  /* ─── CATEGORIES (catSelect) ─── */
+  .cat-screen, #catSelect{padding:80px 14px 30px !important}
+  .cat-hero{margin-bottom:24px !important}
+  .cat-hero h1{font-size:32px !important; line-height:1 !important}
+  .cat-hero p{font-size:11px !important; letter-spacing:.18em !important; margin-top:8px}
+  .cat-grid{
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+    max-width:520px;
+    margin:0 auto;
+  }
+  .cat-card{
+    aspect-ratio:16/9 !important;
+    padding:24px !important;
+  }
+  .cat-name{font-size:22px !important; line-height:1.05 !important}
+  .cat-desc{font-size:11px !important; line-height:1.5 !important; margin-top:8px}
+  .cat-enter{font-size:9px !important; letter-spacing:.22em !important; margin-top:12px}
+
+  /* ─── LIST SCREENS (scanList, designList, printedList) — HORIZONTAL SNAP SWIPE ─── */
+  #scanList, #designList, #printedList{
+    padding-top:96px !important;
+    padding-bottom:30px !important;
+  }
+  #scanList .list-hero, #designList .list-hero, #printedList .list-hero{
+    padding:18px 14px 12px !important; text-align:center;
+  }
+  #scanList .list-hero h1, #designList .list-hero h1, #printedList .list-hero h1{
+    font-size:24px !important;
+  }
+  #scanList .list-hero p, #designList .list-hero p, #printedList .list-hero p{
+    font-size:10px !important; letter-spacing:.18em !important;
+  }
+
+  /* Hide desktop carousel arrows on mobile */
+  .carousel-arrow{display:none !important}
+
+  /* Transform the absolute-positioned 3D carousel into a horizontal swipe row */
+  .grid-cards{
+    position:relative !important;
+    height:auto !important;
+    min-height:480px !important;
+    perspective:none !important;
+    display:flex !important;
+    flex-direction:row !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    scroll-snap-type:x mandatory !important;
+    scroll-padding:0 14px !important;
+    gap:14px !important;
+    padding:14px !important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .grid-cards::-webkit-scrollbar{display:none}
+  .grid-cards .gcard{
+    position:relative !important;
+    top:auto !important; left:auto !important;
+    transform:none !important;
+    flex:0 0 calc(100vw - 56px) !important;
+    max-width:380px !important;
+    width:calc(100vw - 56px) !important;
+    aspect-ratio:4/5 !important;
+    height:auto !important;
+    scroll-snap-align:center !important;
+    opacity:1 !important;
+    box-shadow:0 10px 30px rgba(0,0,0,.5) !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+    transition:none !important;
+  }
+  .grid-cards .gcard .gcard-img{
+    width:100% !important; height:65% !important;
+  }
+  .grid-cards .gcard .gcard-info{
+    padding:18px !important;
+  }
+  .grid-cards .gcard-name{font-size:18px !important; line-height:1.1 !important}
+  .grid-cards .gcard-sub{font-size:10px !important; letter-spacing:.18em !important; margin-top:6px}
+  .grid-cards .gcard-cta{font-size:9px !important; letter-spacing:.22em !important; margin-top:10px}
+  .grid-cards .gcard-counter{font-size:9px !important}
+
+  /* Carousel dots become smaller and right under the cards */
+  .carousel-dots{
+    bottom:18px !important; left:0; right:0;
+    justify-content:center;
+    padding:0 14px;
+  }
+  .carousel-dot{width:6px !important; height:6px !important}
+  .carousel-dot.active{width:18px !important}
+
+  /* ─── PART PICKER (Peugeot/C2 part picker) ─── */
+  .peugeot-parts, .c2-parts{
+    grid-template-columns:1fr !important;
+    gap:12px !important;
+    padding:18px 14px !important;
+  }
+  .peugeot-part, .c2-part{
+    aspect-ratio:16/10 !important;
+    padding:20px !important;
+  }
+  .peugeot-part-name, .c2-part-name{font-size:18px !important}
+  .peugeot-part-desc, .c2-part-desc{font-size:11px !important; margin-top:6px}
+  .peugeot-part-num, .c2-part-num{font-size:9px !important; letter-spacing:.22em !important}
+  .peugeot-part-cta, .c2-part-cta{font-size:9px !important; letter-spacing:.22em !important; margin-top:8px}
+
+  /* ─── DETAIL VIEWS (scanDetail, printedDetail) ─── */
+  #scanDetail .detail-hero, #printedDetail .detail-hero{
+    padding:14px !important;
+  }
+  #scanDetail .detail-hero h2, #printedDetail .detail-hero h2{font-size:22px !important}
+  #scanDetail .detail-hero p, #printedDetail .detail-hero p{
+    font-size:10px !important; letter-spacing:.18em !important; margin-top:6px;
+  }
+  .detail-stage{padding:0 12px !important}
+  .slide-arrow{
+    width:38px !important; height:38px !important;
+  }
+  .slide-prev{left:8px !important}
+  .slide-next{right:8px !important}
+  .slide-counter, .slide-zoom-hint{font-size:9px !important; letter-spacing:.22em !important}
+  .detail-footer{padding:14px !important; flex-wrap:wrap; gap:10px}
+  .slide-thumbs{gap:6px !important; flex:1 1 100%; justify-content:center}
+  .slide-thumb{width:44px !important; height:32px !important}
+
+  /* ─── SERVICES ─── */
+  .services-screen{padding:80px 14px 30px !important}
+  .services-inner{padding:0 !important}
+  .services-hero{margin-bottom:24px !important}
+  .services-hero h1{font-size:30px !important}
+  .services-hero .sec-ey{font-size:9px !important; letter-spacing:.32em !important}
+  .services-hero p{font-size:12px !important; line-height:1.55 !important; margin-top:10px}
+  .services-grid{gap:14px !important}
+  .service-card{
+    grid-template-columns:1fr !important;
+    padding:20px !important; gap:10px !important;
+  }
+  .service-num{font-size:11px !important; letter-spacing:.32em !important}
+  .service-name{font-size:14px !important; line-height:1.3 !important}
+  .service-desc{font-size:11px !important; line-height:1.55 !important; margin-top:6px}
+  .service-tags{gap:6px !important; margin-top:10px}
+  .service-tag{font-size:8px !important; padding:4px 8px !important; letter-spacing:.14em !important}
+  .case-study-btn{
+    font-size:9px !important; letter-spacing:.22em !important;
+    padding:9px 14px !important; margin-top:12px !important;
+  }
+  .services-cta{padding:28px 14px !important}
+  .services-cta-tag{font-size:9px !important; letter-spacing:.32em !important}
+  .services-cta-btn{font-size:11px !important; padding:14px 32px !important; letter-spacing:.28em !important}
+
+  /* ─── CASE STUDY MODAL ─── */
+  .cs-header{padding:36px 14px 18px !important}
+  .cs-eyebrow{font-size:9px !important; letter-spacing:.28em !important; margin-bottom:8px}
+  .cs-title{font-size:22px !important; letter-spacing:.02em !important}
+  .cs-close{top:14px !important; right:14px !important; width:36px !important; height:36px !important}
+  .cs-close svg{width:14px !important; height:14px !important}
+  .cs-stage{padding:0 14px !important}
+  .cs-img{max-width:94vw !important; max-height:55vh !important}
+  .cs-arrow{width:38px !important; height:38px !important}
+  .cs-prev{left:6px !important}
+  .cs-next{right:6px !important}
+  .cs-footer{padding:14px !important; gap:10px !important; flex-wrap:wrap}
+  .cs-counter{font-size:9px !important; letter-spacing:.22em !important; min-width:auto}
+  .cs-thumbs{gap:5px !important; flex:1 1 100%; justify-content:center}
+  .cs-thumb{width:36px !important; height:26px !important}
+
+  /* ─── CONTACT ─── */
+  .contact-screen{padding:80px 14px 30px !important}
+  .contact-hero h1{font-size:30px !important}
+  .contact-hero .sec-ey{font-size:9px !important}
+  .contact-hero p{font-size:11px !important; line-height:1.6 !important}
+  .contact-methods{
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+    margin-top:24px;
+  }
+  .contact-method{padding:22px 18px !important}
+  .contact-method-icon{font-size:24px !important}
+  .contact-method-label{font-size:9px !important; letter-spacing:.28em !important}
+  .contact-method-value{font-size:14px !important; margin-top:4px}
+  .contact-footer-note{font-size:9px !important; letter-spacing:.22em !important; margin-top:24px}
+
+  /* ─── VIEWER (image zoom) ─── */
+  .viewer{cursor:auto !important}
+  .viewer-img{
+    max-width:96vw !important; max-height:80vh !important;
+  }
+  .viewer-hint{font-size:9px !important; letter-spacing:.18em !important; bottom:14px !important}
+  .viewer-close{top:14px !important; right:14px !important; font-size:11px !important; padding:9px 14px !important}
+
+  /* ─── DESIGN PROJECTS — Enter project CTA ─── */
+  .gcard-cta{display:inline-flex !important; align-items:center; gap:6px}
+
+  /* Touch-friendly tap targets */
+  button, .gn-link, .lang-opt, .nav-back, .tb-back, .h-btn, .cat-card, .gcard,
+  .case-study-btn, .services-cta-btn, .contact-method, .slide-arrow, .cs-arrow,
+  .peugeot-part, .c2-part {
+    -webkit-tap-highlight-color:transparent;
+  }
+
+}
+
+/* ─── EXTRA-SMALL PHONES (<400px) ─── */
+@media (max-width: 400px){
+  .gn-links{gap:10px !important}
+  .gn-link{font-size:8px !important}
+  .intro-logo{width:clamp(150px, 55vw, 220px) !important}
+  .h-btn{padding:14px 44px !important; font-size:10px !important}
+  .cat-name{font-size:20px !important}
+  .grid-cards .gcard{flex-basis:calc(100vw - 36px) !important; width:calc(100vw - 36px) !important}
+  .services-hero h1{font-size:26px !important}
+}
+
+/* Cards visible only on mobile (no desktop data available) */
+.mobile-only-card{display:none}
+@media (max-width: 768px){
+  .mobile-only-card{display:flex !important}
+}
 </style>
 </head>
 <body>
@@ -1440,7 +1747,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
   <div class="cat-split">
     <div class="cat-card" data-go="scanList">
-      <video class="cat-card-video" autoplay muted loop playsinline preload="metadata"><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
+      <video class="cat-card-video" autoplay muted loop playsinline><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
       <div class="cat-card-video-vignette"></div>
       <div>
         <div class="cat-name">3D Scan<br>Archive</div>
@@ -1453,7 +1760,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     </div>
 
     <div class="cat-card" data-go="designList">
-      <video class="cat-card-video" autoplay muted loop playsinline preload="metadata"><source src="dizajn priojekti.mp4" type="video/mp4"></video>
+      <video class="cat-card-video" autoplay muted loop playsinline><source src="dizajn priojekti.mp4" type="video/mp4"></video>
       <div class="cat-card-video-vignette"></div>
       <div>
         <div class="cat-name">Design<br>Projects</div>
@@ -1466,7 +1773,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     </div>
 
     <div class="cat-card" data-go="printedList">
-      <video class="cat-card-video" autoplay muted loop playsinline preload="metadata"><source src="video for 3d printing project section.mp4" type="video/mp4"></video>
+      <video class="cat-card-video" autoplay muted loop playsinline><source src="video for 3d printing project section.mp4" type="video/mp4"></video>
       <div class="cat-card-video-vignette"></div>
       <div>
         <div class="cat-name">Printed<br>Parts</div>
@@ -1482,7 +1789,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
 <!-- ══════ SCAN LIST (grid of vehicles) ══════ -->
 <div id="scanList" class="screen grid-screen hidden">
-  <video class="scan-video-bg lazy-video" muted loop playsinline preload="none" data-src="3d skenovi arhiva.mp4"></video>
+  <video class="scan-video-bg" autoplay muted loop playsinline><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
   <div class="scan-video-vignette"></div>
   <div class="topbar">
     <button class="tb-back nav-back">
@@ -1565,15 +1872,29 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
       </div>
     </div>
 
-    <div class="gcard" data-action="scanDetail" data-folder="scan files/yamaha fz6" data-name="Yamaha FZ6" data-files='["01.png","02.png"]'>
-      <img class="gcard-img" src="scan files/yamaha fz6/01.png" alt="Yamaha FZ6">
+    <div class="gcard" data-action="scanDetail" data-folder="scan files/yamaha fz6" data-name="Yamaha FZ6 · Belly" data-files='["01.png","02.png"]'>
+      <img class="gcard-img" src="scan files/yamaha fz6/01.png" alt="Yamaha FZ6 Belly">
       <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
       <div class="gcard-cta">View ↗</div>
       <div class="gcard-overlay">
         <div class="gcard-num">06</div>
         <div class="gcard-info">
           <div class="gcard-name">Yamaha FZ6</div>
-          <div class="gcard-sub">2 scan files</div>
+          <div class="gcard-sub">Belly · 2 scan files</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yamaha FZ6 — Front Fender (Blatobran). Mobile-only card (desktop scan not available). -->
+    <div class="gcard mobile-only-card" data-action="scanDetail" data-folder="Folder - telefon/Scanned images/yamaha fz6/blatobran" data-name="Yamaha FZ6 · Front Fender" data-files='["blatobran_1.png","blatobran_2.png","blatobran_3.png","blatobran_4.png"]'>
+      <img class="gcard-img" src="Folder - telefon/Scanned images/yamaha fz6/blatobran/blatobran_1.png" alt="Yamaha FZ6 Front Fender">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">07</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Yamaha FZ6</div>
+          <div class="gcard-sub">Front Fender · 4 scan files</div>
         </div>
       </div>
     </div>
@@ -1660,7 +1981,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
 <!-- ══════ DESIGN LIST ══════ -->
 <div id="designList" class="screen grid-screen hidden">
-  <video class="design-video-bg lazy-video" muted loop playsinline preload="none" data-src="dizajn priojekti.mp4"></video>
+  <video class="design-video-bg" autoplay muted loop playsinline><source src="dizajn priojekti.mp4" type="video/mp4"></video>
   <div class="design-video-vignette"></div>
   <div class="topbar">
     <button class="tb-back nav-back">
@@ -1770,7 +2091,9 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 <!-- ══════ PRINTED LIST (3D Printed Projects) ══════ -->
 <div id="printedList" class="screen grid-screen hidden">
   <!-- Video lupa overlay (subtle) -->
-  <video class="printed-video-bg lazy-video" muted loop playsinline preload="none" data-src="video for 3d printing project section.mp4"></video>
+  <video class="printed-video-bg" autoplay muted loop playsinline>
+    <source src="video for 3d printing project section.mp4" type="video/mp4">
+  </video>
   <div class="printed-video-vignette"></div>
 
   <div class="topbar">
@@ -2208,8 +2531,6 @@ function showScreen(id){
   // Trigger reflow then ensure no 'out'
   void el.offsetWidth;
   el.classList.remove('out');
-  // Activate lazy videos in this screen, pause videos in others
-  if(window.__activateScreenVideos) window.__activateScreenVideos(id);
   // Init carousel on first visit to carousel screens
   if(id === 'scanList' || id === 'designList' || id === 'printedList'){
     setTimeout(()=>initCarousel(id), 80);
@@ -2541,14 +2862,12 @@ viewer.addEventListener('click', e=>{
     "Surface reconstruction": "Rekonstrukcija površina",
     "Print-ready output": "Spreman za štampu",
     "Custom Part Design & OEM Modification": "Dizajn Delova po Meri i Modifikacija OEM",
-    "Custom Part Design &amp; OEM Modification": "Dizajn delova po meri i modifikacija OEM",
     "Designing custom aftermarket parts from scratch, or modifying existing OEM parts — fitment changes, aesthetic upgrades, design improvements. Scan the original, modify in CAD, print a version that bolts on without compromise.":
       "Dizajn potpuno novih aftermarket delova ili modifikacija postojećih OEM delova: izmene nalegan​ja, estetska poboljšanja i unapređenja dizajna. Original se skenira, u CAD-u se prilagođava, a zatim se štampa verzija koja se montira bez kompromisa.",
     "Custom aftermarket": "Izrada kalupa",
     "OEM modification": "Modifikacija OEM-a",
     "Bolt-on fitment": "Direktna montaža",
     "Consultations & Project Planning": "Konsultacije i Planiranje Projekta",
-    "Consultations &amp; Project Planning": "Konsultacije i planiranje projekta",
     "Talk through your project before committing. Material choice, design feasibility, manufacturing approach — honest assessment from a fellow enthusiast. Sometimes the best result starts with the right plan, not the first idea.":
       "Razgovaramo o projektu pre nego što krenete. Izbor materijala, izvodljivost dizajna, pristup proizvodnji: iskrena procena od kolege entuzijaste. Ponekad najbolji rezultat počinje sa pravim planom, a ne sa prvom idejom.",
     "Project planning": "Planiranje projekta",
@@ -2613,6 +2932,10 @@ viewer.addEventListener('click', e=>{
     "View ↗": "Vidi ↗",
     "View photos ↗": "Vidi fotke ↗",
     "Choose part ↗": "Izaberi deo ↗",
+        "Yamaha FZ6 · Belly": "Yamaha FZ6 · Stomak",
+    "Yamaha FZ6 · Front Fender": "Yamaha FZ6 · Prednji blatobran",
+    "Belly · 2 scan files": "Stomak · 2 sken fajla",
+    "Front Fender · 4 scan files": "Prednji blatobran · 4 sken fajla",
     "3 scan files": "3 sken fajla",
     "2 scan files": "2 sken fajla",
     "Multiple parts available": "Više delova dostupno",
@@ -3036,35 +3359,132 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
 });
 
 
-// ═══ LAZY-LOAD VIDEOS — only load when entering the relevant screen ═══
+// ═══════════════════════════════════════════════════════════════════
+// MOBILE IMAGE SWITCHER — swap image sources to lower-res mobile assets
+// Triggers below 768px; restores desktop assets when resized back up
+// ═══════════════════════════════════════════════════════════════════
 (function(){
-  function activateVideo(videoEl){
-    if(!videoEl || videoEl.dataset.activated) return;
-    const src = videoEl.dataset.src;
-    if(!src) return;
-    videoEl.src = src;
-    videoEl.load();
-    videoEl.play().catch(()=>{}); // ignore autoplay rejection
-    videoEl.dataset.activated = '1';
-  }
-  function pauseVideo(videoEl){
-    if(!videoEl || !videoEl.dataset.activated) return;
-    try { videoEl.pause(); } catch(e){}
-  }
-  // Watch screen visibility — whenever a .screen becomes non-hidden, activate its videos
-  window.__activateScreenVideos = function(screenId){
-    const screen = document.getElementById(screenId);
-    if(!screen) return;
-    screen.querySelectorAll('video.lazy-video').forEach(v=>{
-      activateVideo(v);
+  const MOBILE_BREAKPOINT = 768;
+
+  // Map: desktop src → mobile src (folder telefon)
+  const imageMap = {
+    // Scan list carousel thumbnails
+    'scan files/audi a6/01.png':                            'Folder - telefon/Scanned images/audi a6/audi a6_1.png',
+    'scan files/bmw s 1000 r/01.png':                       'Folder - telefon/Scanned images/bmw s1000r/bmw s 1000 r _1.png',
+    'scan files/c2/01.png':                                 'Folder - telefon/Scanned images/c2/c2_1.png',
+    'scan files/peugeot 508 sw/prednji branik/01.png':      'Folder - telefon/Scanned images/peugeot 508/peugeot_1.png',
+    'scan files/peugeot 508 sw/zadnj branik/01_zadnji.png': 'Folder - telefon/Scanned images/peugeot 508/peugeot_3.png',
+    'scan files/vw 7/01.png':                               'Folder - telefon/Scanned images/vw gti/vw 7 gti _ 1.png',
+    'scan files/yamaha fz6/01.png':                         'Folder - telefon/Scanned images/yamaha fz6/belly/stomak_1.png',
+    // Design list thumbnails
+    'homepage/c2.png':                                      'Folder - telefon/Citroen c2/front/c2_front_scan.png',
+    'homepage/audi.png':                                    'Folder - telefon/Audi a6/audia6_scan.png',
+    'vw 7 gti/03_zoom_effectneutral.png':                   'Folder - telefon/VW 7 GTI/vw_scan.png',
+    'Peugeot 508/naslovna.png':                             'Folder - telefon/Peugeot 508/peugeot_scan.png',
+    // Citroen C2 part picker
+    'citroen c2/rear/rear_scan.png':                        'Folder - telefon/Citroen c2/rear/rear_scan.png',
+    'citroen c2/c2_scan_frontbumper.png':                   'Folder - telefon/Citroen c2/front/c2_front_scan.png',
+    // Printed parts thumbnails (already in mobile folder under "3D printing projects")
+    '3D printing projects/c2/front bumper/1.jpg':           'Folder - telefon/3D printing projects/c2/front bumper/1.jpg',
+    '3D printing projects/c2/rear bumper/01.jpg':           'Folder - telefon/3D printing projects/c2/rear bumper/01.jpg',
+    '3D printing projects/peugeot/01.jpg':                  'Folder - telefon/3D printing projects/peugeot/01.jpg',
+  };
+
+  // Data-files mapping: when user opens scanDetail/printedDetail, the slideshow
+  // pulls the files from data-files on the card. We rewrite both data-folder + data-files for mobile.
+  const dataFolderMap = {
+    // ─── Scan Archive: each vehicle ───
+    'scan files/audi a6':                            {folder:'Folder - telefon/Scanned images/audi a6',         files:['audi a6_1.png','audi a6_2.png','audi a6_3.png','audi a6_4.png']},
+    'scan files/bmw s 1000 r':                       {folder:'Folder - telefon/Scanned images/bmw s1000r',       files:['bmw s 1000 r _1.png','bmw s 1000 r _2.png','bmw s 1000 r _3.png']},
+    'scan files/c2':                                 {folder:'Folder - telefon/Scanned images/c2',               files:['c2_1.png','c2_2.png','c2_3.png','c2_4.png']},
+    'scan files/peugeot 508 sw/prednji branik':      {folder:'Folder - telefon/Scanned images/peugeot 508',     files:['peugeot_1.png','peugeot_2.png']},
+    'scan files/peugeot 508 sw/zadnj branik':        {folder:'Folder - telefon/Scanned images/peugeot 508',     files:['peugeot_3.png','peugeot_4.png']},
+    'scan files/vw 7':                               {folder:'Folder - telefon/Scanned images/vw gti',           files:['vw 7 gti _ 1.png','vw 7 gti _ 2.png','vw 7 gti _ 3.png','vw 7 gti _ 4.png']},
+    'scan files/yamaha fz6':                         {folder:'Folder - telefon/Scanned images/yamaha fz6/belly', files:['stomak_1.png','stomak_2.png','stomak_3.png','stomak_4.png']},
+    // ─── Printed parts ───
+    '3D printing projects/c2/front bumper':          {folder:'Folder - telefon/3D printing projects/c2/front bumper', files:['1.jpg','2.jpg','3.jpg']},
+    '3D printing projects/c2/rear bumper':           {folder:'Folder - telefon/3D printing projects/c2/rear bumper',  files:['01.jpg','02 .jpg']},
+    '3D printing projects/peugeot':                  {folder:'Folder - telefon/3D printing projects/peugeot',         files:['01.jpg','02.jpg','03.jpg']},
+  };
+
+  let originalState = null; // backup of desktop state for restoration
+
+  function captureOriginalState(){
+    if(originalState) return; // already captured
+    originalState = {
+      imgs: [],
+      dataFolders: []
+    };
+    document.querySelectorAll('img').forEach(img=>{
+      originalState.imgs.push({el:img, src:img.getAttribute('src')});
     });
-    // Pause videos in OTHER screens to save resources
-    document.querySelectorAll('.screen').forEach(s=>{
-      if(s.id !== screenId){
-        s.querySelectorAll('video.lazy-video').forEach(pauseVideo);
+    document.querySelectorAll('[data-folder]').forEach(el=>{
+      originalState.dataFolders.push({
+        el:el,
+        folder:el.getAttribute('data-folder'),
+        files:el.getAttribute('data-files')
+      });
+    });
+  }
+
+  function applyMobile(){
+    captureOriginalState();
+    // 1. Swap all img src that are in imageMap
+    document.querySelectorAll('img').forEach(img=>{
+      const src = img.getAttribute('src');
+      if(src && imageMap[src]){
+        img.setAttribute('src', imageMap[src]);
       }
     });
-  };
+    // 2. Rewrite data-folder + data-files on cards
+    document.querySelectorAll('[data-folder]').forEach(el=>{
+      const folder = el.getAttribute('data-folder');
+      if(dataFolderMap[folder]){
+        el.setAttribute('data-folder', dataFolderMap[folder].folder);
+        el.setAttribute('data-files', JSON.stringify(dataFolderMap[folder].files));
+      }
+    });
+  }
+
+  function restoreDesktop(){
+    if(!originalState) return;
+    originalState.imgs.forEach(o=>{
+      if(o.el && o.src) o.el.setAttribute('src', o.src);
+    });
+    originalState.dataFolders.forEach(o=>{
+      if(o.el){
+        o.el.setAttribute('data-folder', o.folder);
+        if(o.files) o.el.setAttribute('data-files', o.files);
+      }
+    });
+  }
+
+  let isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+  function check(){
+    const now = window.innerWidth <= MOBILE_BREAKPOINT;
+    if(now && !isMobile){
+      applyMobile();
+      isMobile = true;
+    } else if(!now && isMobile){
+      restoreDesktop();
+      isMobile = false;
+    }
+  }
+  // Run immediately on load
+  if(isMobile){
+    // Wait for DOM to be fully built before swapping
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', applyMobile);
+    } else {
+      applyMobile();
+    }
+  }
+  // Watch for resize (e.g. orientation change, dev tools open/close)
+  let resizeTimer = null;
+  window.addEventListener('resize', ()=>{
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(check, 200);
+  });
 })();
 
 </script>
