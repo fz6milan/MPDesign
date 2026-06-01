@@ -1782,12 +1782,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .services-hero h1, .contact-hero h1{font-size:26px !important}
   .service-name{font-size:14px !important}
 }
-  .intro-logo{width:clamp(150px, 55vw, 220px) !important}
-  .h-btn{padding:14px 44px !important; font-size:10px !important}
-  .cat-name{font-size:20px !important}
-  .grid-cards .gcard{flex-basis:calc(100vw - 36px) !important; width:calc(100vw - 36px) !important}
-  .services-hero h1{font-size:26px !important}
-}
+/* (orphan mobile rules cleaned up) */
 
 /* Cards visible only on mobile (no desktop data available) */
 .mobile-only-card{display:none}
@@ -3685,21 +3680,28 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
       if(card.dataset.mobileTapBound) return;
       card.dataset.mobileTapBound = '1';
       attachTapHandler(card, ()=>{
-        // Trigger the same click handler by dispatching a click
-        card.click();
+        // Manually dispatch a synthetic click event
+        const evt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
+        card.dispatchEvent(evt);
       });
     });
     // Category cards
     document.querySelectorAll('.cat-card').forEach(card=>{
       if(card.dataset.mobileTapBound) return;
       card.dataset.mobileTapBound = '1';
-      attachTapHandler(card, ()=>card.click());
+      attachTapHandler(card, ()=>{
+        const evt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
+        card.dispatchEvent(evt);
+      });
     });
     // Peugeot/C2 part cards
     document.querySelectorAll('.peugeot-part, .c2-part').forEach(card=>{
       if(card.dataset.mobileTapBound) return;
       card.dataset.mobileTapBound = '1';
-      attachTapHandler(card, ()=>card.click());
+      attachTapHandler(card, ()=>{
+        const evt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
+        card.dispatchEvent(evt);
+      });
     });
   }
 
