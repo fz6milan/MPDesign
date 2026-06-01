@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MP Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Barlow:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1a9fff;--bg:#080808;--surface:#0f0f0f;--border:rgba(255,255,255,0.07);--text:#e8e8e8;--muted:#555;--fd:'Bebas Neue',sans-serif;--fm:'DM Mono',monospace;--fb:'Barlow',sans-serif}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--fb);overflow:hidden;cursor:none}
+#cursor{position:fixed;z-index:9999;width:8px;height:8px;background:var(--blue);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .3s,height .3s;mix-blend-mode:screen}
+#cursor.large{width:44px;height:44px;background:rgba(26,159,255,.1);border:1px solid var(--blue)}
+#pageOut{position:fixed;inset:0;background:#080808;z-index:8888;opacity:0;pointer-events:none;transition:opacity .6s}
+#pageOut.active{opacity:1;pointer-events:all}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(26,159,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(26,159,255,.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;opacity:0;animation:gf 1.5s .5s forwards}
+@keyframes gf{to{opacity:1}}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .7s,transform .7s}
+.screen.out{opacity:0;pointer-events:none;transform:scale(.97)}
+.screen.hidden{opacity:0;pointer-events:none}
+#intro{gap:0}
+.tag{font-family:var(--fm);font-size:11px;letter-spacing:.28em;color:var(--blue);text-transform:uppercase;opacity:0;animation:fu .8s .3s forwards}
+.brand{font-family:var(--fd);font-size:clamp(90px,16vw,180px);line-height:.88;color:#fff;opacity:0;animation:fu .9s .5s forwards;position:relative}
+.brand::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:var(--blue);animation:li .6s 1.2s forwards}
+.tagline{font-family:var(--fm);font-size:11px;letter-spacing:.2em;color:var(--muted);margin-top:28px;opacity:0;animation:fu .8s .9s forwards}
+.enter-btn{margin-top:56px;font-family:var(--fm);font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:var(--text);border:1px solid var(--border);padding:14px 48px;background:transparent;cursor:none;position:relative;overflow:hidden;opacity:0;animation:fu .8s 1.3s forwards;transition:color .3s,border-color .3s}
+.enter-btn::before{content:'';position:absolute;inset:0;background:var(--blue);transform:translateX(-100%);transition:transform .4s cubic-bezier(.4,0,.2,1);z-index:-1}
+.enter-btn:hover{color:#000;border-color:var(--blue)}
+.enter-btn:hover::before{transform:translateX(0)}
+#select{flex-direction:column;gap:48px}
+.sel-title{text-align:center;opacity:0;transition:opacity .6s,transform .6s;transform:translateY(16px)}
+.sel-title.vis{opacity:1;transform:translateY(0)}
+.sel-title h2{font-family:var(--fd);font-size:clamp(28px,4vw,52px);letter-spacing:.06em;color:#fff}
+.sel-title p{font-family:var(--fm);font-size:10px;letter-spacing:.3em;color:var(--muted);margin-top:10px;text-transform:uppercase}
+.vehicles{display:flex;gap:24px;opacity:0;transition:opacity .7s .2s,transform .7s .2s;transform:translateY(20px)}
+.vehicles.vis{opacity:1;transform:translateY(0)}
+.vcard{position:relative;width:clamp(220px,26vw,360px);aspect-ratio:3/4;overflow:hidden;border:1px solid var(--border);cursor:none;transition:border-color .4s}
+.vcard:hover{border-color:rgba(26,159,255,.5)}
+.vcard img{width:100%;height:100%;object-fit:cover;transform:scale(1);transition:transform .7s cubic-bezier(.25,.46,.45,.94)}
+.vcard:hover img{transform:scale(1.07)}
+.vcard-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(8,8,8,.92));display:flex;flex-direction:column;justify-content:flex-end;padding:28px}
+.vcard-name{font-family:var(--fd);font-size:32px;letter-spacing:.05em;color:#fff}
+.vcard-sub{font-family:var(--fm);font-size:9px;letter-spacing:.25em;color:var(--muted);margin-top:6px;text-transform:uppercase}
+.vcard-cta{font-family:var(--fm);font-size:9px;letter-spacing:.25em;color:var(--blue);margin-top:14px;text-transform:uppercase;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s}
+.vcard:hover .vcard-cta{opacity:1;transform:translateY(0)}
+.vcard-line{position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--blue);transition:width .4s}
+.vcard:hover .vcard-line{width:100%}
+@keyframes fu{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes li{to{width:100%}}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="pageOut"></div>
+<div class="grid-bg"></div>
+
+<div id="intro" class="screen">
+  <div class="tag">Reverse Engineering Studio</div>
+  <div class="brand">MP<br>Design</div>
+  <div class="tagline">3D Scan · Reverse Engineering · Additive Manufacturing</div>
+  <button class="enter-btn" id="enterBtn">Enter</button>
+</div>
+
+<div id="select" class="screen hidden">
+  <div class="sel-title" id="selTitle">
+    <h2>Izaberi vozilo</h2>
+    <p>Select a project to explore</p>
+  </div>
+  <div class="vehicles" id="vehicles">
+    <div class="vcard" data-url="citroen c2/index.html">
+      <img src="homepage/c2.png" alt="Citroen C2">
+      <div class="vcard-overlay">
+        <div class="vcard-name">Citroen C2</div>
+        <div class="vcard-sub">Front Bumper · 3D Scan</div>
+        <div class="vcard-cta">View project →</div>
+      </div>
+      <div class="vcard-line"></div>
+    </div>
+    <div class="vcard" data-url="audi a6/index.html">
+      <img src="homepage/audi.png" alt="Audi A6">
+      <div class="vcard-overlay">
+        <div class="vcard-name">Audi A6</div>
+        <div class="vcard-sub">Front Splitter · 3D Scan</div>
+        <div class="vcard-cta">View project →</div>
+      </div>
+      <div class="vcard-line"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cursor=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px'});
+document.querySelectorAll('.enter-btn,.vcard').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cursor.classList.add('large'));
+  el.addEventListener('mouseleave',()=>cursor.classList.remove('large'));
+});
+// fade in on load
+const po=document.getElementById('pageOut');
+po.style.opacity='1';
+requestAnimationFrame(()=>requestAnimationFrame(()=>{po.style.opacity='0'}));
+document.getElementById('enterBtn').addEventListener('click',()=>{
+  document.getElementById('intro').classList.add('out');
+  const sel=document.getElementById('select');
+  sel.classList.remove('hidden');
+  setTimeout(()=>{
+    document.getElementById('selTitle').classList.add('vis');
+    document.getElementById('vehicles').classList.add('vis');
+  },80);
+});
+document.querySelectorAll('.vcard').forEach(card=>{
+  card.addEventListener('click',()=>{
+    po.style.opacity='1';
+    setTimeout(()=>window.location.href=card.dataset.url,600);
+  });
+});
+</script>
+</body>
+</html>

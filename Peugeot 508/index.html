@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MP Design · Peugeot 508</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Barlow:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1a9fff;--bg:#080808;--border:rgba(255,255,255,.07);--text:#e8e8e8;--muted:#555;--fd:'Bebas Neue',sans-serif;--fm:'DM Mono',monospace;--fb:'Barlow',sans-serif}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--fb);overflow:hidden;cursor:none}
+
+/* CURSOR */
+#cursor{position:fixed;z-index:9999;width:8px;height:8px;background:var(--blue);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-radius .25s,background .25s;mix-blend-mode:screen}
+#cursor.large{width:44px;height:44px;background:rgba(26,159,255,.1);border:1px solid var(--blue)}
+
+/* LUPA — magnifier cursor for scan zone */
+#lupa{position:fixed;z-index:9998;width:48px;height:48px;pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s;display:flex;align-items:center;justify-content:center}
+#lupa svg{width:36px;height:36px;stroke:var(--blue);fill:none;stroke-width:1.5;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(26,159,255,.6))}
+#lupa.vis{opacity:1}
+
+#pageOut{position:fixed;inset:0;background:#080808;z-index:8888;opacity:1;pointer-events:none;transition:opacity .6s}
+.topbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;padding:0 40px;border-bottom:1px solid var(--border);z-index:300;background:rgba(8,8,8,.95);backdrop-filter:blur(12px)}
+.tb-back{font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;cursor:none;transition:color .3s;border:none;background:none;padding:0}
+.tb-back:hover{color:var(--blue)}
+.tb-brand{font-family:var(--fd);font-size:22px;color:#fff;margin-left:28px}
+.tb-brand span{color:var(--blue)}
+.tb-tag{margin-left:auto;font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted)}
+.progress{position:fixed;top:52px;left:0;height:1px;background:var(--blue);width:0;z-index:301;box-shadow:0 0 8px var(--blue)}
+#scroller{position:fixed;inset:52px 0 0;overflow-y:scroll;overflow-x:hidden;scrollbar-width:none}
+#scroller::-webkit-scrollbar{display:none}
+section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 40px}
+
+/* SCROLL HINT */
+.scroll-hint{position:fixed;right:28px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;z-index:150;pointer-events:none;opacity:0;transition:opacity .6s}
+.scroll-hint.vis{opacity:1}
+.scroll-hint span{font-family:var(--fm);font-size:9px;letter-spacing:.22em;color:var(--muted);writing-mode:vertical-rl;text-transform:uppercase}
+.sa i{display:block;width:1px;height:8px;background:var(--blue);opacity:0;margin:3px auto;animation:sa 1.6s ease-in-out infinite}
+.sa i:nth-child(2){animation-delay:.2s}.sa i:nth-child(3){animation-delay:.4s}
+@keyframes sa{0%,100%{opacity:0;transform:scaleY(.4)}50%{opacity:1;transform:scaleY(1)}}
+
+/* SCAN HERO */
+.scan-wrap{position:relative;width:82vw;max-width:1100px;aspect-ratio:16/9;overflow:hidden;cursor:none}
+.scan-base{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .4s}
+.scan-wrap:hover .scan-base{opacity:0}
+.scan-zoom{position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.scan-wrap:hover .scan-zoom{opacity:1}
+
+/* Flash overlay for scan→print transition */
+.scan-flash{position:absolute;inset:0;background:rgba(26,159,255,.18);opacity:0;pointer-events:none;z-index:10;transition:opacity .15s}
+
+/* Faster: delay 0.7s, flash at 0.7s */
+.sz-scan{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  transform:scale(1);transform-origin:center center;
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94), opacity .35s .7s}
+.scan-wrap:hover .sz-scan{transform:scale(1.04);opacity:0}
+.sz-print{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  transform:scale(1.04);transform-origin:center center;opacity:0;
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94), opacity .35s .7s}
+.scan-wrap:hover .sz-print{transform:scale(1);opacity:1}
+/* Flash fires at 0.7s */
+.scan-wrap:hover .scan-flash{animation:flashPop .5s .7s ease forwards}
+@keyframes flashPop{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+
+.scan-state{position:absolute;bottom:24px;left:28px;height:18px;overflow:hidden;pointer-events:none}
+.scan-state span{display:block;font-family:var(--fm);font-size:10px;letter-spacing:.25em;text-transform:uppercase;transition:transform .4s,opacity .4s}
+.ss-scan{color:var(--blue)}.ss-print{color:#a8f0ff;transform:translateY(100%);opacity:0}
+.scan-wrap:hover .ss-scan{transform:translateY(-100%);opacity:0;transition-delay:.7s}
+.scan-wrap:hover .ss-print{transform:translateY(0);opacity:1;transition-delay:.7s}
+.scan-hint-r{position:absolute;bottom:24px;right:28px;font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted);pointer-events:none;transition:opacity .3s}
+.scan-wrap:hover .scan-hint-r{opacity:0}
+.sec-ey{font-family:var(--fm);font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:28px;align-self:flex-start;padding-left:9vw}
+
+/* COMPARE */
+.cmp-hdr{text-align:center;margin-bottom:36px}
+.cmp-hdr h2{font-family:var(--fd);font-size:clamp(28px,5vw,60px);letter-spacing:.05em;color:#fff}
+.cmp-hdr p{font-family:var(--fm);font-size:10px;letter-spacing:.25em;color:var(--muted);margin-top:10px;text-transform:uppercase}
+.cmp-wrap{position:relative;width:82vw;max-width:1100px;aspect-ratio:16/9;overflow:hidden;cursor:none;user-select:none}
+.cmp-before{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none}
+.cmp-aw{position:absolute;top:0;bottom:0;right:0;width:50%;overflow:hidden;z-index:2;pointer-events:none}
+.cmp-after{position:absolute;top:0;right:0;height:100%;object-fit:cover;object-position:right center;pointer-events:none}
+.cmp-div{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#fff;transform:translateX(-50%);z-index:10;pointer-events:none;box-shadow:0 0 10px rgba(255,255,255,.3)}
+.cmp-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:2px solid #fff;background:rgba(8,8,8,.85);z-index:11;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.cmp-handle svg{width:18px;height:18px}
+.cmp-badge{position:absolute;top:20px;font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--border);background:rgba(8,8,8,.7);backdrop-filter:blur(6px);pointer-events:none;transition:opacity .4s}
+.cmp-badge.l{left:20px;color:var(--blue);border-color:rgba(26,159,255,.3)}
+.cmp-badge.r{right:20px;color:#999}
+.drag-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--muted);pointer-events:none;white-space:nowrap;transition:opacity .4s}
+
+/* ═══ REVEAL PANEL — right sidebar, fades with slider ═══ */
+.reveal-panel{
+  position:fixed;
+  top:52px;right:0;bottom:0;
+  width:clamp(280px,36vw,480px);
+  background:rgba(10,10,12,.97);
+  border-left:1px solid rgba(26,159,255,.25);
+  backdrop-filter:blur(16px);
+  z-index:100;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:28px;padding:40px 32px;
+  opacity:0;pointer-events:none;
+  transition:opacity .15s;
+  box-shadow:-8px 0 40px rgba(0,0,0,.6);
+}
+.reveal-panel.interactive{pointer-events:all}
+
+.rp-tag{font-family:var(--fm);font-size:9px;letter-spacing:.3em;color:var(--blue);text-transform:uppercase}
+.rp-title{font-family:var(--fd);font-size:clamp(36px,4vw,56px);letter-spacing:.04em;color:#fff;text-align:center;line-height:.95}
+.rp-title span{color:var(--blue)}
+
+/* Animated arrow — pulses right */
+.rp-arrow{display:flex;flex-direction:column;align-items:center;gap:6px}
+.rp-arrow-row{display:flex;align-items:center}
+.a-seg{width:24px;height:2px;background:var(--blue);margin-right:2px;opacity:0;animation:aSeg 1.4s ease-in-out infinite}
+.a-seg:nth-child(2){animation-delay:.15s}
+.a-seg:nth-child(3){animation-delay:.3s}
+.a-seg:nth-child(4){animation-delay:.45s}
+.a-head{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:10px solid var(--blue)}
+@keyframes aSeg{0%,100%{opacity:.15}50%{opacity:1}}
+.rp-arrow-label{font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+
+/* Product preview in sidebar */
+.rp-img-wrap{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;border:1.5px solid var(--blue);box-shadow:0 0 32px rgba(26,159,255,.15)}
+.rp-img-wrap img{width:100%;height:100%;object-fit:cover}
+.rp-img-wrap::before,.rp-img-wrap::after{content:'';position:absolute;width:16px;height:16px;z-index:5}
+.rp-img-wrap::before{top:8px;left:8px;border-top:2px solid var(--blue);border-left:2px solid var(--blue)}
+.rp-img-wrap::after{bottom:8px;right:8px;border-bottom:2px solid var(--blue);border-right:2px solid var(--blue)}
+.rp-img-name{font-family:var(--fd);font-size:18px;color:#fff;margin-top:12px;letter-spacing:.04em}
+.rp-img-sub{font-family:var(--fm);font-size:9px;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:4px}
+
+.rp-next{font-family:var(--fm);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#000;background:var(--blue);border:none;padding:12px 32px;cursor:none;width:100%;transition:background .3s}
+.rp-next:hover{background:#3db8ff}
+
+/* ═══ PRODUCTS PANEL ═══ */
+.products-panel{position:fixed;inset:0;background:#0a0a0a;transform:translateX(100%);transition:transform .7s cubic-bezier(.4,0,.15,1);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:80px 40px 40px;gap:32px;overflow-y:auto;scrollbar-width:none}
+.products-panel::-webkit-scrollbar{display:none}
+.products-panel.open{transform:translateX(0)}
+.pp-back{position:absolute;top:18px;left:28px;font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;background:none;border:none;cursor:none;transition:color .3s}
+.pp-back:hover{color:var(--blue)}
+.pp-hdr{text-align:center}
+.pp-hdr h2{font-family:var(--fd);font-size:clamp(32px,5vw,64px);letter-spacing:.05em;color:#fff}
+.pp-hdr p{font-family:var(--fm);font-size:10px;letter-spacing:.28em;color:var(--muted);margin-top:10px;text-transform:uppercase}
+.pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:84vw;max-width:1100px}
+.pp-item{position:relative;overflow:hidden;border:1px solid var(--border);aspect-ratio:4/3;cursor:none;transition:border-color .3s}
+.pp-item:hover{border-color:rgba(26,159,255,.4)}
+.pp-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.pp-item:hover img{transform:scale(1.05)}
+.pp-item-lbl{position:absolute;bottom:0;left:0;right:0;padding:36px 16px 14px;background:linear-gradient(transparent,rgba(8,8,8,.92));font-family:var(--fm);font-size:9px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase}
+.pp-zoom-tag{position:absolute;top:12px;right:12px;font-family:var(--fm);font-size:9px;letter-spacing:.15em;color:var(--blue);opacity:0;transition:opacity .3s;text-transform:uppercase}
+.pp-item:hover .pp-zoom-tag{opacity:1}
+
+/* 3D VIEWER */
+.viewer3d-wrap{width:100%;max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+.viewer3d-label{display:flex;align-items:center;gap:10px;font-family:var(--fm);font-size:10px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;padding:10px 16px;border:1px solid var(--border);border-bottom:none;background:rgba(26,159,255,.04)}
+.v3d-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 6px var(--blue);flex-shrink:0;animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:.4}50%{opacity:1}}
+.v3d-link{margin-left:auto;color:var(--blue);text-decoration:none;font-size:9px;letter-spacing:.2em;transition:opacity .3s}
+.v3d-link:hover{opacity:.7}
+.viewer3d-frame{width:100%;max-width:780px;height:340px;margin:0 auto;border:1px solid var(--border);display:block;background:#0a0a0a}
+
+/* VIEWER */
+.viewer{position:fixed;inset:0;background:rgba(4,4,4,.97);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;cursor:none;overflow:hidden}
+.viewer.open{opacity:1;pointer-events:all}
+.viewer-img{max-width:90vw;max-height:90vh;object-fit:contain;transform-origin:center;will-change:transform;user-select:none;pointer-events:none;-webkit-user-drag:none}
+.viewer-close{position:fixed;top:20px;right:28px;font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted);background:none;border:1px solid var(--border);padding:8px 18px;cursor:none;text-transform:uppercase;transition:color .3s,border-color .3s;z-index:10}
+.viewer-close:hover{color:var(--blue);border-color:var(--blue)}
+.viewer-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;pointer-events:none}
+
+/* Seamless CSS carbon — no external image needed */
+body{
+  background:#0c0c0c;
+  background-image:
+    linear-gradient(27deg, #131313 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #131313 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #1a1a1a 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #1a1a1a 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #161616 10px, transparent 10px),
+    linear-gradient(#171717 25%, #141414 25%, #141414 50%, transparent 50%, transparent 75%, #1c1c1c 75%, #1c1c1c);
+  background-size: 16px 16px;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:radial-gradient(ellipse 85% 75% at 50% 45%, transparent 30%, rgba(8,8,8,.7) 100%);
+}
+.screen,.topbar,.progress,#scroller,.reveal-panel{background:transparent!important}
+.products-panel{background:#0a0a0a!important}
+section{background:transparent!important}
+/* Bigger, more visible back button */
+.tb-back{
+  background:rgba(255,255,255,.04)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  padding:9px 18px!important;
+  font-size:11px!important;letter-spacing:.22em!important;
+  color:#a0a0a0!important;
+  display:inline-flex!important;align-items:center;gap:8px;
+  transition:color .3s,border-color .3s,background .3s!important;
+}
+.tb-back:hover{color:#fff!important;border-color:rgba(255,255,255,.3)!important;background:rgba(255,255,255,.08)!important}
+/* Topbar — taller, metallic logo */
+.topbar{height:62px!important;background:linear-gradient(180deg,rgba(15,15,15,.95),rgba(10,10,10,.85))!important;backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)!important;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+/* Brand text — solid silver, no clip-text */
+.tb-brand{font-family:var(--fd)!important;font-size:24px!important;letter-spacing:.05em!important;color:#e8e8e8!important;background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;text-shadow:0 1px 0 rgba(255,255,255,.08), 0 -1px 0 rgba(0,0,0,.5)}
+.tb-brand span{color:#1a9fff!important;background:none!important;-webkit-text-fill-color:#1a9fff!important}
+
+
+/* ═══ PRODUCT SLIDESHOW ═══ */
+.pp-slideshow{
+  width:90vw;max-width:1200px;
+  display:flex;flex-direction:column;
+  margin:0 auto;
+}
+.pp-slide-stage{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/10;
+  background:rgba(8,8,8,.6);
+  border:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.pp-slide-img{
+  max-width:96%;max-height:96%;
+  object-fit:contain;cursor:none;
+  transition:opacity .35s, transform .4s cubic-bezier(.25,.46,.45,.94);
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.5));
+}
+.pp-slide-img.fade-out{opacity:0;transform:scale(.97)}
+.pp-slide-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:54px;height:54px;
+  background:rgba(15,15,15,.7);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  cursor:none;
+  transition:background .3s,border-color .3s,transform .3s;
+  backdrop-filter:blur(8px);
+  color:#fff;
+}
+.pp-slide-arrow:hover{background:rgba(30,30,30,.85);border-color:rgba(255,255,255,.35)}
+.pp-slide-arrow.left{left:20px}.pp-slide-arrow.right{right:20px}
+.pp-slide-arrow:hover.left{transform:translateY(-50%) translateX(-3px)}
+.pp-slide-arrow:hover.right{transform:translateY(-50%) translateX(3px)}
+.pp-slide-arrow svg{width:22px;height:22px}
+.pp-slide-zoom{
+  position:absolute;top:18px;right:18px;
+  font-family:var(--fm);font-size:10px;letter-spacing:.24em;
+  color:#a0a0a0;text-transform:uppercase;
+  padding:7px 14px;background:rgba(15,15,15,.7);
+  border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(8px);
+  pointer-events:none;opacity:0;transition:opacity .3s;
+}
+.pp-slide-stage:hover .pp-slide-zoom{opacity:1}
+.pp-slide-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 4px 0;
+}
+.pp-slide-counter{
+  font-family:var(--fm);font-size:11px;letter-spacing:.28em;
+  color:#a0a0a0;text-transform:uppercase;
+}
+.pp-slide-counter strong{color:#fff;font-weight:500}
+.pp-slide-thumbs{display:flex;gap:8px}
+.pp-thumb{
+  width:54px;height:38px;
+  background:rgba(20,20,20,.7);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:none;overflow:hidden;
+  transition:border-color .3s;
+}
+.pp-thumb img{width:100%;height:100%;object-fit:cover;opacity:.5;transition:opacity .3s}
+.pp-thumb:hover img{opacity:.85}
+.pp-thumb.active{border-color:#fff}
+.pp-thumb.active img{opacity:1}
+.pp-single .pp-slide-thumbs{display:none}
+
+
+/* Hide reveal-panel when products panel is open */
+body:has(.products-panel.open) .reveal-panel{opacity:0!important;pointer-events:none!important}
+
+.real-build-cta{margin-top:20px;display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px;width:100%;max-width:780px}
+.real-build-cta-tag{font-family:var(--fm);font-size:9px;letter-spacing:.3em;color:rgba(26,159,255,.6);text-transform:uppercase}
+.real-build-btn{font-family:var(--fm);font-size:11px;letter-spacing:.32em;color:#fff;text-transform:uppercase;padding:14px 36px;background:rgba(26,159,255,.12);border:1px solid rgba(26,159,255,.4);cursor:none;transition:background .3s,border-color .3s,letter-spacing .3s}
+.real-build-btn:hover{background:rgba(26,159,255,.25);border-color:rgba(26,159,255,.7);letter-spacing:.4em}
+
+/* Language toggle */
+.lang-toggle{
+  margin-left:16px;
+  display:flex;align-items:center;gap:6px;
+  padding:6px 12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+}
+.lang-opt{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;
+  color:rgba(255,255,255,.4);
+  background:none;border:none;cursor:none;
+  padding:2px 6px;text-transform:uppercase;
+  transition:color .25s;
+}
+.lang-opt:hover{color:rgba(255,255,255,.85)}
+.lang-opt.active{color:#fff}
+.lang-sep{color:rgba(255,255,255,.2);font-family:'DM Mono',monospace;font-size:10px}
+.tb-spacer{margin-left:auto !important}
+.topbar{display:flex;align-items:center}
+.topbar > *:not(.lang-toggle){flex-shrink:0}
+.topbar .tb-section{margin-right:auto}
+
+
+/* Topbar brand logo (project pages) — replace tb-brand text */
+.tb-brand-logo{
+  height:28px;
+  width:auto;
+  display:block;
+  margin-left:28px;
+  -webkit-user-drag:none;
+  user-select:none;
+}
+
+/* Section dividers — subtle hairline between sections */
+#scroller > section{
+  position:relative;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+#scroller > section:last-child{border-bottom:none}
+
+/* Section number indicator (top-left of each section, except first) */
+#scroller > section:not(:first-child)::before{
+  content:'';
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:60px;height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+}
+
+/* Animated scroll-down arrow at bottom of first section (more discoverable) */
+.scroll-down-cue{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.32em;
+  color:rgba(255,255,255,.45);text-transform:uppercase;
+  pointer-events:none;z-index:5;
+  animation:scrollPulse 2.4s ease-in-out infinite;
+}
+.scroll-down-cue svg{width:14px;height:14px;color:rgba(26,159,255,.7)}
+@keyframes scrollPulse{
+  0%,100%{transform:translateX(-50%) translateY(0);opacity:.5}
+  50%{transform:translateX(-50%) translateY(8px);opacity:1}
+}
+/* Hide cue when scrolled past first viewport */
+body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity .4s}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<!-- LUPA magnifier -->
+<div id="lupa">
+  <svg viewBox="0 0 24 24">
+    <circle cx="10.5" cy="10.5" r="6.5"/>
+    <line x1="15.5" y1="15.5" x2="21" y2="21"/>
+    <line x1="10.5" y1="7.5" x2="10.5" y2="13.5"/>
+    <line x1="7.5" y1="10.5" x2="13.5" y2="10.5"/>
+  </svg>
+</div>
+<div id="pageOut"></div>
+
+<div class="topbar">
+  <button class="tb-back" id="backBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px"><path d="M10 4L6 8l4 4"/></svg>Back</button>
+  <div class="tb-tag">Peugeot 508 · Front Splitter</div>
+</div>
+<div class="progress" id="prog"></div>
+
+<div class="scroll-hint" id="scrollHint">
+  <div class="sa"><i></i><i></i><i></i></div>
+  <span>scroll</span>
+</div>
+
+<div id="scroller">
+  <!-- § 1 SCAN HERO -->
+  <section>
+    <div class="sec-ey">3D Scan · 001</div>
+    <div class="scan-wrap" id="scanWrap">
+      <img class="scan-base" src="front/01_zoomneutral.png" alt="C2 Scan">
+      <div class="scan-zoom">
+        <img class="sz-scan" src="front/01_zoomneutral.png" alt="Scan Bumper">
+        <img class="sz-print" src="front/02_zoomeffect.png" alt="Print Bumper">
+        <div class="scan-flash"></div>
+      </div>
+      <div class="scan-state">
+        <span class="ss-scan">3D Scan</span>
+        <span class="ss-print">3D Print</span>
+      </div>
+      <div class="scan-hint-r">hover to inspect splitter</div>
+    </div>
+    <div class="scroll-down-cue">
+    <span>Scroll for more</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+</section>
+
+  <!-- § 2 COMPARE -->
+  <section>
+    <div class="cmp-hdr">
+      <h2>SCAN → PRINT</h2>
+      <p>drag to compare</p>
+    </div>
+    <div class="cmp-wrap" id="cmpWrap">
+      <img class="cmp-before" src="front/01_scanonly.png" alt="Scan">
+      <div class="cmp-aw" id="afterWrap">
+        <img class="cmp-after" id="afterImg" src="front/01_3dprint.png" alt="3D Print">
+      </div>
+      <div class="cmp-div" id="cmpDiv">
+        <div class="cmp-handle">
+          <svg viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+            <path d="M7 4l-4 6 4 6M13 4l4 6-4 6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="cmp-badge l" id="badgeL">3D Scan</div>
+      <div class="cmp-badge r">3D Print</div>
+      <div class="drag-hint" id="dragHint">← drag to compare →</div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══ REVEAL PANEL (right sidebar) ═══ -->
+<div class="reveal-panel" id="revealPanel">
+  <div class="rp-tag">New part revealed</div>
+  <div class="rp-title">Front<br><span>Splitter</span></div>
+  <div class="rp-arrow">
+    <div class="rp-arrow-row">
+      <div class="a-seg"></div><div class="a-seg"></div>
+      <div class="a-seg"></div><div class="a-seg"></div>
+      <div class="a-head"></div>
+    </div>
+    <div class="rp-arrow-label">new part</div>
+  </div>
+  <div class="rp-img-wrap">
+    <img src="front/02_zoomeffect.png" alt="Front Splitter">
+  </div>
+  <div class="rp-img-name">Front Splitter</div>
+  <div class="rp-img-sub">Peugeot 508 · Additive Manufacturing</div>
+  <button class="rp-next" id="rpNext">View Products →</button>
+</div>
+
+<!-- ═══ PRODUCTS PANEL ═══ -->
+<div class="products-panel" id="productsPanel">
+  <button class="pp-back" id="ppBack">← Back</button>
+  <div class="pp-hdr">
+    <h2>Products</h2>
+    <p>Peugeot 508 · Front Splitter · Final Output</p>
+  </div>
+
+  <!-- 3D VIEWER -->
+  <div class="viewer3d-wrap">
+    <div class="viewer3d-label">
+      <span class="v3d-dot"></span>
+      3D Model — Interactive
+      <a href="https://p3d.in/NvbqE" target="_blank" class="v3d-link">open full ↗</a>
+    </div>
+    <iframe src="https://p3d.in/e/NvbqE" class="viewer3d-frame" allowfullscreen></iframe>
+  </div>
+
+    <div class="pp-slideshow" data-files='["front/product_01.png","front/product_02.png","front/product_03.png"]' data-labels='["Peugeot 508 · View 01","Peugeot 508 · View 02","Peugeot 508 · View 03"]'>
+    <div class="pp-slide-stage">
+      <button class="pp-slide-arrow left" id="ppLeft">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M15 6L9 12l6 6"/></svg>
+      </button>
+      <img class="pp-slide-img" id="ppSlideImg" src="front/product_01.png" alt="">
+      <div class="pp-slide-zoom">click · zoom ↗</div>
+      <button class="pp-slide-arrow right" id="ppRight">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="pp-slide-bottom">
+      <div class="pp-slide-counter"><strong id="ppNow">01</strong> / <span id="ppTotal">03</span></div>
+      <div class="pp-slide-thumbs" id="ppThumbs"></div>
+    </div>
+  </div>
+
+  <div class="real-build-cta">
+    <div class="real-build-cta-tag">— Want to see the real thing? —</div>
+    <button class="real-build-btn" data-real-folder="3D printing projects/peugeot" data-real-files='[&quot;01.jpg&quot;,&quot;02.jpg&quot;,&quot;03.jpg&quot;]' data-real-name="Peugeot 508 SW">
+      View installed photos →
+    </button>
+  </div>
+</div>
+
+<!-- VIEWER -->
+<div class="viewer" id="viewer">
+  <button class="viewer-close" id="viewerClose">✕ Close</button>
+  <img class="viewer-img" id="viewerImg" src="" alt="">
+  <div class="viewer-hint">move cursor · zoom follows · ESC · close</div>
+</div>
+
+<script>
+// FADE IN
+const po=document.getElementById('pageOut');
+requestAnimationFrame(()=>requestAnimationFrame(()=>{po.style.transition='opacity .6s';po.style.opacity='0'}));
+setTimeout(()=>document.getElementById('scrollHint').classList.add('vis'),800);
+
+// CURSOR + LUPA
+const cur=document.getElementById('cursor');
+const lupa=document.getElementById('lupa');
+const scanWrap=document.getElementById('scanWrap');
+document.addEventListener('mousemove',e=>{
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+  lupa.style.left=e.clientX+'px';lupa.style.top=e.clientY+'px';
+});
+scanWrap.addEventListener('mouseenter',()=>{cur.style.opacity='0';lupa.classList.add('vis')});
+scanWrap.addEventListener('mouseleave',()=>{cur.style.opacity='1';lupa.classList.remove('vis')});
+
+// Other hover large cursor
+document.querySelectorAll('.cmp-wrap,.rp-next,.pp-item,.tb-back,.pp-back,.viewer-close').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('large'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('large'));
+});
+
+// BACK
+document.getElementById('backBtn').addEventListener('click',()=>{
+  po.style.transition='opacity .6s';po.style.opacity='1';
+  setTimeout(()=>window.location.href='../index.html',600);
+});
+
+// SCROLL PROGRESS
+const scr=document.getElementById('scroller');
+scr.addEventListener('scroll',()=>{
+  document.getElementById('prog').style.width=(scr.scrollTop/(scr.scrollHeight-scr.clientHeight)*100)+'%';
+});
+
+// SLIDER
+const wrap=document.getElementById('cmpWrap'),
+      aw=document.getElementById('afterWrap'),
+      ai=document.getElementById('afterImg'),
+      cdiv=document.getElementById('cmpDiv'),
+      revealPanel=document.getElementById('revealPanel'),
+      dragHint=document.getElementById('dragHint');
+let drag=false, sliderPct=50;
+
+// Threshold: start fading reveal panel below this %
+const FADE_START=22;
+
+function setSlider(pct){
+  sliderPct=Math.max(0,Math.min(100,pct));
+  // Clamp display
+  const disp=Math.min(99.5,sliderPct);
+  aw.style.width=(100-disp)+'%';
+  ai.style.width=wrap.getBoundingClientRect().width+'px';
+  cdiv.style.left=disp+'%';
+
+  // Reveal panel fades in as slider approaches 0 (drag LEFT = reveal new part)
+  if(sliderPct<=FADE_START){
+    const opacity = 1 - (sliderPct / FADE_START);
+    revealPanel.style.opacity=opacity;
+    revealPanel.classList.toggle('interactive', sliderPct < FADE_START * 0.8);
+    dragHint.style.opacity=sliderPct<5?'0':'1';
+  } else {
+    revealPanel.style.opacity='0';
+    revealPanel.classList.remove('interactive');
+    dragHint.style.opacity='1';
+  }
+}
+
+// Init slider — wait for images then size
+function initSlider(){
+  setSlider(50);
+}
+if(document.readyState==='complete'){initSlider()}else{window.addEventListener('load',initSlider)}
+requestAnimationFrame(initSlider);
+window.addEventListener('resize',()=>setSlider(sliderPct));
+wrap.addEventListener('mousedown',e=>{drag=true;e.preventDefault()});
+document.addEventListener('mouseup',()=>drag=false);
+document.addEventListener('mousemove',e=>{
+  if(!drag)return;
+  const r=wrap.getBoundingClientRect();
+  setSlider((e.clientX-r.left)/r.width*100);
+});
+wrap.addEventListener('touchstart',e=>{drag=true;e.preventDefault()},{passive:false});
+document.addEventListener('touchend',()=>drag=false);
+document.addEventListener('touchmove',e=>{
+  if(!drag)return;
+  const r=wrap.getBoundingClientRect();
+  setSlider((e.touches[0].clientX-r.left)/r.width*100);
+});
+
+// NEXT → products
+document.getElementById('rpNext').addEventListener('click',()=>{
+  document.getElementById('productsPanel').classList.add('open');
+});
+document.getElementById('ppBack').addEventListener('click',()=>{
+  document.getElementById('productsPanel').classList.remove('open');
+});
+
+// VIEWER — cursor-follow zoom (no free drag)
+const viewer=document.getElementById('viewer'),vImg=document.getElementById('viewerImg');
+let vZoom=1.3, vActive=false, lastE=null;
+function openV(src){
+  vImg.src=src;
+  vImg.style.transform='scale(1)';
+  vImg.style.transformOrigin='center center';
+  vActive=false;
+  viewer.classList.add('open');
+}
+function closeViewer(){
+  viewer.classList.remove('open');
+  vImg.style.transform='scale(1)';
+  vActive=false;
+}
+document.querySelectorAll('.pp-item').forEach(it=>it.addEventListener('click',()=>openV(it.dataset.img)));
+document.getElementById('viewerClose').addEventListener('click', closeViewer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape' && viewer.classList.contains('open')) closeViewer()});
+viewer.addEventListener('wheel',e=>{
+  e.preventDefault();
+  if(e.deltaY < 0) vZoom = Math.min(2.0, vZoom + 0.1);
+  else vZoom = Math.max(1.1, vZoom - 0.1);
+  if(vActive && lastE) updateZoom(lastE);
+},{passive:false});
+function updateZoom(e){
+  if(!vImg.naturalWidth) return;
+  const rect = vImg.getBoundingClientRect();
+  if(e.clientX < rect.left || e.clientX > rect.right ||
+     e.clientY < rect.top  || e.clientY > rect.bottom){
+    vImg.style.transform='scale(1)';
+    vActive=false;
+    return;
+  }
+  const px = ((e.clientX - rect.left) / rect.width) * 100;
+  const py = ((e.clientY - rect.top)  / rect.height) * 100;
+  vImg.style.transformOrigin = `${px}% ${py}%`;
+  vImg.style.transform = `scale(${vZoom})`;
+  vActive = true;
+}
+viewer.addEventListener('mousemove', e=>{
+  if(!viewer.classList.contains('open')) return;
+  lastE = e;
+  updateZoom(e);
+});
+viewer.addEventListener('mouseleave', ()=>{
+  vImg.style.transform='scale(1)';
+  vActive=false;
+});
+viewer.addEventListener('click', e=>{
+  if(e.target === viewer) closeViewer();
+});
+
+// ═══ SLIDESHOW INIT ═══
+(function(){
+  const ppSlide = document.querySelector('.pp-slideshow');
+  if(!ppSlide) return;
+  const files = JSON.parse(ppSlide.dataset.files || '[]');
+  const labels = JSON.parse(ppSlide.dataset.labels || '[]');
+  const img = document.getElementById('ppSlideImg');
+  const now = document.getElementById('ppNow');
+  const thumbs = document.getElementById('ppThumbs');
+  let idx = 0;
+  function show(i){
+    idx = (i + files.length) % files.length;
+    img.classList.add('fade-out');
+    setTimeout(()=>{
+      img.src = files[idx];
+      img.alt = labels[idx] || '';
+      img.classList.remove('fade-out');
+    }, 180);
+    if(now) now.textContent = String(idx+1).padStart(2,'0');
+    document.querySelectorAll('.pp-thumb').forEach((t,j)=>t.classList.toggle('active', j===idx));
+  }
+  files.forEach((f,i)=>{
+    const t = document.createElement('div');
+    t.className = 'pp-thumb' + (i===0?' active':'');
+    t.innerHTML = '<img src="'+f+'" alt="thumb '+(i+1)+'">';
+    t.addEventListener('click', ()=>show(i));
+    if(thumbs) thumbs.appendChild(t);
+  });
+  const leftBtn = document.getElementById('ppLeft');
+  const rightBtn = document.getElementById('ppRight');
+  if(leftBtn) leftBtn.addEventListener('click', ()=>show(idx-1));
+  if(rightBtn) rightBtn.addEventListener('click', ()=>show(idx+1));
+  if(files.length <= 1){
+    if(leftBtn) leftBtn.style.display = 'none';
+    if(rightBtn) rightBtn.style.display = 'none';
+  }
+  if(img) img.addEventListener('click', ()=>{
+    if(typeof openV === 'function') openV(img.src);
+    else {
+      const v = document.getElementById('viewer');
+      const vi = document.getElementById('viewerImg');
+      if(v && vi){vi.src = img.src; v.classList.add('open');}
+    }
+  });
+  document.addEventListener('keydown', e=>{
+    const panel = document.getElementById('productsPanel');
+    if(!panel || !panel.classList.contains('open')) return;
+    const v = document.getElementById('viewer');
+    if(v && v.classList.contains('open')) return;
+    if(e.key === 'ArrowLeft') show(idx-1);
+    if(e.key === 'ArrowRight') show(idx+1);
+  });
+})();
+
+// Save return state for homepage
+const _backBtn = document.getElementById('backBtn');
+if(_backBtn){
+  _backBtn.addEventListener('click',function(){
+    try{sessionStorage.setItem('returnTo','designList');}catch(_){}
+  });
+}
+
+
+document.querySelectorAll('.real-build-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    try{
+      sessionStorage.setItem('returnTo','printedDetail');
+      sessionStorage.setItem('backToProject','Peugeot 508/index.html');
+      sessionStorage.setItem('printedFolder', btn.dataset.realFolder);
+      sessionStorage.setItem('printedFiles', btn.dataset.realFiles.replace(/&quot;/g,'"'));
+      sessionStorage.setItem('printedName', btn.dataset.realName);
+    }catch(_){}
+    po.style.transition='opacity .6s';po.style.opacity='1';
+    setTimeout(()=>window.location.href='../index.html',600);
+  });
+});
+
+
+// Auto-open products panel if user returned from printed detail
+try{
+  if(sessionStorage.getItem('openProducts') === '1'){
+    sessionStorage.removeItem('openProducts');
+    setTimeout(()=>{
+      const panel = document.getElementById('productsPanel');
+      if(panel) panel.classList.add('open');
+    }, 100);
+  }
+}catch(_){}
+
+
+// ═══════════════ LANGUAGE SWITCHER ═══════════════
+(function(){
+  const T = {
+    // ── Homepage texts ──
+    "Enter": "Uđi",
+    "Choose Category": "Izaberi kategoriju",
+    "Select what you want to explore": "Izaberite šta želite da istražite",
+    "◈ Section 01": "◈ Sekcija 01",
+    "◇ Section 02": "◇ Sekcija 02",
+    "▲ Section 03": "▲ Sekcija 03",
+    "3D Scan\nArchive": "3D Skenovi\nArhiva",
+    "3D Scan<br>Archive": "3D Skenovi<br>Arhiva",
+    "Design\nProjects": "Dizajn\nProjekti",
+    "Design<br>Projects": "Dizajn<br>Projekti",
+    "Printed\nParts": "Štampani\nDelovi",
+    "Printed<br>Parts": "Štampani<br>Delovi",
+    "Browse raw 3D scan data of vehicles — Audi A6, BMW S1000R, Citroen C2, Peugeot 508 SW, VW Golf 7 and more.":
+      "Pregled sirovih 3D skenova vozila — Audi A6, BMW S1000R, Citroen C2, Peugeot 508 SW, VW Golf 7 i drugi.",
+    "Complete reverse engineering projects — from scan to 3D printed final part. Full process documentation.":
+      "Kompletni reverse engineering projekti — od skena do 3D štampanog finalnog dela. Puna dokumentacija procesa.",
+    "Real-world photos of finished 3D printed parts installed and tested. The physical output of the design process.":
+      "Stvarne fotografije gotovih 3D štampanih delova ugrađenih i testiranih. Fizički rezultat dizajn procesa.",
+    "Explore Archive": "Istraži arhivu",
+    "View Projects": "Vidi projekte",
+    "See Printed": "Vidi štampano",
+    "Back": "Nazad",
+    "Scroll for more": "Skroluj za više",
+    "scroll": "skroluj",
+    "3D Scan Archive": "3D Skenovi — Arhiva",
+    "Select a vehicle to view scan data": "Izaberite vozilo za pregled podataka",
+    "Design Projects": "Dizajn Projekti",
+    "Complete scan → 3D print case studies": "Kompletne studije slučaja: sken → 3D štampa",
+    "Printed Parts": "Štampani delovi",
+    "Real-world photos of finished 3D printed parts": "Stvarne fotke gotovih 3D štampanih delova",
+    "Citroen C2 · Choose Part": "Citroen C2 · Izaberi deo",
+    "Choose which part to explore": "Izaberite koji deo želite da istražite",
+    "Peugeot 508 SW · Parts": "Peugeot 508 SW · Delovi",
+    "Peugeot 508 SW": "Peugeot 508 SW",
+    "Select which part to view": "Izaberite koji deo želite da pregledate",
+    "Front Bumper": "Prednji branik",
+    "Rear Bumper": "Zadnji branik",
+    "Front Splitter": "Prednji splitter",
+    "Front bumper · view scans →": "Prednji branik · pogledaj skenove →",
+    "Rear bumper · view scans →": "Zadnji branik · pogledaj skenove →",
+    "Enter project →": "Uđi u projekat →",
+    "Enter project ↗": "Uđi u projekat ↗",
+    "View ↗": "Vidi ↗",
+    "View photos ↗": "Vidi fotke ↗",
+    "Choose part ↗": "Izaberi deo ↗",
+    "3 scan files": "3 sken fajla",
+    "2 scan files": "2 sken fajla",
+    "Multiple parts available": "Više delova dostupno",
+    "Coming soon": "Uskoro",
+    "Front Bumper · 3D Scan": "Prednji branik · 3D sken",
+    "Front · Rear · 3D Print": "Prednji · Zadnji · 3D štampa",
+    "Front Splitter · 3D Print": "Prednji splitter · 3D štampa",
+    "Front Bumper · 3D Print": "Prednji branik · 3D štampa",
+    "Front Bumper · 3 photos": "Prednji branik · 3 fotke",
+    "Rear Bumper · 2 photos": "Zadnji branik · 2 fotke",
+    "3 photos": "3 fotke",
+    "3D scan data · click image to zoom · arrows to navigate": "3D sken podaci · klik na sliku za zoom · strelice za navigaciju",
+    "Finished part · real-world photos · click to zoom": "Gotov deo · stvarne fotografije · klik za zoom",
+    "Categories": "Kategorije",
+    "3D Scan · Manufacturing · Design": "3D Skeniranje · Izrada · Dizajn",
+    "Automotive aftermarket parts": "Aftermarket auto delovi",
+    "Reverse Engineering Studio": "Reverse Engineering Studio",
+    "scroll": "skroluj",
+    // Project pages
+    "MP Design · Citroen C2": "MP Design · Citroen C2",
+    "MP Design · Citroen C2 · Rear": "MP Design · Citroen C2 · Zadnji",
+    "MP Design · Audi A6": "MP Design · Audi A6",
+    "MP Design · VW Golf 7 GTI": "MP Design · VW Golf 7 GTI",
+    "MP Design · Peugeot 508": "MP Design · Peugeot 508",
+    "Citroen C2 · Front Bumper": "Citroen C2 · Prednji branik",
+    "Citroen C2 · Rear Bumper": "Citroen C2 · Zadnji branik",
+    "Audi A6 · Front Splitter": "Audi A6 · Prednji splitter",
+    "VW Golf 7 GTI · Front Bumper": "VW Golf 7 GTI · Prednji branik",
+    "Peugeot 508 · Front Splitter": "Peugeot 508 · Prednji splitter",
+    "3D Scan · 001": "3D Sken · 001",
+    "3D Scan": "3D Sken",
+    "3D Print": "3D Štampa",
+    "hover to inspect": "pređi mišem za pregled",
+    "hover to inspect splitter": "pređi mišem za pregled splittera",
+    "hover to inspect bumper": "pređi mišem za pregled branika",
+    "hover to inspect rear": "pređi mišem za pregled zadnjeg dela",
+    "SCAN → PRINT": "SKEN → ŠTAMPA",
+    "← drag to compare →": "← prevuci za poređenje →",
+    "New part revealed": "Novi deo otkriven",
+    "new part": "novi deo",
+    "View Products →": "Pogledaj proizvode →",
+    "Products": "Proizvodi",
+    "Front Bumper · Final Output": "Prednji branik · Finalni rezultat",
+    "Rear Bumper · Final Output": "Zadnji branik · Finalni rezultat",
+    "Front Splitter · Final Output": "Prednji splitter · Finalni rezultat",
+    "3D Model — Interactive": "3D Model — Interaktivno",
+    "open full ↗": "otvori potpuno ↗",
+    "zoom ↗": "zoom ↗",
+    "click · zoom ↗": "klik · zoom ↗",
+    "scroll to zoom · drag to pan · ESC to close": "skrol za zoom · prevuci za pomeraj · ESC za zatvaranje",
+    "✕ Close": "✕ Zatvori",
+    "move cursor · zoom follows · ESC · close": "pomeraj kursor · zum prati · ESC · zatvori",
+    "— Want to see the real thing? —": "— Želite da vidite uživo? —",
+    "View installed photos →": "Vidi ugrađene fotke →",
+    "Project 01": "Projekat 01",
+    "Project 02": "Projekat 02",
+    "Project 03": "Projekat 03",
+    "Project 04": "Projekat 04",
+    "Part 01": "Deo 01",
+    "Part 02": "Deo 02",
+    "A personal portfolio & hobby project showcasing my work in 3D scanning, reverse engineering and additive manufacturing of automotive parts. Built by an enthusiast for fellow car & engineering lovers.":
+      "Lični portfolio i hobi projekat koji prikazuje moj rad na 3D skeniranju, reverse engineering-u i 3D štampi automobilskih delova. Napravljeno od strane entuzijaste za ostale zaljubljenike u kola i inženjering.",
+    // Scan sub items
+    "1": "1",
+    "Choose Part": "Izaberi deo",
+    "Prednji branik": "Prednji branik",
+    "Zadnji branik": "Zadnji branik"
+  };
+
+  function applyLang(lang){
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n-orig]').forEach(el=>{
+      const orig = el.dataset.i18nOrig;
+      if(lang === 'sr' && T[orig]) el.innerHTML = T[orig];
+      else el.innerHTML = orig;
+    });
+    document.querySelectorAll('[data-i18n-orig-attr]').forEach(el=>{
+      const data = JSON.parse(el.dataset.i18nOrigAttr);
+      Object.entries(data).forEach(([attr, orig])=>{
+        if(lang === 'sr' && T[orig]) el.setAttribute(attr, T[orig]);
+        else el.setAttribute(attr, orig);
+      });
+    });
+    // Update toggle UI
+    document.querySelectorAll('.lang-toggle').forEach(t=>{
+      t.querySelectorAll('.lang-opt').forEach(o=>{
+        o.classList.toggle('active', o.dataset.lang === lang);
+      });
+    });
+    try{localStorage.setItem('mpdesign_lang', lang);}catch(_){}
+  }
+
+  // Walk DOM and tag every translatable text node
+  function tagDom(){
+    // Whitelist of safe-to-tag elements (NO buttons, NO generic spans/divs that have event listeners)
+    const candidates = document.querySelectorAll(
+      'h1,h2,h3,h4,p,.tb-section,.tb-tag,.cat-name,.cat-desc,.cat-enter,'+
+      '.gcard-name,.gcard-sub,.gcard-cta,.gcard-num,'+
+      '.peugeot-part-name,.peugeot-part-cta,.peugeot-part-num,'+
+      '.detail-img-label,.viewer-hint,.viewer-close,'+
+      '.h-tag,.h-sub,.h-story,.h-scroll span,.scan-state span,.scan-hint-r,'+
+      '.cmp-hdr h2,.cmp-hdr p,.drag-hint,.cmp-badge,'+
+      '.rp-tag,.rp-title,.rp-arrow-label,.rp-img-name,.rp-img-sub,.rp-next,'+
+      '.pp-back,.pp-hdr h2,.pp-hdr p,.pp-item-lbl,.pp-zoom-tag,.pp-slide-zoom,.pp-slide-counter,'+
+      '.real-build-cta-tag,.real-build-btn,'+
+      '.slide-counter,.slide-zoom-hint,.sec-ey,'+
+      '.v3d-label,.v3d-link,.scroll-down-cue span'
+    );
+    candidates.forEach(el=>{
+      if(el.id === 'enterBtn' || el.classList.contains('lang-opt') || el.classList.contains('nav-back') || el.classList.contains('tb-back')) return;
+      if(el.querySelector('span,div,h1,h2,h3,h4,p,svg,button') && !el.classList.contains('cat-name') && !el.classList.contains('rp-title') && !el.classList.contains('peugeot-part-name')) return;
+      const txt = el.innerHTML.trim();
+      if(!txt) return;
+      if(!el.dataset.i18nOrig) el.dataset.i18nOrig = txt;
+    });
+    const enterBtn = document.getElementById('enterBtn');
+    if(enterBtn){
+      enterBtn.childNodes.forEach(node=>{
+        if(node.nodeType === 3){
+          const t = node.textContent.trim();
+          if(t && T[t] && !node.__i18n_tagged){
+            node.__i18n_tagged = true;
+            node.__i18n_orig = t;
+          }
+        }
+      });
+    }
+    document.querySelectorAll('.tb-back, .pp-back, .nav-back').forEach(el=>{
+      el.childNodes.forEach(node=>{
+        if(node.nodeType === 3){
+          const t = node.textContent.trim();
+          if(t && T[t] && !node.__i18n_tagged){
+            node.__i18n_tagged = true;
+            node.__i18n_orig = t;
+          }
+        }
+      });
+    });
+  }
+  
+  function applyTextNodes(lang){
+    function walk(node){
+      if(node.nodeType === 3 && node.__i18n_orig){
+        node.textContent = (lang === 'sr' && T[node.__i18n_orig]) ? T[node.__i18n_orig] : node.__i18n_orig;
+      } else if(node.nodeType === 1){
+        node.childNodes.forEach(walk);
+      }
+    }
+    walk(document.body);
+  }
+
+  // Inject language toggle into topbar
+  function injectToggle(){
+    // Toggle removed from project pages — language preference is set from homepage and persists via localStorage
+  }
+
+  // Init
+  function init(){
+    tagDom();
+    injectToggle();
+    let saved = 'en';
+    try{saved = localStorage.getItem('mpdesign_lang') || 'en';}catch(_){}
+    applyLang(saved);
+    applyTextNodes(saved);
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    setTimeout(init, 50);
+  }
+  // Also re-init when screens change (for dynamic content like printedDetail)
+  window.__applyCurrentLang = function(){
+    let saved = 'en';
+    try{saved = localStorage.getItem('mpdesign_lang') || 'en';}catch(_){}
+    tagDom();
+    applyLang(saved);
+    applyTextNodes(saved);
+  };
+})();
+
+
+// Hide scroll cue once user scrolls past first viewport
+(function(){
+  const scr = document.getElementById('scroller');
+  if(!scr) return;
+  scr.addEventListener('scroll',()=>{
+    if(scr.scrollTop > window.innerHeight*0.4) document.body.classList.add('scrolled');
+    else document.body.classList.remove('scrolled');
+  });
+})();
+
+</script>
+</body>
+</html>

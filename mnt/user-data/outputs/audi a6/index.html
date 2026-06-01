@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MP Design · Audi A6</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Barlow:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1a9fff;--bg:#080808;--surface:#0f0f0f;--border:rgba(255,255,255,0.07);--text:#e8e8e8;--muted:#555;--fd:'Bebas Neue',sans-serif;--fm:'DM Mono',monospace;--fb:'Barlow',sans-serif}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--fb);overflow:hidden;cursor:none}
+#cursor{position:fixed;z-index:9999;width:8px;height:8px;background:var(--blue);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:width .3s,height .3s;mix-blend-mode:screen}
+#cursor.large{width:44px;height:44px;background:rgba(26,159,255,.1);border:1px solid var(--blue)}
+#pageOut{position:fixed;inset:0;background:#080808;z-index:8888;opacity:1;pointer-events:none;transition:opacity .6s}
+.topbar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;padding:0 40px;border-bottom:1px solid var(--border);z-index:100;background:rgba(8,8,8,.9);backdrop-filter:blur(12px)}
+.tb-back{font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;cursor:none;transition:color .3s;border:none;background:none;padding:0}
+.tb-back:hover{color:var(--blue)}
+.tb-brand{font-family:var(--fd);font-size:22px;letter-spacing:.05em;color:#fff;margin-left:28px}
+.tb-brand span{color:var(--blue)}
+.tb-tag{margin-left:auto;font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted)}
+.progress{position:fixed;top:52px;left:0;height:1px;background:var(--blue);width:0;z-index:101;box-shadow:0 0 8px var(--blue);transition:width .1s}
+#scroller{position:fixed;inset:52px 0 0;overflow-y:scroll;overflow-x:hidden;scrollbar-width:none}
+#scroller::-webkit-scrollbar{display:none}
+section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 40px}
+.scan-wrap{position:relative;width:82vw;max-width:1100px;aspect-ratio:16/9;overflow:hidden;cursor:none}
+.scan-base{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .5s}
+.scan-zoom{position:absolute;inset:0;opacity:0;transition:opacity .5s}
+.scan-zoom img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1);transition:transform .9s cubic-bezier(.25,.46,.45,.94);transform-origin:40% 70%}
+.scan-wrap:hover .scan-zoom{opacity:1}
+.scan-wrap:hover .scan-zoom img{transform:scale(1.22)}
+.scan-wrap:hover .scan-base{opacity:0}
+.scan-lbl{position:absolute;bottom:24px;left:28px;font-family:var(--fm);font-size:10px;letter-spacing:.25em;color:var(--blue);text-transform:uppercase;pointer-events:none}
+.scan-hint{position:absolute;bottom:24px;right:28px;font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--muted);pointer-events:none;transition:opacity .3s}
+.scan-wrap:hover .scan-hint{opacity:0}
+.sec-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:28px;align-self:flex-start;padding-left:9vw}
+.cmp-header{text-align:center;margin-bottom:36px}
+.cmp-header h2{font-family:var(--fd);font-size:clamp(28px,5vw,60px);letter-spacing:.05em;color:#fff}
+.cmp-header p{font-family:var(--fm);font-size:10px;letter-spacing:.25em;color:var(--muted);margin-top:10px;text-transform:uppercase}
+.cmp-wrap{position:relative;width:82vw;max-width:1100px;aspect-ratio:16/9;overflow:hidden;cursor:none;user-select:none}
+.cmp-before{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none}
+.cmp-after-wrap{position:absolute;top:0;bottom:0;right:0;width:50%;overflow:hidden;z-index:2;pointer-events:none}
+.cmp-after{position:absolute;top:0;right:0;height:100%;object-fit:cover;object-position:right center;pointer-events:none}
+.cmp-div{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#fff;transform:translateX(-50%);z-index:10;pointer-events:none;box-shadow:0 0 10px rgba(255,255,255,.3)}
+.cmp-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;border:2px solid #fff;background:rgba(8,8,8,.85);z-index:11;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.cmp-handle svg{width:18px;height:18px}
+.cmp-badge{position:absolute;top:20px;font-family:var(--fm);font-size:10px;letter-spacing:.22em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--border);background:rgba(8,8,8,.7);backdrop-filter:blur(6px);pointer-events:none}
+.cmp-badge.l{left:20px;color:var(--blue);border-color:rgba(26,159,255,.3)}
+.cmp-badge.r{right:20px;color:#999}
+.cmp-drag-hint{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--muted);pointer-events:none;white-space:nowrap}
+.prod-section{gap:40px}
+.prod-eyebrow{font-family:var(--fm);font-size:10px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;text-align:center}
+.prod-card{position:relative;width:82vw;max-width:780px;aspect-ratio:16/8;overflow:hidden;cursor:none;border:2px solid transparent;transition:border-color .4s,box-shadow .4s}
+.prod-card:hover{border-color:var(--blue);box-shadow:0 0 0 1px rgba(26,159,255,.15),0 0 40px rgba(26,159,255,.1)}
+.prod-card img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.25,.46,.45,.94)}
+.prod-card:hover img{transform:scale(1.04)}
+.prod-card-overlay{position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(8,8,8,.85));display:flex;flex-direction:column;justify-content:flex-end;padding:28px}
+.prod-card-name{font-family:var(--fd);font-size:28px;letter-spacing:.05em;color:#fff}
+.prod-card-sub{font-family:var(--fm);font-size:9px;letter-spacing:.25em;color:var(--muted);margin-top:6px;text-transform:uppercase}
+.prod-card-enter{font-family:var(--fm);font-size:9px;letter-spacing:.3em;color:var(--blue);margin-top:12px;text-transform:uppercase;opacity:0;transform:translateY(4px);transition:opacity .3s,transform .3s}
+.prod-card:hover .prod-card-enter{opacity:1;transform:translateY(0)}
+.prod-card::before,.prod-card::after{content:'';position:absolute;width:20px;height:20px;opacity:0;transition:opacity .4s,transform .4s;z-index:5}
+.prod-card::before{top:10px;left:10px;border-top:2px solid var(--blue);border-left:2px solid var(--blue);transform:translate(-4px,-4px)}
+.prod-card::after{bottom:10px;right:10px;border-bottom:2px solid var(--blue);border-right:2px solid var(--blue);transform:translate(4px,4px)}
+.prod-card:hover::before,.prod-card:hover::after{opacity:1;transform:translate(0,0)}
+.gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:82vw;max-width:1100px;opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s;pointer-events:none}
+.gallery-grid.vis{opacity:1;transform:translateY(0);pointer-events:all}
+.gitem{position:relative;overflow:hidden;border:1px solid var(--border);aspect-ratio:4/3;transition:border-color .3s}
+.gitem:hover{border-color:rgba(26,159,255,.35)}
+.gitem img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.46,.45,.94)}
+.gitem:hover img{transform:scale(1.05)}
+.gitem-lbl{position:absolute;bottom:0;left:0;right:0;padding:28px 16px 14px;background:linear-gradient(transparent,rgba(8,8,8,.9));font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+.scroll-ind{position:fixed;bottom:28px;right:36px;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;z-index:50;opacity:0;transition:opacity .5s}
+.scroll-ind.vis{opacity:1}
+.scroll-ind span{font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--muted);writing-mode:vertical-rl}
+.scroll-line{width:1px;height:36px;background:linear-gradient(var(--blue),transparent);animation:sp 1.8s ease-in-out infinite}
+@keyframes sp{0%,100%{opacity:.3;transform:scaleY(.5)}50%{opacity:1;transform:scaleY(1)}}
+</style>
+</head>
+<body>
+<div id="cursor"></div>
+<div id="pageOut"></div>
+
+<div class="topbar">
+  <button class="tb-back" id="backBtn">← Back</button>
+  <div class="tb-brand">MP <span>Design</span></div>
+  <div class="tb-tag">Audi A6 · Front Splitter</div>
+</div>
+<div class="progress" id="prog"></div>
+
+<div id="scroller">
+
+  <section>
+    <div class="sec-eyebrow">3D Scan · 001</div>
+    <div class="scan-wrap">
+      <img class="scan-base" src="audi_a6scanbumper.png" alt="Audi A6 Scan">
+      <div class="scan-zoom"><img src="audi_a6scanbumper.png" alt="Splitter Scan"></div>
+      <div class="scan-lbl">3D Scan · Audi A6</div>
+      <div class="scan-hint">hover to inspect splitter</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="cmp-header">
+      <h2>SCAN → PRINT</h2>
+      <p>drag to compare · reverse engineering</p>
+    </div>
+    <div class="cmp-wrap" id="cmpWrap">
+      <img class="cmp-before" src="audi_a6scanbumper.png" alt="Scan">
+      <div class="cmp-after-wrap" id="afterWrap">
+        <img class="cmp-after" id="afterImg" src="audi_a63dbumper.png" alt="3D Print">
+      </div>
+      <div class="cmp-div" id="cmpDiv">
+        <div class="cmp-handle">
+          <svg viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+            <path d="M7 4l-4 6 4 6M13 4l4 6-4 6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="cmp-badge l">3D Scan</div>
+      <div class="cmp-badge r">3D Print</div>
+      <div class="cmp-drag-hint">← drag to compare →</div>
+    </div>
+  </section>
+
+  <section class="prod-section">
+    <div class="prod-eyebrow">Produced part · click to explore</div>
+    <div class="prod-card" id="prodCard">
+      <img src="audi_a63dbumper.png" alt="Front Splitter">
+      <div class="prod-card-overlay">
+        <div class="prod-card-name">Front Splitter</div>
+        <div class="prod-card-sub">Audi A6 · Additive Manufacturing</div>
+        <div class="prod-card-enter">Explore product →</div>
+      </div>
+    </div>
+    <div class="gallery-grid" id="gallery">
+      <div class="gitem">
+        <img src="render_01.png" alt="Render 01">
+        <div class="gitem-lbl">Splitter · View 01</div>
+      </div>
+      <div class="gitem">
+        <img src="render_02.png" alt="Render 02">
+        <div class="gitem-lbl">Splitter · View 02</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+<div class="scroll-ind" id="scrollInd"><span>scroll</span><div class="scroll-line"></div></div>
+
+<script>
+const po=document.getElementById('pageOut');
+requestAnimationFrame(()=>requestAnimationFrame(()=>{po.style.transition='opacity .6s';po.style.opacity='0'}));
+setTimeout(()=>document.getElementById('scrollInd').classList.add('vis'),1000);
+const cur=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+document.querySelectorAll('.scan-wrap,.cmp-wrap,.prod-card,.gitem,.tb-back').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('large'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('large'));
+});
+document.getElementById('backBtn').addEventListener('click',()=>{
+  po.style.opacity='1';
+  setTimeout(()=>window.location.href='../index.html',600);
+});
+const scr=document.getElementById('scroller');
+scr.addEventListener('scroll',()=>{
+  document.getElementById('prog').style.width=(scr.scrollTop/(scr.scrollHeight-scr.clientHeight)*100)+'%';
+});
+const wrap=document.getElementById('cmpWrap');
+const aw=document.getElementById('afterWrap');
+const ai=document.getElementById('afterImg');
+const cdiv=document.getElementById('cmpDiv');
+let drag=false;
+function setSlider(pct){
+  pct=Math.max(1,Math.min(99,pct));
+  aw.style.width=(100-pct)+'%';
+  ai.style.width=wrap.getBoundingClientRect().width+'px';
+  cdiv.style.left=pct+'%';
+}
+requestAnimationFrame(()=>setSlider(50));
+window.addEventListener('resize',()=>setSlider(parseFloat(cdiv.style.left)||50));
+wrap.addEventListener('mousedown',e=>{drag=true;e.preventDefault()});
+document.addEventListener('mouseup',()=>drag=false);
+document.addEventListener('mousemove',e=>{if(!drag)return;const r=wrap.getBoundingClientRect();setSlider((e.clientX-r.left)/r.width*100)});
+wrap.addEventListener('touchstart',e=>{drag=true;e.preventDefault()},{passive:false});
+document.addEventListener('touchend',()=>drag=false);
+document.addEventListener('touchmove',e=>{if(!drag)return;const r=wrap.getBoundingClientRect();setSlider((e.touches[0].clientX-r.left)/r.width*100)});
+let open=false;
+document.getElementById('prodCard').addEventListener('click',()=>{
+  open=!open;
+  document.getElementById('gallery').classList.toggle('vis',open);
+  if(open)setTimeout(()=>document.getElementById('gallery').scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+});
+</script>
+</body>
+</html>

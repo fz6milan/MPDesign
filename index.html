@@ -1,0 +1,3038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MP Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Barlow:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --silver-1:#e8e8e8;--silver-2:#a0a0a0;--silver-3:#5a5a5a;
+  --carbon-1:#1a1a1a;--carbon-2:#222;--carbon-3:#0e0e0e;
+  --accent:#c0c8d4;       /* metallic blue-grey instead of bright blue */
+  --bg:#080808;
+  --border:rgba(255,255,255,.08);--text:#e8e8e8;--muted:#666;
+  --fd:'Bebas Neue',sans-serif;--fm:'DM Mono',monospace;--fb:'Barlow',sans-serif
+}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--fb);overflow:hidden;cursor:none}
+
+/* ════════════════════════════
+   SEAMLESS CSS CARBON FIBER
+   (no external image — perfectly tileable)
+════════════════════════════ */
+.carbon{
+  background-color:#131313;
+  background-image:
+    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+  background-size: 20px 20px;
+}
+
+/* Body bg = full carbon, subtle, with vignette */
+body{
+  background:#0c0c0c;
+  background-image:
+    linear-gradient(27deg, #131313 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #131313 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #1a1a1a 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #1a1a1a 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #161616 10px, transparent 10px),
+    linear-gradient(#171717 25%, #141414 25%, #141414 50%, transparent 50%, transparent 75%, #1c1c1c 75%, #1c1c1c);
+  background-size: 16px 16px;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%, transparent 30%, rgba(8,8,8,.75) 100%);
+}
+
+/* CURSOR */
+#cursor{position:fixed;z-index:9999;width:8px;height:8px;background:#fff;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .25s,height .25s}
+#cursor.large{width:42px;height:42px}
+
+#pageOut{position:fixed;inset:0;background:#080808;z-index:8888;opacity:1;pointer-events:none;transition:opacity .7s}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;transition:opacity .6s,transform .6s;z-index:1}
+.screen.out{opacity:0;pointer-events:none;transform:scale(.98)}
+.screen.hidden{opacity:0;pointer-events:none;display:none}
+
+/* ════════════════════════════
+   METALLIC LOGO TREATMENT
+   (used in topbars, brand text)
+════════════════════════════ */
+.logo-text{font-family:var(--fd);letter-spacing:.04em;color:#e8e8e8;text-shadow:0 1px 0 rgba(255,255,255,.08), 0 -1px 0 rgba(0,0,0,.5)}
+
+/* ════════════════════════════
+   INTRO / HERO — 3 rows: top / center / bottom
+════════════════════════════ */
+#intro{display:block}
+
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:#0c0c0c;
+  background-image:
+    linear-gradient(27deg, #131313 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #131313 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #1f1f1f 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #1f1f1f 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #181818 10px, transparent 10px),
+    linear-gradient(#1c1c1c 25%, #161616 25%, #161616 50%, transparent 50%, transparent 75%, #222 75%, #222);
+  background-size: 22px 22px;
+}
+.hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse 75% 70% at 50% 45%, transparent 25%, rgba(0,0,0,.92) 100%);
+}
+
+/* TOP — MP Design emboss */
+.hero-top{display:none}
+/* (removed embossed text — replaced by logo image) */
+
+/* CENTER — Logo + ENTER button stacked vertically, centered on screen */
+.hero-center{
+  position:absolute;inset:0;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  pointer-events:none;
+  /* Shift the group slightly upward to leave breathing room above the bottom story */
+  padding-bottom:8vh;
+}
+.h-btn{
+  pointer-events:all;
+  font-family:var(--fm);font-size:14px;letter-spacing:.42em;text-transform:uppercase;
+  color:#fff;background:rgba(0,0,0,.3);
+  border:1px solid rgba(255,255,255,.3);
+  padding:24px 96px;cursor:none;position:relative;overflow:hidden;
+  opacity:0;animation:fu .8s 1s forwards;
+  transition:border-color .3s,letter-spacing .3s,background .3s;
+  backdrop-filter:blur(4px);
+}
+.h-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#f0f0f0,#b8b8b8);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.4,0,.2,1);z-index:-1}
+.h-btn:hover{border-color:#fff;color:#000;letter-spacing:.5em}
+.h-btn:hover::before{transform:scaleX(1)}
+
+/* BOTTOM — story + tags */
+.hero-bottom{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 40px 5vh;
+  text-align:center;
+  gap:36px;
+}
+.h-story{
+  font-family:var(--fb);font-weight:300;font-size:15px;line-height:1.85;
+  letter-spacing:.03em;color:rgba(220,220,220,.5);
+  max-width:620px;
+  opacity:0;animation:fu .8s 1.4s forwards;
+}
+.h-story strong{color:rgba(240,240,240,.85);font-weight:400}
+
+.h-bottom{display:flex;flex-direction:column;align-items:center;gap:8px}
+.h-tag{font-family:var(--fm);font-size:11px;letter-spacing:.34em;color:var(--silver-3);text-transform:uppercase;opacity:0;animation:fu .7s 1.7s forwards}
+.h-sub{font-family:var(--fm);font-size:10px;letter-spacing:.24em;color:rgba(255,255,255,.22);opacity:0;animation:fu .7s 1.9s forwards;text-transform:uppercase}
+
+/* ════════════════════════════
+   UNIVERSAL TOPBAR
+════════════════════════════ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:62px;z-index:200;
+  display:flex;align-items:center;padding:0 36px;
+  background:linear-gradient(180deg, rgba(15,15,15,.95), rgba(10,10,10,.85));
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  box-shadow:0 1px 0 rgba(255,255,255,.03), 0 8px 24px rgba(0,0,0,.4);
+}
+
+.tb-back{
+  font-family:var(--fm);font-size:11px;letter-spacing:.22em;
+  color:var(--silver-2);text-transform:uppercase;cursor:none;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  padding:9px 18px;
+  display:flex;align-items:center;gap:8px;
+  transition:color .3s,border-color .3s,background .3s;
+}
+.tb-back:hover{color:#fff;border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.08)}
+.tb-back svg{width:14px;height:14px}
+
+.tb-brand{
+  font-family:var(--fd);font-size:24px;letter-spacing:.05em;
+  margin-left:24px;
+  color:#e8e8e8;
+  text-shadow:0 1px 0 rgba(255,255,255,.08), 0 -1px 0 rgba(0,0,0,.5);
+}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.1);margin:0 18px}
+.tb-section{font-family:var(--fm);font-size:10px;letter-spacing:.26em;color:var(--silver-3);text-transform:uppercase}
+.tb-spacer{margin-left:auto}
+
+/* ════════════════════════════
+   CATEGORY SELECT (after ENTER)
+════════════════════════════ */
+#catSelect{padding:62px 0 0;display:flex;flex-direction:column}
+
+.cat-header{
+  text-align:center;padding:5vh 40px 3vh;
+}
+.cat-header h1{
+  font-family:var(--fd);font-size:clamp(36px,5vw,72px);letter-spacing:.04em;
+  background:linear-gradient(180deg, #f0f0f0 0%, #c0c0c0 50%, #888 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.cat-header p{
+  font-family:var(--fm);font-size:11px;letter-spacing:.32em;color:var(--silver-3);
+  margin-top:14px;text-transform:uppercase;
+}
+
+.cat-split{
+  flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;
+  padding:0 40px 5vh;
+}
+.cat-card{
+  position:relative;overflow:hidden;cursor:none;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(135deg, rgba(20,20,20,.7), rgba(8,8,8,.85));
+  padding:50px 50px 40px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  transition:border-color .4s,transform .4s,background .4s;
+}
+.cat-card:hover{
+  border-color:rgba(255,255,255,.2);
+  background:linear-gradient(135deg, rgba(28,28,28,.85), rgba(12,12,12,.9));
+  transform:translateY(-3px);
+}
+
+/* Carbon weave decoration */
+.cat-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg, transparent, var(--silver-2), transparent);
+  opacity:.25;transition:opacity .4s;
+}
+.cat-card:hover::before{opacity:.6}
+
+/* Corner brackets */
+.cat-card::after{
+  content:"";position:absolute;bottom:18px;right:18px;
+  width:28px;height:28px;
+  border-bottom:1px solid rgba(255,255,255,.15);
+  border-right:1px solid rgba(255,255,255,.15);
+  transition:border-color .4s;
+}
+.cat-card:hover::after{border-color:rgba(255,255,255,.4)}
+
+.cat-icon{
+  font-family:var(--fm);font-size:11px;letter-spacing:.3em;color:var(--silver-3);
+  text-transform:uppercase;margin-bottom:18px;
+}
+.cat-name{
+  font-family:var(--fd);font-size:clamp(48px,7vw,96px);letter-spacing:.03em;
+  line-height:.92;
+  background:linear-gradient(180deg, #f5f5f5 0%, #c0c0c0 50%, #808080 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.cat-desc{
+  font-family:var(--fb);font-size:15px;line-height:1.7;color:rgba(220,220,220,.5);
+  margin-top:24px;max-width:90%;
+}
+.cat-enter{
+  font-family:var(--fm);font-size:11px;letter-spacing:.34em;color:var(--silver-1);
+  text-transform:uppercase;margin-top:32px;
+  display:flex;align-items:center;gap:14px;
+  opacity:.6;transition:opacity .3s,gap .3s;
+}
+.cat-card:hover .cat-enter{opacity:1;gap:22px}
+.cat-enter-line{width:36px;height:1px;background:var(--silver-1);transition:width .3s}
+.cat-card:hover .cat-enter-line{width:60px}
+
+/* ════════════════════════════
+   GRID — vehicle thumbnails
+════════════════════════════ */
+.grid-screen{padding:62px 0 0;display:flex;flex-direction:column;overflow:hidden}
+
+.grid-header{padding:4vh 40px 2.5vh;text-align:center}
+.grid-header h2{
+  font-family:var(--fd);font-size:clamp(32px,4.5vw,56px);letter-spacing:.04em;
+  background:linear-gradient(180deg, #f0f0f0 0%, #b0b0b0 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.grid-header p{font-family:var(--fm);font-size:11px;letter-spacing:.3em;color:var(--silver-3);margin-top:12px;text-transform:uppercase}
+
+/* ═══ COVERFLOW CAROUSEL — absolute positioned, fixed center stage ═══ */
+.grid-cards{
+  flex:1;overflow:hidden;
+  position:relative;
+  perspective:1800px;
+  perspective-origin:50% 50%;
+  padding:20px 0 80px;
+}
+
+.carousel-track{
+  position:absolute;inset:0;
+  display:block;
+  transform-style:preserve-3d;
+  pointer-events:none;
+}
+
+/* Each card — absolutely positioned, animated via transform */
+.grid-cards .gcard{
+  position:absolute;
+  top:50%;left:50%;
+  width:clamp(420px,60vw,880px);
+  aspect-ratio:16/9;
+  margin:0;
+  transform-style:preserve-3d;
+  transition:transform .7s cubic-bezier(.32,.72,.27,1),
+             opacity .55s, filter .55s, box-shadow .5s, border-color .4s;
+  opacity:0;
+  pointer-events:none;
+  /* Default off-stage */
+  transform:translate(-50%,-50%) translateZ(-500px) scale(.5);
+}
+
+/* Active — flat to camera, in front */
+.grid-cards .gcard.pos-active{
+  opacity:1;
+  filter:saturate(1.08) brightness(1);
+  transform:translate(-50%,-50%) translateZ(60px) rotateY(0deg) scale(1);
+  z-index:10;
+  pointer-events:all;
+  border-color:rgba(255,255,255,.22);
+  box-shadow:0 32px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.06) inset;
+}
+
+/* One off (left/right) — rotated, slightly back, offset horizontally */
+.grid-cards .gcard.pos-l1{
+  opacity:.55;
+  filter:saturate(.6) brightness(.7);
+  transform:translate(-50%,-50%) translateX(-58%) translateZ(-120px) rotateY(40deg) scale(.86);
+  z-index:5;
+  pointer-events:all;
+}
+.grid-cards .gcard.pos-r1{
+  opacity:.55;
+  filter:saturate(.6) brightness(.7);
+  transform:translate(-50%,-50%) translateX(58%) translateZ(-120px) rotateY(-40deg) scale(.86);
+  z-index:5;
+  pointer-events:all;
+}
+
+/* Two off — deeper, further offset */
+.grid-cards .gcard.pos-l2{
+  opacity:.22;
+  filter:saturate(.4) brightness(.55);
+  transform:translate(-50%,-50%) translateX(-95%) translateZ(-280px) rotateY(50deg) scale(.74);
+  z-index:2;
+  pointer-events:all;
+}
+.grid-cards .gcard.pos-r2{
+  opacity:.22;
+  filter:saturate(.4) brightness(.55);
+  transform:translate(-50%,-50%) translateX(95%) translateZ(-280px) rotateY(-50deg) scale(.74);
+  z-index:2;
+  pointer-events:all;
+}
+
+/* Far hidden — invisible, no interaction */
+.grid-cards .gcard.pos-hidden-l{
+  opacity:0;
+  transform:translate(-50%,-50%) translateX(-150%) translateZ(-500px) rotateY(60deg) scale(.5);
+  pointer-events:none;
+}
+.grid-cards .gcard.pos-hidden-r{
+  opacity:0;
+  transform:translate(-50%,-50%) translateX(150%) translateZ(-500px) rotateY(-60deg) scale(.5);
+  pointer-events:none;
+}
+
+/* Carousel arrows */
+.carousel-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:58px;height:58px;
+  background:rgba(15,15,15,.82);
+  border:1px solid rgba(255,255,255,.16);
+  display:flex;align-items:center;justify-content:center;
+  cursor:none;
+  transition:background .3s,border-color .3s,transform .3s;
+  backdrop-filter:blur(10px);color:#fff;z-index:30;
+}
+.carousel-arrow:hover{background:rgba(35,35,35,.92);border-color:rgba(255,255,255,.42)}
+.carousel-arrow.left{left:36px}
+.carousel-arrow.right{right:36px}
+.carousel-arrow:hover.left{transform:translateY(-50%) translateX(-3px)}
+.carousel-arrow:hover.right{transform:translateY(-50%) translateX(3px)}
+.carousel-arrow svg{width:24px;height:24px}
+.carousel-arrow.disabled{opacity:.22;pointer-events:none}
+
+/* Dots indicator */
+.carousel-dots{
+  position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  display:flex;gap:10px;z-index:20;
+}
+.carousel-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.18);
+  cursor:none;transition:background .3s,transform .3s,width .3s,border-radius .3s;
+}
+.carousel-dot.active{background:#fff;width:24px;border-radius:3px}
+
+/* Peugeot parts grid stays normal */
+#peugeotParts .grid-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(340px,42vw),1fr));
+  gap:20px;
+  padding:0 40px 40px;align-content:start;overflow-y:auto;
+  scrollbar-width:none;
+  perspective:none;
+}
+#peugeotParts .grid-cards .gcard{
+  position:relative;top:auto;left:auto;
+  width:auto;
+  transform:none;opacity:1;filter:none;
+  aspect-ratio:4/3;
+  pointer-events:all;
+}
+#peugeotParts .grid-cards .gcard:hover{transform:translateY(-3px)}
+#peugeotParts .grid-cards::-webkit-scrollbar{display:none}
+
+
+.gcard{
+  position:relative;overflow:hidden;cursor:none;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(135deg, rgba(20,20,20,.7), rgba(10,10,10,.85));
+  aspect-ratio:4/3;
+  transition:border-color .4s,transform .4s;
+}
+.gcard:hover{
+  border-color:rgba(255,255,255,.25);
+  transform:translateY(-3px);
+}
+.gcard-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;filter:brightness(.7) contrast(1.05);
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94),filter .4s;
+}
+.gcard:hover .gcard-img{transform:scale(1.06);filter:brightness(.9) contrast(1.1)}
+
+.gcard-overlay{
+  position:absolute;inset:0;z-index:2;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:24px;
+  background:linear-gradient(180deg, rgba(0,0,0,.55) 0%, transparent 35%, transparent 60%, rgba(0,0,0,.9) 100%);
+}
+.gcard-num{font-family:var(--fm);font-size:11px;letter-spacing:.28em;color:rgba(255,255,255,.45);text-transform:uppercase}
+.gcard-info{display:flex;flex-direction:column;gap:6px}
+.gcard-name{font-family:var(--fd);font-size:clamp(22px,2.6vw,32px);letter-spacing:.04em;color:#fff;line-height:1}
+.gcard-sub{font-family:var(--fm);font-size:10px;letter-spacing:.2em;color:var(--silver-2);text-transform:uppercase}
+
+/* Corner brackets on hover */
+.gcard-corner{position:absolute;width:18px;height:18px;opacity:0;transition:opacity .4s,transform .4s;z-index:3;pointer-events:none}
+.gcard-corner.tl{top:8px;left:8px;border-top:1px solid var(--silver-1);border-left:1px solid var(--silver-1);transform:translate(-4px,-4px)}
+.gcard-corner.br{bottom:8px;right:8px;border-bottom:1px solid var(--silver-1);border-right:1px solid var(--silver-1);transform:translate(4px,4px)}
+.gcard:hover .gcard-corner{opacity:1;transform:translate(0,0)}
+
+.gcard-cta{
+  font-family:var(--fm);font-size:9px;letter-spacing:.3em;
+  color:var(--silver-1);text-transform:uppercase;
+  position:absolute;top:24px;right:24px;z-index:3;
+  opacity:0;transform:translateX(8px);transition:opacity .3s,transform .3s;
+}
+.gcard:hover .gcard-cta{opacity:1;transform:translateX(0)}
+
+/* Multi-part card (Peugeot) */
+.gcard.multi .gcard-name::after{
+  content:" › 2 PARTS";
+  font-family:var(--fm);font-size:9px;letter-spacing:.2em;color:var(--silver-2);
+  font-weight:400;margin-left:10px;
+}
+
+/* ════════════════════════════
+   SCAN DETAIL — slideshow (single large image + arrows)
+════════════════════════════ */
+#scanDetail{padding:62px 0 0;display:flex;flex-direction:column;overflow:hidden}
+
+/* ═══════════════════════════════════════════
+   SCAN/PRINTED DETAIL — strict viewport-fit slideshow
+═══════════════════════════════════════════ */
+#scanDetail, #printedDetail{
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  padding:62px 0 0;
+}
+
+.slideshow-wrap{
+  flex:1;min-height:0;
+  display:flex;flex-direction:column;
+  padding:20px 40px 40px;
+  overflow:hidden;
+}
+
+.slideshow-stage{
+  flex:1;min-height:0;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.06);
+  background:rgba(8,8,8,.6);
+  overflow:hidden;
+  /* Force the stage to a maximum size relative to the viewport */
+  max-height:calc(100vh - 280px);
+}
+
+.slide-img{
+  position:absolute;
+  inset:5%;
+  width:auto;height:auto;
+  max-width:90%;max-height:90%;
+  margin:auto;
+  object-fit:contain;
+  cursor:none;
+  transition:opacity .4s, transform .4s cubic-bezier(.25,.46,.45,.94);
+  filter:drop-shadow(0 8px 24px rgba(0,0,0,.5));
+}
+.slide-img.fade-out{opacity:0;transform:scale(.97)}
+
+/* Arrow buttons */
+.slide-arrow{
+  position:absolute;top:50%;
+  transform:translateY(-50%);
+  width:56px;height:56px;
+  background:rgba(15,15,15,.7);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;
+  cursor:none;
+  transition:background .3s, border-color .3s, transform .3s;
+  z-index:5;
+  backdrop-filter:blur(8px);
+}
+.slide-arrow:hover{
+  background:rgba(30,30,30,.85);
+  border-color:rgba(255,255,255,.35);
+}
+.slide-arrow.left{left:24px}
+.slide-arrow.right{right:24px}
+.slide-arrow:hover.left{transform:translateY(-50%) translateX(-3px)}
+.slide-arrow:hover.right{transform:translateY(-50%) translateX(3px)}
+.slide-arrow svg{width:22px;height:22px;color:#fff}
+.slide-arrow:disabled{opacity:.25;pointer-events:none}
+
+/* Zoom CTA on image hover */
+.slide-zoom-hint{
+  position:absolute;top:20px;right:20px;
+  font-family:var(--fm);font-size:10px;letter-spacing:.24em;
+  color:var(--silver-2);text-transform:uppercase;
+  padding:7px 14px;background:rgba(15,15,15,.7);
+  border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+  opacity:0;transition:opacity .3s;
+  z-index:6;
+}
+.slideshow-stage:hover .slide-zoom-hint{opacity:1}
+
+/* Bottom strip: counter + thumbnails */
+.slide-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 4px 0;
+}
+.slide-counter{
+  font-family:var(--fm);font-size:11px;letter-spacing:.28em;
+  color:var(--silver-2);text-transform:uppercase;
+}
+.slide-counter strong{color:#fff;font-weight:500}
+
+.slide-thumbs{display:flex;gap:8px}
+.slide-thumb{
+  width:54px;height:40px;
+  background:rgba(20,20,20,.7);
+  border:1px solid rgba(255,255,255,.08);
+  cursor:none;overflow:hidden;
+  transition:border-color .3s, transform .3s;
+}
+.slide-thumb img{width:100%;height:100%;object-fit:cover;opacity:.5;transition:opacity .3s}
+.slide-thumb:hover img{opacity:.85}
+.slide-thumb.active{border-color:var(--silver-1)}
+.slide-thumb.active img{opacity:1}
+
+/* ════════════════════════════
+   PEUGEOT PART SELECT
+════════════════════════════ */
+.peugeot-parts{
+  flex:1;display:grid;grid-template-columns:1fr 1fr;gap:28px;
+  padding:20px 40px 5vh;
+  max-width:1600px;margin:0 auto;width:100%;box-sizing:border-box;
+  align-content:center;
+}
+.peugeot-part{
+  position:relative;overflow:hidden;cursor:none;
+  border:1px solid rgba(255,255,255,.1);
+  background:linear-gradient(135deg, rgba(20,20,20,.7), rgba(8,8,8,.85));
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:36px;aspect-ratio:4/3;
+  transition:border-color .4s,transform .4s,box-shadow .4s;
+}
+.peugeot-part:hover{
+  border-color:rgba(26,159,255,.45);
+  transform:translateY(-3px);
+  box-shadow:0 16px 40px rgba(0,0,0,.5), 0 0 60px -10px rgba(26,159,255,.15);
+}
+.peugeot-part img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.7) contrast(1.05) saturate(.9);
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94),filter .4s;
+}
+.peugeot-part:hover img{transform:scale(1.04);filter:brightness(.92) saturate(1)}
+/* Subtle inner vignette — fades edges of the image so they don't visually "leak" */
+.peugeot-part::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 75% 70% at 50% 50%, transparent 30%, rgba(8,8,8,.4) 75%, rgba(8,8,8,.85) 100%),
+    linear-gradient(transparent 50%, rgba(8,8,8,.7) 100%);
+}
+.peugeot-part-overlay{
+  position:relative;z-index:2;
+  background:linear-gradient(transparent,rgba(0,0,0,.85) 60%);
+  margin:-36px;padding:80px 36px 32px;
+}
+.peugeot-part-num{font-family:var(--fm);font-size:10px;letter-spacing:.32em;color:var(--silver-3);text-transform:uppercase}
+.peugeot-part-name{font-family:var(--fd);font-size:clamp(30px,3.5vw,48px);letter-spacing:.04em;color:#fff;line-height:1;margin-top:8px}
+.peugeot-part-cta{font-family:var(--fm);font-size:10px;letter-spacing:.28em;color:var(--silver-1);margin-top:14px;text-transform:uppercase;opacity:.5;transition:opacity .3s}
+.peugeot-part:hover .peugeot-part-cta{opacity:1}
+
+/* ════════════════════════════
+   VIEWER (fullscreen image)
+════════════════════════════ */
+.viewer{position:fixed;inset:0;background:rgba(4,4,4,.97);z-index:600;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;cursor:none;overflow:hidden}
+.viewer.open{opacity:1;pointer-events:all}
+.viewer-img{
+  max-width:90vw;max-height:90vh;
+  width:auto;height:auto;
+  object-fit:contain;
+  transform-origin:center center;
+  transform:scale(1);
+  will-change:transform;
+  user-select:none;pointer-events:none;
+  -webkit-user-drag:none;
+  transition:transform .15s ease-out;
+}
+.viewer-close{position:fixed;top:20px;right:28px;font-family:var(--fm);font-size:11px;letter-spacing:.22em;color:var(--silver-2);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);padding:9px 18px;cursor:none;text-transform:uppercase;transition:color .3s,border-color .3s;z-index:10}
+.viewer-close:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.viewer-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-family:var(--fm);font-size:10px;letter-spacing:.22em;color:var(--silver-3);text-transform:uppercase;pointer-events:none}
+
+/* ═══ PRINTED LIST — video lupa background ═══ */
+.printed-video-bg{
+  position:absolute;inset:62px 0 0 0;z-index:0;
+  width:100%;height:calc(100% - 62px);object-fit:cover;
+  opacity:.32;
+  filter:brightness(.85) saturate(.7);
+  pointer-events:none;
+}
+.printed-video-vignette{
+  position:absolute;inset:62px 0 0 0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 70% at 50% 50%, transparent 0%, rgba(8,8,8,.45) 60%, rgba(8,8,8,.92) 100%),
+    radial-gradient(ellipse 30% 30% at 50% 50%, rgba(26,159,255,.05) 0%, transparent 60%);
+  animation:vignettePulse 8s ease-in-out infinite;
+}
+@keyframes vignettePulse{
+  0%,100%{opacity:.95;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.03)}
+}
+/* Topbar stays absolutely positioned at top, above the video */
+#printedList .topbar{
+  position:absolute;top:0;left:0;right:0;z-index:50;
+}
+#printedList .grid-header,
+#printedList .grid-cards{position:relative;z-index:1}
+
+@keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* Language toggle */
+.lang-toggle{
+  margin-left:16px;
+  display:flex;align-items:center;gap:6px;
+  padding:6px 12px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+/* Intro language toggle — top-right corner */
+.intro-lang-toggle{
+  position:absolute;top:28px;right:32px;z-index:50;
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px;
+  background:rgba(15,15,15,.5);
+  border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(8px);
+  opacity:0;animation:fu .8s 1.6s forwards;
+}
+.lang-opt{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;
+  color:rgba(255,255,255,.4);
+  background:none;border:none;cursor:none;
+  padding:2px 6px;text-transform:uppercase;
+  transition:color .25s;
+}
+.lang-opt:hover{color:rgba(255,255,255,.85)}
+.lang-opt.active{color:#fff}
+.lang-sep{color:rgba(255,255,255,.2);font-family:'DM Mono',monospace;font-size:10px}
+.tb-spacer{margin-left:auto !important}
+.topbar{display:flex;align-items:center}
+.topbar > *:not(.lang-toggle){flex-shrink:0}
+.topbar .tb-section{margin-right:auto}
+
+
+/* Category card video overlay */
+.cat-card{position:relative}
+.cat-card-video{
+  position:absolute;inset:0;z-index:0;
+  width:100%;height:100%;object-fit:cover;
+  opacity:.18;
+  filter:brightness(.9) saturate(.8);
+  pointer-events:none;
+  transition:opacity .5s;
+}
+.cat-card:hover .cat-card-video{opacity:.32}
+.cat-card-video-vignette{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 80% at 50% 50%, transparent 0%, rgba(8,8,8,.55) 70%, rgba(8,8,8,.92) 100%);
+}
+/* Card content must be above video */
+.cat-card .cat-icon,
+.cat-card .cat-name,
+.cat-card .cat-desc,
+.cat-card .cat-enter,
+.cat-card > div{position:relative;z-index:2}
+
+/* ═══ SCAN LIST and DESIGN LIST video lupa background (same as Printed) ═══ */
+.scan-video-bg, .design-video-bg{
+  position:absolute;inset:62px 0 0 0;z-index:0;
+  width:100%;height:calc(100% - 62px);object-fit:cover;
+  opacity:.32;
+  filter:brightness(.85) saturate(.7);
+  pointer-events:none;
+}
+.scan-video-vignette, .design-video-vignette{
+  position:absolute;inset:62px 0 0 0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 70% at 50% 50%, transparent 0%, rgba(8,8,8,.45) 60%, rgba(8,8,8,.92) 100%),
+    radial-gradient(ellipse 30% 30% at 50% 50%, rgba(26,159,255,.05) 0%, transparent 60%);
+  animation:vignettePulse 8s ease-in-out infinite;
+}
+#scanList .topbar, #designList .topbar{
+  position:absolute;top:0;left:0;right:0;z-index:50;
+}
+#scanList .grid-header, #scanList .grid-cards,
+#designList .grid-header, #designList .grid-cards{position:relative;z-index:1}
+
+/* ═══════════ GLOBAL NAV (after Enter) ═══════════ */
+.global-nav{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  height:62px;box-sizing:border-box;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:rgba(8,8,8,.96);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  pointer-events:auto;
+  transition:opacity .4s, transform .4s;
+}
+.global-nav.hidden-nav{opacity:0;transform:translateY(-100%);pointer-events:none}
+
+.gn-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:.16em;
+  color:#e8e8e8;text-shadow:0 1px 2px rgba(0,0,0,.5);
+  cursor:none;background:none;border:none;padding:0;
+  text-transform:uppercase;
+}
+.gn-brand:hover{color:#fff}
+
+.gn-links{
+  display:flex;align-items:center;gap:6px;
+}
+.gn-link{
+  font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:.24em;
+  color:rgba(255,255,255,.55);
+  background:none;border:none;cursor:none;
+  padding:10px 18px;
+  text-transform:uppercase;
+  transition:color .25s, background .25s;
+  position:relative;
+}
+.gn-link:hover{color:#fff;background:rgba(255,255,255,.04)}
+.gn-link.active{color:#fff}
+.gn-link.active::after{
+  content:'';position:absolute;left:18px;right:18px;bottom:4px;height:1px;
+  background:#fff;
+}
+.gn-link .gn-icon{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:currentColor;margin-right:8px;vertical-align:middle;opacity:.5;
+}
+
+.gn-right{
+  display:flex;align-items:center;gap:14px;
+}
+
+/* When global nav is showing, push down the topbar/grid-header */
+.global-nav ~ #catSelect,
+.global-nav ~ .screen{margin-top:0}
+body:has(.global-nav:not(.hidden-nav)) #catSelect{padding-top:60px}
+
+/* Adjust grid-screen padding when global nav present */
+body:has(.global-nav:not(.hidden-nav)) .grid-screen{padding-top:118px}
+/* Topbar stays fixed at the top of the screen across all screens */
+body:has(.global-nav:not(.hidden-nav)) .grid-screen .topbar,
+body:has(.global-nav:not(.hidden-nav)) #scanList .topbar,
+body:has(.global-nav:not(.hidden-nav)) #designList .topbar,
+body:has(.global-nav:not(.hidden-nav)) #printedList .topbar{
+  position:fixed!important;
+  top:62px!important;
+  z-index:200!important;
+}
+body:has(.global-nav:not(.hidden-nav)) .scan-video-bg,
+body:has(.global-nav:not(.hidden-nav)) .design-video-bg,
+body:has(.global-nav:not(.hidden-nav)) .printed-video-bg{
+  inset:124px 0 0 0;
+  height:calc(100% - 124px);
+}
+body:has(.global-nav:not(.hidden-nav)) .scan-video-vignette,
+body:has(.global-nav:not(.hidden-nav)) .design-video-vignette,
+body:has(.global-nav:not(.hidden-nav)) .printed-video-vignette{
+  inset:124px 0 0 0;
+}
+
+/* Scan/Printed detail screens: shift content below global nav */
+body:has(.global-nav:not(.hidden-nav)) #scanDetail,
+body:has(.global-nav:not(.hidden-nav)) #printedDetail{
+  padding-top:124px;
+}
+body:has(.global-nav:not(.hidden-nav)) #scanDetail .topbar,
+body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
+  position:fixed!important;
+  top:62px!important;
+  z-index:200!important;
+}
+
+/* ═══════════ SERVICES SCREEN ═══════════ */
+.services-screen{
+  background:#0a0a0a;
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:none;
+}
+.services-screen::-webkit-scrollbar{display:none}
+.services-inner{
+  min-height:100%;
+  padding-top:96px;
+  padding-bottom:60px;
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.services-screen::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:100%;z-index:0;
+  background:
+    radial-gradient(ellipse 50% 40% at 50% 20%, rgba(26,159,255,.06) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(26,159,255,.03) 0%, transparent 70%);
+  pointer-events:none;
+}
+.services-inner > *{position:relative;z-index:1}
+
+.services-hero{
+  text-align:center;padding:40px 40px 24px;
+}
+.services-hero .sec-ey{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.4em;
+  color:rgba(26,159,255,.6);text-transform:uppercase;margin-bottom:18px;
+}
+.services-hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(54px,8vw,108px);letter-spacing:.04em;
+  color:#fff;margin:0 0 16px;line-height:.95;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+}
+.services-hero p{
+  font-family:'Barlow',sans-serif;font-size:15px;
+  color:rgba(255,255,255,.5);max-width:580px;margin:0 auto;
+  letter-spacing:.02em;line-height:1.6;
+}
+
+/* Modern list-card hybrid layout */
+.services-grid{
+  display:flex;flex-direction:column;gap:1px;
+  padding:30px 40px;
+  max-width:1100px;margin:0 auto;width:100%;box-sizing:border-box;
+  background:rgba(255,255,255,.04);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.service-card{
+  position:relative;
+  display:grid;
+  grid-template-columns:80px 1fr;
+  gap:32px;align-items:center;
+  padding:28px 24px;
+  background:#0a0a0a;
+  border:none;
+  overflow:hidden;
+}
+.service-card::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:2px;height:60%;background:rgba(26,159,255,.5);
+}
+
+.service-num{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.32em;
+  color:rgba(255,255,255,.32);text-transform:uppercase;
+  text-align:left;
+  margin:0;
+}
+
+.service-content{
+  display:flex;flex-direction:column;gap:8px;
+}
+.service-icon{display:none}
+
+.service-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(22px,2.4vw,32px);letter-spacing:.04em;color:#fff;line-height:1.05;
+  margin:0;text-transform:uppercase;
+}
+
+.service-desc{
+  font-family:'Barlow',sans-serif;font-size:13.5px;
+  color:rgba(255,255,255,.5);line-height:1.55;letter-spacing:.01em;
+  max-width:560px;
+  margin:0;
+}
+
+.service-tags{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;
+}
+.service-tag{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;
+  color:rgba(255,255,255,.35);text-transform:uppercase;
+  padding:3px 8px;border:1px solid rgba(255,255,255,.08);
+}
+
+.services-cta{
+  text-align:center;padding:40px 40px 40px;
+}
+.services-cta-tag{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.3em;
+  color:rgba(26,159,255,.55);text-transform:uppercase;margin-bottom:18px;
+}
+.services-cta-btn{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.32em;
+  color:#fff;text-transform:uppercase;
+  padding:16px 40px;
+  background:rgba(26,159,255,.14);
+  border:1px solid rgba(26,159,255,.45);
+  cursor:none;
+  transition:background .3s, border-color .3s, letter-spacing .3s;
+}
+.services-cta-btn:hover{
+  background:rgba(26,159,255,.28);
+  border-color:rgba(26,159,255,.75);
+  letter-spacing:.4em;
+}
+
+@media (max-width: 720px){
+  .service-card{
+    grid-template-columns:1fr;
+    gap:8px;
+    padding:22px 18px;
+  }
+  .services-grid{padding:20px 16px}
+}
+
+/* ═══════════ CONTACT SCREEN ═══════════ */
+.contact-screen{
+  background:#0a0a0a;
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:none;
+}
+.contact-screen::-webkit-scrollbar{display:none}
+.contact-bg-glow{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 40%, rgba(26,159,255,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(26,159,255,.04) 0%, transparent 70%);
+}
+.contact-inner{
+  position:relative;z-index:1;
+  max-width:1100px;margin:0 auto;width:100%;
+  padding:128px 40px 60px;
+  display:flex;flex-direction:column;align-items:center;
+  min-height:100vh;box-sizing:border-box;
+}
+.contact-hero{
+  text-align:center;margin-bottom:54px;
+}
+.contact-hero .sec-ey{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.4em;
+  color:rgba(26,159,255,.7);text-transform:uppercase;margin-bottom:18px;
+}
+.contact-hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(54px,8vw,112px);letter-spacing:.04em;
+  color:#fff;margin:0 0 18px;line-height:.95;
+}
+.contact-hero p{
+  font-family:'Barlow',sans-serif;font-size:17px;
+  color:rgba(255,255,255,.6);max-width:600px;margin:0 auto;
+  letter-spacing:.02em;line-height:1.55;
+}
+
+.contact-methods{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(300px,80vw),1fr));
+  gap:18px;width:100%;max-width:760px;
+  margin-bottom:36px;
+}
+.contact-method{
+  position:relative;
+  padding:32px 28px;
+  background:rgba(15,15,15,.55);
+  border:1px solid rgba(255,255,255,.08);
+  text-decoration:none;cursor:none;
+  display:flex;flex-direction:column;
+  transition:border-color .35s, background .35s, transform .35s;
+}
+.contact-method:hover{
+  border-color:rgba(26,159,255,.5);
+  background:rgba(20,30,40,.55);
+  transform:translateY(-3px);
+}
+.contact-method-icon{
+  font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:.3em;
+  color:rgba(26,159,255,.7);text-transform:uppercase;
+  margin-bottom:14px;
+}
+.contact-method-label{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.26em;
+  color:rgba(255,255,255,.4);text-transform:uppercase;margin-bottom:10px;
+}
+.contact-method-value{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:24px;letter-spacing:.02em;color:#fff;
+  word-break:break-all;
+}
+.contact-method-arrow{
+  position:absolute;top:30px;right:24px;
+  font-family:'DM Mono',monospace;font-size:14px;color:rgba(255,255,255,.3);
+  transition:color .3s,transform .3s;
+}
+.contact-method:hover .contact-method-arrow{color:#fff;transform:translate(2px,-2px)}
+
+.contact-footer-note{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.32em;
+  color:rgba(255,255,255,.3);text-transform:uppercase;text-align:center;
+  margin-top:14px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px){
+  .global-nav{padding:14px 16px}
+  .gn-link{padding:8px 10px;font-size:10px;letter-spacing:.18em}
+  .gn-brand{font-size:14px}
+  .services-grid{grid-template-columns:1fr;padding:20px 16px 40px}
+  .contact-inner{padding:32px 16px 50px}
+  body:has(.global-nav:not(.hidden-nav)) .grid-screen{padding-top:130px}
+  body:has(.global-nav:not(.hidden-nav)) .grid-screen .topbar{top:62px}
+}
+
+/* ═══════════ LOGO STYLES ═══════════ */
+/* Hero logo wrap — sits above Enter button in center of intro */
+.hero-logo-wrap{
+  position:relative;
+  display:inline-block;
+  margin-bottom:24px;
+  opacity:0;
+  animation:fu 1.1s .25s forwards;
+  isolation:isolate;
+}
+.intro-logo{
+  display:block;
+  width:clamp(280px,38vw,520px);
+  height:auto;
+  margin:0 auto;
+  position:relative;z-index:1;
+  filter:
+    drop-shadow(0 0 60px rgba(255,255,255,.06))
+    drop-shadow(0 6px 22px rgba(0,0,0,.9));
+  -webkit-user-drag:none;
+  user-select:none;
+  pointer-events:none;
+}
+/* Carbon-fiber sheen — animated metallic shine sweeping across the logo */
+.hero-logo-sheen{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(115deg,
+    transparent 30%,
+    rgba(180,200,220,.18) 47%,
+    rgba(255,255,255,.55) 50%,
+    rgba(180,200,220,.18) 53%,
+    transparent 70%);
+  background-size:280% 280%;
+  background-position:-50% 50%;
+  mix-blend-mode:overlay;
+  -webkit-mask-image:url('logo.png');
+  -webkit-mask-size:contain;
+  -webkit-mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-image:url('logo.png');
+  mask-size:contain;
+  mask-repeat:no-repeat;
+  mask-position:center;
+  animation:carbonSheen 7s cubic-bezier(.45,.05,.55,.95) infinite;
+}
+@keyframes carbonSheen{
+  0%   {background-position:-50% 50%}
+  45%  {background-position:130% 50%}
+  100% {background-position:130% 50%}
+}
+/* Subtle ambient glow behind the logo */
+.hero-logo-wrap::before{
+  content:'';
+  position:absolute;inset:-8%;z-index:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 50%,
+    rgba(220,230,255,.05) 0%,
+    rgba(180,190,210,.02) 35%,
+    transparent 70%);
+  pointer-events:none;
+  filter:blur(20px);
+}
+
+/* Topbar logo (global nav) — keep original color */
+.gn-brand-logo{
+  height:48px;
+  width:auto;
+  display:block;
+  -webkit-user-drag:none;
+  user-select:none;
+  transition:transform .3s;
+}
+.gn-brand:hover .gn-brand-logo{transform:scale(1.04)}
+
+/* Logo in project page topbar / list screens topbar */
+.tb-brand-logo{
+  height:28px;
+  width:auto;
+  display:block;
+  -webkit-user-drag:none;
+  user-select:none;
+  margin-right:8px;
+}
+
+
+/* ═══════════ BLUE ACCENT EXPANSIONS ═══════════ */
+:root{--blue-glow:rgba(26,159,255,.4);--blue-soft:rgba(26,159,255,.12)}
+
+/* Category cards hover — blue accent border */
+.cat-card{transition:border-color .4s,transform .4s}
+.cat-card:hover{
+  border-color:rgba(26,159,255,.45)!important;
+  box-shadow:0 12px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(26,159,255,.15) inset;
+}
+.cat-card:hover .cat-enter-line{background:#1a9fff!important}
+.cat-card:hover .cat-icon{color:#1a9fff;transition:color .35s}
+
+/* Carousel — dots active in blue, hover arrows have blue accent */
+.carousel-dot.active{background:#1a9fff!important}
+.carousel-arrow:hover{
+  border-color:rgba(26,159,255,.55)!important;
+  background:rgba(26,159,255,.12)!important;
+  color:#fff;
+}
+
+/* Active grid card — blue glow shadow */
+.grid-cards .gcard.pos-active{
+  box-shadow:0 32px 80px rgba(0,0,0,.7),
+             0 0 0 1px rgba(26,159,255,.22) inset,
+             0 0 60px -10px rgba(26,159,255,.18)!important;
+}
+.grid-cards .gcard.pos-active{border-color:rgba(26,159,255,.35)!important}
+
+/* gcard-cta on hover */
+.gcard .gcard-cta{color:rgba(255,255,255,.85)}
+.gcard:hover .gcard-cta{color:#1a9fff;letter-spacing:.32em}
+
+/* Hero ENTER button — blue tint on hover */
+.h-btn{transition:border-color .3s,letter-spacing .3s,background .3s,color .3s,box-shadow .3s}
+.h-btn:hover{
+  border-color:#1a9fff!important;
+  color:#fff!important;
+  background:rgba(26,159,255,.18)!important;
+  box-shadow:0 0 30px rgba(26,159,255,.25);
+}
+.h-btn:hover::before{display:none}
+
+/* Carbon sheen on logo — subtle blue tint */
+.hero-logo-sheen{
+  background:linear-gradient(115deg,
+    transparent 30%,
+    rgba(180,210,240,.18) 47%,
+    rgba(220,240,255,.55) 50%,
+    rgba(180,210,240,.18) 53%,
+    transparent 70%)!important;
+}
+
+/* Hero ambient glow with blue tint */
+.hero-logo-wrap::before{
+  background:radial-gradient(ellipse 60% 50% at 50% 50%,
+    rgba(26,159,255,.06) 0%,
+    rgba(120,150,200,.025) 35%,
+    transparent 70%)!important;
+}
+
+/* Intro language toggle — blue active */
+.intro-lang-toggle .lang-opt.active{
+  color:#1a9fff!important;
+}
+.intro-lang-toggle{
+  border-color:rgba(26,159,255,.18)!important;
+}
+
+/* Global nav lang-toggle active in blue */
+#gnLangToggle .lang-opt.active{color:#1a9fff!important}
+
+/* Section eyebrow texts (sec-ey) already blue — keep consistent */
+
+/* h-tag dot/divider gets blue */
+.h-tag{color:rgba(255,255,255,.55)}
+.h-sub{color:rgba(26,159,255,.55)!important}
+
+/* Slide arrows on detail screens — blue hover */
+.slide-arrow:hover{
+  background:rgba(26,159,255,.14)!important;
+  border-color:rgba(26,159,255,.5)!important;
+}
+
+/* Active gn-link (already underline) get blue underline */
+.gn-link.active{color:#fff}
+.gn-link.active::after{background:#1a9fff!important;height:2px!important}
+.gn-link:hover{background:rgba(26,159,255,.06)}
+
+/* Hero scroll text/tag */
+.h-tag{
+  position:relative;
+}
+.h-tag::before{
+  content:'';display:inline-block;width:24px;height:1px;
+  background:#1a9fff;margin-right:14px;vertical-align:middle;opacity:.7;
+}
+.h-tag::after{
+  content:'';display:inline-block;width:24px;height:1px;
+  background:#1a9fff;margin-left:14px;vertical-align:middle;opacity:.7;
+}
+
+/* ═══════════ CASE STUDY BUTTON (pulsing) ═══════════ */
+.case-study-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:18px;
+  padding:11px 18px;
+  background:rgba(26,159,255,.06);
+  border:1px solid rgba(26,159,255,.3);
+  color:#1a9fff;
+  font-family:var(--fm);font-size:10px;letter-spacing:.32em;
+  text-transform:uppercase;cursor:none;
+  border-radius:0;
+  position:relative;
+  animation:csPulse 2.4s ease-in-out infinite;
+  transition:background .3s,border-color .3s,letter-spacing .3s,color .3s;
+}
+.case-study-btn svg{width:14px;height:14px;flex-shrink:0;transition:transform .3s}
+.case-study-btn:hover{
+  background:rgba(26,159,255,.18);
+  border-color:#1a9fff;
+  color:#fff;
+  letter-spacing:.38em;
+  animation:none;
+}
+.case-study-btn:hover svg{transform:translateX(4px)}
+@keyframes csPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(26,159,255,.4), 0 0 0 0 rgba(26,159,255,0)}
+  50%    {box-shadow:0 0 0 6px rgba(26,159,255,0), 0 0 18px 2px rgba(26,159,255,.18)}
+}
+
+/* ═══════════ CASE STUDY MODAL ═══════════ */
+.case-study-modal{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(4,4,4,.985);
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .45s;
+  cursor:none;
+}
+.case-study-modal.open{opacity:1;pointer-events:auto}
+
+.cs-close{
+  position:absolute;top:28px;right:32px;z-index:10;
+  width:46px;height:46px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .3s,border-color .3s,transform .3s;
+}
+.cs-close svg{width:18px;height:18px}
+.cs-close:hover{
+  background:rgba(26,159,255,.15);
+  border-color:#1a9fff;
+  transform:rotate(90deg);
+}
+
+.cs-header{
+  padding:60px 60px 30px;
+  text-align:center;
+  flex-shrink:0;
+}
+.cs-eyebrow{
+  font-family:var(--fm);font-size:11px;letter-spacing:.42em;
+  color:#1a9fff;text-transform:uppercase;
+  margin-bottom:14px;
+}
+.cs-title{
+  font-family:var(--fd);font-size:clamp(32px,4vw,52px);
+  letter-spacing:.04em;color:#fff;line-height:1;
+}
+
+.cs-stage{
+  flex:1;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 100px;
+  overflow:hidden;
+}
+.cs-img{
+  max-width:80vw;max-height:65vh;
+  width:auto;height:auto;
+  object-fit:contain;
+  user-select:none;-webkit-user-drag:none;
+  pointer-events:none;
+  filter:drop-shadow(0 20px 50px rgba(0,0,0,.6));
+}
+
+.cs-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:54px;height:54px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;cursor:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .3s,border-color .3s;
+  z-index:5;
+}
+.cs-arrow svg{width:20px;height:20px}
+.cs-prev{left:30px}
+.cs-next{right:30px}
+.cs-arrow:hover{
+  background:rgba(26,159,255,.15);
+  border-color:#1a9fff;
+}
+
+.cs-footer{
+  padding:24px 60px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:30px;
+  flex-shrink:0;
+}
+.cs-counter{
+  font-family:var(--fm);font-size:11px;letter-spacing:.32em;
+  color:rgba(255,255,255,.4);text-transform:uppercase;
+  min-width:80px;
+}
+.cs-thumbs{
+  display:flex;gap:8px;align-items:center;
+  flex:1;justify-content:center;
+}
+.cs-thumb{
+  width:56px;height:42px;
+  background:#0a0a0a;
+  border:1px solid rgba(255,255,255,.1);
+  overflow:hidden;cursor:none;
+  transition:border-color .3s,transform .3s;
+}
+.cs-thumb img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(.6);transition:filter .3s;
+}
+.cs-thumb:hover img{filter:brightness(1)}
+.cs-thumb.active{border-color:#1a9fff}
+.cs-thumb.active img{filter:brightness(1)}
+</style>
+</head>
+<body>
+<!-- ═══════════ GLOBAL NAV ═══════════ -->
+<nav class="global-nav hidden-nav" id="globalNav">
+  <button class="gn-brand" id="gnBrand"><img class="gn-brand-logo" src="logo.png" alt="MP Design"></button>
+  <div class="gn-links">
+    <button class="gn-link" data-nav="catSelect" id="gnCategories"><span class="gn-icon"></span>Categories</button>
+    <button class="gn-link" data-nav="services" id="gnServices"><span class="gn-icon"></span>Services</button>
+    <button class="gn-link" data-nav="contact" id="gnContact"><span class="gn-icon"></span>Contact</button>
+  </div>
+  <div class="gn-right">
+    <div class="lang-toggle" id="gnLangToggle">
+      <button class="lang-opt" data-lang="en">EN</button>
+      <span class="lang-sep">·</span>
+      <button class="lang-opt" data-lang="sr">SR</button>
+    </div>
+  </div>
+</nav>
+
+
+<div id="cursor"></div>
+<div id="pageOut"></div>
+
+<!-- ══════ INTRO ══════ -->
+<div id="intro" class="screen">
+  <div class="hero-bg"></div>
+
+  <!-- Language toggle in top-right corner of intro -->
+  <div class="intro-lang-toggle">
+    <button class="lang-opt" data-lang="en">EN</button>
+    <span class="lang-sep">·</span>
+    <button class="lang-opt" data-lang="sr">SR</button>
+  </div>
+
+  
+
+  <!-- CENTER: ENTER button -->
+  <div class="hero-center">
+    <div class="hero-logo-wrap">
+      <img class="intro-logo" src="logo.png" alt="MP Design">
+      <div class="hero-logo-sheen"></div>
+    </div>
+    <button class="h-btn" id="enterBtn">Enter</button>
+  </div>
+
+  <!-- BOTTOM: story + tags -->
+  <div class="hero-bottom">
+    <div class="h-story">
+      A personal portfolio &amp; <strong>hobby project</strong> showcasing my work in <strong>3D scanning</strong>, reverse engineering and additive manufacturing of automotive parts. Built by an enthusiast for fellow car &amp; engineering lovers.
+    </div>
+    <div class="h-bottom">
+      <div class="h-tag">3D Scan · Manufacturing · Design</div>
+      <div class="h-sub">Automotive aftermarket parts</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ CATEGORY SELECT ══════ -->
+<div id="catSelect" class="screen hidden">
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section">Categories</div>
+  </div>
+
+  <div class="cat-header">
+    <h1>Choose Category</h1>
+    <p>Select what you want to explore</p>
+  </div>
+
+  <div class="cat-split">
+    <div class="cat-card" data-go="scanList">
+      <video class="cat-card-video" autoplay muted loop playsinline><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
+      <div class="cat-card-video-vignette"></div>
+      <div>
+        <div class="cat-name">3D Scan<br>Archive</div>
+        <div class="cat-desc">Browse raw 3D scan data of vehicles — Audi A6, BMW S1000R, Citroen C2, Peugeot 508 SW, VW Golf 7 and more.</div>
+      </div>
+      <div class="cat-enter">
+        <div class="cat-enter-line"></div>
+        Explore Archive
+      </div>
+    </div>
+
+    <div class="cat-card" data-go="designList">
+      <video class="cat-card-video" autoplay muted loop playsinline><source src="dizajn priojekti.mp4" type="video/mp4"></video>
+      <div class="cat-card-video-vignette"></div>
+      <div>
+        <div class="cat-name">Design<br>Projects</div>
+        <div class="cat-desc">Complete reverse engineering projects — from scan to 3D printed final part. Full process documentation.</div>
+      </div>
+      <div class="cat-enter">
+        <div class="cat-enter-line"></div>
+        View Projects
+      </div>
+    </div>
+
+    <div class="cat-card" data-go="printedList">
+      <video class="cat-card-video" autoplay muted loop playsinline><source src="video for 3d printing project section.mp4" type="video/mp4"></video>
+      <div class="cat-card-video-vignette"></div>
+      <div>
+        <div class="cat-name">Printed<br>Parts</div>
+        <div class="cat-desc">Real-world photos of finished 3D printed parts installed and tested. The physical output of the design process.</div>
+      </div>
+      <div class="cat-enter">
+        <div class="cat-enter-line"></div>
+        See Printed
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SCAN LIST (grid of vehicles) ══════ -->
+<div id="scanList" class="screen grid-screen hidden">
+  <video class="scan-video-bg" autoplay muted loop playsinline><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
+  <div class="scan-video-vignette"></div>
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section">3D Scan Archive</div>
+  </div>
+
+  <div class="grid-header">
+    <h2>3D Scan Archive</h2>
+    <p>Select a vehicle to view scan data</p>
+  </div>
+
+  <div class="grid-cards">
+
+    <div class="gcard" data-action="scanDetail" data-folder="scan files/audi a6" data-name="Audi A6" data-files='["01.png","02.png","03.png"]'>
+      <img class="gcard-img" src="scan files/audi a6/01.png" alt="Audi A6">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">01</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Audi A6</div>
+          <div class="gcard-sub">3 scan files</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="scanDetail" data-folder="scan files/bmw s 1000 r" data-name="BMW S 1000 R" data-files='["01.png","02.png"]'>
+      <img class="gcard-img" src="scan files/bmw s 1000 r/01.png" alt="BMW S 1000 R">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">02</div>
+        <div class="gcard-info">
+          <div class="gcard-name">BMW S 1000 R</div>
+          <div class="gcard-sub">2 scan files</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="scanDetail" data-folder="scan files/c2" data-name="Citroen C2" data-files='["01.png","02.png","03.png"]'>
+      <img class="gcard-img" src="scan files/c2/01.png" alt="Citroen C2">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">03</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Citroen C2</div>
+          <div class="gcard-sub">3 scan files</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard multi" data-action="peugeotParts">
+      <img class="gcard-img" src="scan files/peugeot 508 sw/prednji branik/01.png" alt="Peugeot 508 SW">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">Choose part ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">04</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Peugeot 508 SW</div>
+          <div class="gcard-sub">Multiple parts available</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="scanDetail" data-folder="scan files/vw 7" data-name="VW Golf 7" data-files='["01.png","02.png","03.png"]'>
+      <img class="gcard-img" src="scan files/vw 7/01.png" alt="VW Golf 7">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">05</div>
+        <div class="gcard-info">
+          <div class="gcard-name">VW Golf 7</div>
+          <div class="gcard-sub">3 scan files</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="scanDetail" data-folder="scan files/yamaha fz6" data-name="Yamaha FZ6" data-files='["01.png","02.png"]'>
+      <img class="gcard-img" src="scan files/yamaha fz6/01.png" alt="Yamaha FZ6">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">06</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Yamaha FZ6</div>
+          <div class="gcard-sub">2 scan files</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════ PEUGEOT PARTS ══════ -->
+<div id="peugeotParts" class="screen grid-screen hidden">
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section">Peugeot 508 SW · Parts</div>
+  </div>
+
+  <div class="grid-header">
+    <h2>Peugeot 508 SW</h2>
+    <p>Select which part to view</p>
+  </div>
+
+  <div class="peugeot-parts">
+    <div class="peugeot-part" data-folder="scan files/peugeot 508 sw/prednji branik" data-name="Peugeot 508 SW — Prednji Branik" data-files='["01.png","02.png","03.png"]'>
+      <img src="scan files/peugeot 508 sw/prednji branik/01.png" alt="Prednji branik">
+      <div class="peugeot-part-overlay">
+        <div class="peugeot-part-num">Part 01</div>
+        <div class="peugeot-part-name">Prednji branik</div>
+        <div class="peugeot-part-cta">Front bumper · view scans →</div>
+      </div>
+    </div>
+    <div class="peugeot-part" data-folder="scan files/peugeot 508 sw/zadnj branik" data-name="Peugeot 508 SW — Zadnji Branik" data-files='["01_zadnji.png","02_zadnji.png","03_zadnji.png"]'>
+      <img src="scan files/peugeot 508 sw/zadnj branik/01_zadnji.png" alt="Zadnji branik">
+      <div class="peugeot-part-overlay">
+        <div class="peugeot-part-num">Part 02</div>
+        <div class="peugeot-part-name">Zadnji branik</div>
+        <div class="peugeot-part-cta">Rear bumper · view scans →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SCAN DETAIL ══════ -->
+<div id="scanDetail" class="screen hidden">
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section" id="detailTitle">—</div>
+  </div>
+
+  <div class="grid-header">
+    <h2 id="detailH2">—</h2>
+    <p>3D scan data · click image to zoom · arrows to navigate</p>
+  </div>
+
+  <div class="slideshow-wrap">
+    <div class="slideshow-stage" id="slideStage">
+      <button class="slide-arrow left" id="slideLeft">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M15 6L9 12l6 6"/>
+        </svg>
+      </button>
+
+      <img class="slide-img" id="slideImg" src="" alt="">
+      <div class="slide-zoom-hint">click · zoom ↗</div>
+
+      <button class="slide-arrow right" id="slideRight">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M9 6l6 6-6 6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="slide-bottom">
+      <div class="slide-counter"><strong id="slideNow">01</strong> / <span id="slideTotal">03</span></div>
+      <div class="slide-thumbs" id="slideThumbs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ DESIGN LIST ══════ -->
+<div id="designList" class="screen grid-screen hidden">
+  <video class="design-video-bg" autoplay muted loop playsinline><source src="dizajn priojekti.mp4" type="video/mp4"></video>
+  <div class="design-video-vignette"></div>
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section">Design Projects</div>
+  </div>
+
+  <div class="grid-header">
+    <h2>Design Projects</h2>
+    <p>Complete scan → 3D print case studies</p>
+  </div>
+
+  <div class="grid-cards">
+    <div class="gcard" data-action="goScreen" data-screen="c2PartPick">
+      <img class="gcard-img" src="homepage/c2.png" alt="Citroen C2">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">Enter project ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">Project 01</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Citroen C2</div>
+          <div class="gcard-sub">Front · Rear · 3D Print</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="goUrl" data-url="audi a6/index.html">
+      <img class="gcard-img" src="homepage/audi.png" alt="Audi A6">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">Enter project ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">Project 02</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Audi A6</div>
+          <div class="gcard-sub">Front Splitter · 3D Print</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="goUrl" data-url="vw 7 gti/index.html">
+      <img class="gcard-img" src="vw 7 gti/03_zoom_effectneutral.png" alt="VW Golf 7 GTI">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">Enter project ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">Project 03</div>
+        <div class="gcard-info">
+          <div class="gcard-name">VW Golf 7 GTI</div>
+          <div class="gcard-sub">Rear Diffuser · 3D Print</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="goUrl" data-url="Peugeot 508/index.html">
+      <img class="gcard-img" src="Peugeot 508/naslovna.png" alt="Peugeot 508">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">Enter project ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">Project 04</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Peugeot 508 SW</div>
+          <div class="gcard-sub">Front Splitter · 3D Print</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ C2 PART PICKER (Rear vs Front) ══════ -->
+<div id="c2PartPick" class="screen grid-screen hidden">
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section">Citroen C2 · Choose Part</div>
+  </div>
+
+  <div class="grid-header">
+    <h2>Citroen C2</h2>
+    <p>Choose which part to explore</p>
+  </div>
+
+  <div class="peugeot-parts">
+    <div class="peugeot-part" data-action="goUrl" data-url="citroen c2/rear.html">
+      <img src="citroen c2/rear/rear_scan.png" alt="Rear Bumper">
+      <div class="peugeot-part-overlay">
+        <div class="peugeot-part-num">Part 01</div>
+        <div class="peugeot-part-name">Rear Bumper</div>
+        <div class="peugeot-part-cta">Enter project →</div>
+      </div>
+    </div>
+    <div class="peugeot-part" data-action="goUrl" data-url="citroen c2/index.html">
+      <img src="citroen c2/c2_scan_frontbumper.png" alt="Front Bumper">
+      <div class="peugeot-part-overlay">
+        <div class="peugeot-part-num">Part 02</div>
+        <div class="peugeot-part-name">Front Bumper</div>
+        <div class="peugeot-part-cta">Enter project →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PRINTED LIST (3D Printed Projects) ══════ -->
+<div id="printedList" class="screen grid-screen hidden">
+  <!-- Video lupa overlay (subtle) -->
+  <video class="printed-video-bg" autoplay muted loop playsinline>
+    <source src="video for 3d printing project section.mp4" type="video/mp4">
+  </video>
+  <div class="printed-video-vignette"></div>
+
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section">Printed Parts</div>
+  </div>
+
+  <div class="grid-header">
+    <h2>Printed Parts</h2>
+    <p>Real-world photos of finished 3D printed parts</p>
+  </div>
+
+  <div class="grid-cards">
+    <div class="gcard" data-action="goPrinted" data-folder="3D printing projects/c2/front bumper" data-name="Citroen C2 — Front Bumper" data-files='["1.jpg","2.jpg","3.jpg"]'>
+      <img class="gcard-img" src="3D printing projects/c2/front bumper/1.jpg" alt="C2 Front Bumper">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View photos ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">01</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Citroen C2</div>
+          <div class="gcard-sub">Front Bumper · 3 photos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="goPrinted" data-folder="3D printing projects/c2/rear bumper" data-name="Citroen C2 — Rear Bumper" data-files='["01.jpg","02 .jpg"]'>
+      <img class="gcard-img" src="3D printing projects/c2/rear bumper/01.jpg" alt="C2 Rear Bumper">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View photos ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">02</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Citroen C2</div>
+          <div class="gcard-sub">Rear Bumper · 2 photos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="goPrinted" data-folder="3D printing projects/peugeot" data-name="Peugeot 508 SW" data-files='["01.jpg","02.jpg","03.jpg"]'>
+      <img class="gcard-img" src="3D printing projects/peugeot/01.jpg" alt="Peugeot 508 SW">
+      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
+      <div class="gcard-cta">View photos ↗</div>
+      <div class="gcard-overlay">
+        <div class="gcard-num">03</div>
+        <div class="gcard-info">
+          <div class="gcard-name">Peugeot 508 SW</div>
+          <div class="gcard-sub">3 photos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PRINTED DETAIL (slideshow) ══════ -->
+<div id="printedDetail" class="screen hidden">
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section" id="printedTitle">—</div>
+  </div>
+
+  <div class="grid-header">
+    <h2 id="printedH2">—</h2>
+    <p>Finished part · real-world photos · click to zoom</p>
+  </div>
+
+  <div class="slideshow-wrap">
+    <div class="slideshow-stage" id="printedStage">
+      <button class="slide-arrow left" id="printedLeft">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M15 6L9 12l6 6"/></svg>
+      </button>
+      <img class="slide-img" id="printedImg" src="" alt="">
+      <div class="slide-zoom-hint">click · zoom ↗</div>
+      <button class="slide-arrow right" id="printedRight">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <div class="slide-bottom">
+      <div class="slide-counter"><strong id="printedNow">01</strong> / <span id="printedTotal">03</span></div>
+      <div class="slide-thumbs" id="printedThumbs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SERVICES SCREEN ═══════════ -->
+<div id="services" class="screen services-screen hidden">
+  <div class="services-inner">
+    <div class="services-hero">
+      <div class="sec-ey">— Equipment & Services</div>
+      <h1>Services</h1>
+      <p>Personal workshop equipped with prosumer-grade scanning and printing hardware. Below — the actual tools behind every project, and what each one delivers.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-num">01</div>
+        <div class="service-content">
+          <div class="service-name">Shining 3D Einstar — Handheld Scanning</div>
+          <div class="service-desc">Handheld structured-light scanner with 0.1 mm precision and built-in color capture. Built for shiny, dark, and reflective car panels — exactly where most scanners fail.</div>
+          <div class="service-tags">
+            <span class="service-tag">Point distance 0.1 mm</span>
+            <span class="service-tag">14 FPS scan rate</span>
+            <span class="service-tag">VCSEL infrared</span>
+            <span class="service-tag">Color capture</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">02</div>
+        <div class="service-content">
+          <div class="service-name">Creality K1 Max — FDM 3D Printing</div>
+          <div class="service-desc">Enclosed CoreXY printer with 300×300×300 mm build volume. Runs PLA, PETG, ABS, ASA, PA, and PC at up to 600 mm/s. Big enough for splitters and full trim pieces in one shot.</div>
+          <div class="service-tags">
+            <span class="service-tag">300×300×300 mm</span>
+            <span class="service-tag">600 mm/s max</span>
+            <span class="service-tag">Hotend ≤300°C</span>
+            <span class="service-tag">PLA · PETG · ABS · ASA · PA · PC</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">03</div>
+        <div class="service-content">
+          <div class="service-name">Reverse Engineering — Scan to CAD</div>
+          <div class="service-desc">Raw scan mesh, converted into clean parametric CAD. Surface reconstruction, geometry cleanup, output ready for print or further modification.</div>
+          <div class="service-tags">
+            <span class="service-tag">Mesh → CAD</span>
+            <span class="service-tag">Surface reconstruction</span>
+            <span class="service-tag">Print-ready output</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service-card" data-case-study="custom">
+        <div class="service-num">04</div>
+        <div class="service-content">
+          <div class="service-name">Complete design and manufacturing service for composite molds</div>
+          <div class="service-desc">Complete design and manufacturing service for composite molds. The process includes 3D modeling, geometry optimization, production preparation, and 3D printing of functional molds intended for the fabrication of fiberglass, carbon fiber, and other composite components..</div>
+          <div class="service-tags">
+            <span class="service-tag">Custom aftermarket</span>
+            <span class="service-tag">OEM modification</span>
+            <span class="service-tag">Bolt-on fitment</span>
+          </div>
+          <button class="case-study-btn" data-case="custom">
+            <span>View case study</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="service-card" data-case-study="replica">
+        <div class="service-num">05</div>
+        <div class="service-content">
+          <div class="service-name">Replication of Broken or Discontinued Parts</div>
+          <div class="service-desc">Broken, lost, or no longer in production? Scan whatever remains of the original, rebuild it in CAD, print a working replacement. Ideal for older, rare, or out-of-stock parts.</div>
+          <div class="service-tags">
+            <span class="service-tag">Damaged part recovery</span>
+            <span class="service-tag">Legacy parts</span>
+            <span class="service-tag">CAD rebuild</span>
+          </div>
+          <button class="case-study-btn" data-case="replica">
+            <span>View case study</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-num">06</div>
+        <div class="service-content">
+          <div class="service-name">Consultations &amp; Project Planning</div>
+          <div class="service-desc">Talk through your project before committing. Material, feasibility, approach — honest assessment from a fellow enthusiast.</div>
+          <div class="service-tags">
+            <span class="service-tag">Project planning</span>
+            <span class="service-tag">Feasibility</span>
+            <span class="service-tag">Material advice</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="services-cta">
+      <div class="services-cta-tag">— Have a project in mind? —</div>
+      <button class="services-cta-btn" id="servicesCtaBtn">Get in touch →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CASE STUDY VIEWER ═══════════ -->
+<div id="caseStudy" class="case-study-modal">
+  <button class="cs-close" id="csClose">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="cs-header">
+    <div class="cs-eyebrow" id="csEyebrow">Case Study</div>
+    <div class="cs-title" id="csTitle">Custom Part Design</div>
+  </div>
+  <div class="cs-stage">
+    <button class="cs-arrow cs-prev" id="csPrev">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <img class="cs-img" id="csImg" src="" alt="">
+    <button class="cs-arrow cs-next" id="csNext">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  <div class="cs-footer">
+    <div class="cs-counter" id="csCounter">01 / 05</div>
+    <div class="cs-thumbs" id="csThumbs"></div>
+  </div>
+</div>
+
+<!-- ═══════════ CONTACT SCREEN ═══════════ -->
+<div id="contact" class="screen contact-screen hidden">
+  <div class="contact-bg-glow"></div>
+  <div class="contact-inner">
+    <div class="contact-hero">
+      <div class="sec-ey">— Get in touch</div>
+      <h1>Contact</h1>
+      <p>Have a project in mind, or just curious about the process? Drop a message — I respond personally to every inquiry.</p>
+    </div>
+
+    <div class="contact-methods">
+      <a href="mailto:mpdsgnn@gmail.com" class="contact-method" target="_blank">
+        <div class="contact-method-icon">✉ Email</div>
+        <div class="contact-method-label">Primary contact</div>
+        <div class="contact-method-value">mpdsgnn@gmail.com</div>
+        <div class="contact-method-arrow">↗</div>
+      </a>
+
+      <a href="https://instagram.com/mp6design" class="contact-method" target="_blank">
+        <div class="contact-method-icon">◎ Instagram</div>
+        <div class="contact-method-label">Project updates · DM open</div>
+        <div class="contact-method-value">@mp6design</div>
+        <div class="contact-method-arrow">↗</div>
+      </a>
+    </div>
+
+    <div class="contact-footer-note">— More contact options coming soon —</div>
+  </div>
+</div>
+
+<!-- ══════ VIEWER ══════ -->
+<div class="viewer" id="viewer">
+  <button class="viewer-close" id="viewerClose">✕ Close</button>
+  <img class="viewer-img" id="viewerImg" src="" alt="">
+  <div class="viewer-hint">move cursor · zoom follows · ESC · close</div>
+</div>
+
+<script>
+// ═══ INIT ═══
+const po=document.getElementById('pageOut');
+requestAnimationFrame(()=>requestAnimationFrame(()=>po.style.opacity='0'));
+
+// ═══ CURSOR ═══
+const cur=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+function addLargeCursor(){
+  document.querySelectorAll('.h-btn,.cat-card,.gcard,.tb-back,.peugeot-part,.detail-img-wrap,.viewer-close,.slide-arrow,.slide-img,.slide-thumb').forEach(el=>{
+    if(el.dataset.cursorBound)return;
+    el.dataset.cursorBound='1';
+    el.addEventListener('mouseenter',()=>cur.classList.add('large'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('large'));
+  });
+}
+addLargeCursor();
+
+// ═══ COVERFLOW CAROUSEL — absolute positioned, fixed center ═══
+function initCarousel(screenId){
+  const screen = document.getElementById(screenId);
+  if(!screen) return;
+  const gridCards = screen.querySelector('.grid-cards');
+  if(!gridCards || gridCards.dataset.carouselInit) return;
+  gridCards.dataset.carouselInit = '1';
+
+  const cards = Array.from(gridCards.querySelectorAll('.gcard'));
+  if(cards.length < 2) return;
+
+  // Arrows
+  const leftBtn = document.createElement('button');
+  leftBtn.className = 'carousel-arrow left';
+  leftBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M15 6L9 12l6 6"/></svg>';
+  const rightBtn = document.createElement('button');
+  rightBtn.className = 'carousel-arrow right';
+  rightBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>';
+  gridCards.appendChild(leftBtn);
+  gridCards.appendChild(rightBtn);
+
+  // Dots
+  const dots = document.createElement('div');
+  dots.className = 'carousel-dots';
+  cards.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className = 'carousel-dot' + (i===0?' active':'');
+    d.addEventListener('click',()=>setActive(i));
+    dots.appendChild(d);
+  });
+  gridCards.appendChild(dots);
+
+  let activeIdx = 0;
+  function setActive(i){
+    activeIdx = Math.max(0, Math.min(cards.length-1, i));
+    cards.forEach((c,j)=>{
+      c.classList.remove('pos-active','pos-l1','pos-r1','pos-l2','pos-r2','pos-hidden-l','pos-hidden-r');
+      const d = j - activeIdx;
+      if(d === 0)      c.classList.add('pos-active');
+      else if(d === -1) c.classList.add('pos-l1');
+      else if(d === 1)  c.classList.add('pos-r1');
+      else if(d === -2) c.classList.add('pos-l2');
+      else if(d === 2)  c.classList.add('pos-r2');
+      else if(d < -2)   c.classList.add('pos-hidden-l');
+      else              c.classList.add('pos-hidden-r');
+    });
+    dots.querySelectorAll('.carousel-dot').forEach((d,j)=>{
+      d.classList.toggle('active', j===activeIdx);
+    });
+    leftBtn.classList.toggle('disabled', activeIdx===0);
+    rightBtn.classList.toggle('disabled', activeIdx===cards.length-1);
+  }
+
+  leftBtn.addEventListener('click', e=>{e.stopPropagation();setActive(activeIdx-1);});
+  rightBtn.addEventListener('click', e=>{e.stopPropagation();setActive(activeIdx+1);});
+
+  // Click on non-active card → activate it; click on active → trigger action
+  cards.forEach((c,i)=>{
+    c.addEventListener('click', e=>{
+      if(i !== activeIdx){
+        e.stopPropagation();
+        e.preventDefault();
+        setActive(i);
+      }
+      // If active, let the normal action handler fire
+    }, true);
+  });
+
+  // Keyboard nav
+  function keyHandler(e){
+    const sc = document.getElementById(screenId);
+    if(!sc || sc.classList.contains('hidden')) return;
+    const v = document.getElementById('viewer');
+    if(v && v.classList.contains('open')) return;
+    if(e.key === 'ArrowLeft')  setActive(activeIdx-1);
+    if(e.key === 'ArrowRight') setActive(activeIdx+1);
+  }
+  if(!gridCards.dataset.keyBound){
+    gridCards.dataset.keyBound = '1';
+    document.addEventListener('keydown', keyHandler);
+  }
+
+  // Large cursor on controls
+  [leftBtn, rightBtn, ...dots.querySelectorAll('.carousel-dot')].forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('large'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('large'));
+  });
+
+  // Initial state
+  requestAnimationFrame(()=>setActive(0));
+}
+
+// Initialize carousels when their screen is shown — hooked into showScreen below
+// (see after navStack definition)
+
+// Restore screen from sessionStorage if user came back from a project
+try{
+  const ret = sessionStorage.getItem('returnTo');
+  if(ret){
+    sessionStorage.removeItem('returnTo');
+    // Capture printed-detail params if present
+    const pFolder = sessionStorage.getItem('printedFolder');
+    const pFiles  = sessionStorage.getItem('printedFiles');
+    const pName   = sessionStorage.getItem('printedName');
+    const backProject = sessionStorage.getItem('backToProject');
+    sessionStorage.removeItem('printedFolder');
+    sessionStorage.removeItem('printedFiles');
+    sessionStorage.removeItem('printedName');
+    sessionStorage.removeItem('backToProject');
+    setTimeout(()=>{
+      document.getElementById('intro').classList.add('hidden');
+      navStack.length = 0;
+      const pathMap = {
+        'designList':   ['intro','catSelect','designList'],
+        'c2PartPick':   ['intro','catSelect','designList','c2PartPick'],
+        'printedList':  ['intro','catSelect','printedList'],
+        'printedDetail':['intro','catSelect','printedList','printedDetail'],
+        'scanList':     ['intro','catSelect','scanList'],
+        'catSelect':    ['intro','catSelect']
+      };
+      const stack = pathMap[ret] || ['intro','catSelect',ret];
+      stack.forEach(s=>navStack.push(s));
+
+      if(ret === 'printedDetail' && pFolder && pFiles && pName){
+        try{
+          const files = JSON.parse(pFiles);
+          openPrintedDetail(pFolder, pName, files);
+          // If user came from a project page, override back to return there
+          navStack.length = 0;
+          if(backProject){
+            // Mark printedDetail to return to backProject URL on back
+            window.__printedDetailBackTo = backProject;
+            navStack.push('intro','catSelect','printedDetail');
+          } else {
+            stack.forEach(s=>navStack.push(s));
+          }
+          return;
+        }catch(e){console.error('printedDetail restore failed',e)}
+      }
+
+      const target = document.getElementById(ret);
+      if(target){
+        document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+        target.classList.remove('hidden');
+        if(ret === 'scanList' || ret === 'designList' || ret === 'printedList'){
+          setTimeout(()=>initCarousel(ret), 80);
+        }
+      }
+    }, 50);
+  }
+}catch(_){}
+
+const navStack=['intro'];
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.add('hidden'));
+  const el=document.getElementById(id);
+  el.classList.remove('hidden');
+  // Trigger reflow then ensure no 'out'
+  void el.offsetWidth;
+  el.classList.remove('out');
+  // Init carousel on first visit to carousel screens
+  if(id === 'scanList' || id === 'designList' || id === 'printedList'){
+    setTimeout(()=>initCarousel(id), 80);
+  }
+  // Re-apply language on each screen change
+  if(window.__applyCurrentLang) setTimeout(window.__applyCurrentLang, 30);
+}
+function go(id){
+  navStack.push(id);
+  fadeNav(()=>showScreen(id));
+}
+function back(){
+  if(navStack.length<=1)return;
+  // Special case: if we're in printedDetail with a backToProject URL override, return to that URL
+  const current = navStack[navStack.length-1];
+  if(current === 'printedDetail' && window.__printedDetailBackTo){
+    const url = window.__printedDetailBackTo;
+    window.__printedDetailBackTo = null;
+    try{sessionStorage.setItem('openProducts','1');}catch(_){}
+    po.style.transition='opacity .6s';po.style.opacity='1';
+    setTimeout(()=>window.location.href=url, 600);
+    return;
+  }
+  navStack.pop();
+  const prev=navStack[navStack.length-1];
+  fadeNav(()=>showScreen(prev));
+}
+function fadeNav(fn){
+  po.style.transition='opacity .35s';po.style.opacity='1';
+  setTimeout(()=>{fn();po.style.opacity='0';addLargeCursor();},350);
+}
+
+// Hook all .nav-back buttons
+document.querySelectorAll('.nav-back').forEach(btn=>{
+  btn.addEventListener('click',back);
+});
+
+// ═══ ENTER ═══
+document.getElementById('enterBtn').addEventListener('click',()=>go('catSelect'));
+
+// ═══ CATEGORY CLICKS ═══
+document.querySelectorAll('.cat-card').forEach(card=>{
+  card.addEventListener('click',()=>go(card.dataset.go));
+});
+
+// ═══ GRID CARDS ═══
+document.querySelectorAll('.gcard[data-action]').forEach(card=>{
+  card.addEventListener('click',()=>{
+    const action=card.dataset.action;
+    if(action==='scanDetail'){
+      const folder=card.dataset.folder;
+      const name=card.dataset.name;
+      const files=JSON.parse(card.dataset.files||'[]');
+      openScanDetail(folder,name,files);
+    } else if(action==='peugeotParts'){
+      go('peugeotParts');
+    } else if(action==='goUrl'){
+      po.style.transition='opacity .6s';po.style.opacity='1';
+      setTimeout(()=>window.location.href=card.dataset.url,600);
+    } else if(action==='goScreen'){
+      go(card.dataset.screen);
+    } else if(action==='goPrinted'){
+      const folder=card.dataset.folder;
+      const name=card.dataset.name;
+      const files=JSON.parse(card.dataset.files||'[]');
+      openPrintedDetail(folder,name,files);
+    }
+  });
+});
+
+// ═══ PEUGEOT PARTS (and other peugeot-part elements) ═══
+document.querySelectorAll('.peugeot-part').forEach(p=>{
+  p.addEventListener('click',()=>{
+    const action=p.dataset.action;
+    if(action==='goUrl'){
+      po.style.transition='opacity .6s';po.style.opacity='1';
+      setTimeout(()=>window.location.href=p.dataset.url,600);
+      return;
+    }
+    const folder=p.dataset.folder;
+    const name=p.dataset.name;
+    const files=JSON.parse(p.dataset.files||'[]');
+    openScanDetail(folder,name,files);
+  });
+});
+
+// ═══ PRINTED DETAIL SLIDESHOW ═══
+let pFiles=[], pFolder='', pIdx=0;
+function openPrintedDetail(folder,name,files){
+  document.getElementById('printedTitle').textContent=name;
+  document.getElementById('printedH2').textContent=name;
+  pFiles=files;pFolder=folder;pIdx=0;
+  document.getElementById('printedTotal').textContent=String(files.length).padStart(2,'0');
+  buildPrintedThumbs();
+  showPrinted(0);
+  go('printedDetail');
+}
+function showPrinted(i){
+  if(!pFiles.length)return;
+  pIdx=(i+pFiles.length)%pFiles.length;
+  const img=document.getElementById('printedImg');
+  img.classList.add('fade-out');
+  setTimeout(()=>{
+    img.src=pFolder+'/'+pFiles[pIdx];
+    img.classList.remove('fade-out');
+  },200);
+  document.getElementById('printedNow').textContent=String(pIdx+1).padStart(2,'0');
+  document.querySelectorAll('#printedThumbs .slide-thumb').forEach((t,j)=>{
+    t.classList.toggle('active',j===pIdx);
+  });
+}
+function buildPrintedThumbs(){
+  const wrap=document.getElementById('printedThumbs');
+  wrap.innerHTML='';
+  pFiles.forEach((f,i)=>{
+    const t=document.createElement('div');
+    t.className='slide-thumb'+(i===pIdx?' active':'');
+    t.innerHTML='<img src="'+pFolder+'/'+f+'" alt="thumb '+(i+1)+'">';
+    t.addEventListener('click',()=>showPrinted(i));
+    t.addEventListener('mouseenter',()=>cur.classList.add('large'));
+    t.addEventListener('mouseleave',()=>cur.classList.remove('large'));
+    wrap.appendChild(t);
+  });
+}
+document.getElementById('printedLeft').addEventListener('click',()=>showPrinted(pIdx-1));
+document.getElementById('printedRight').addEventListener('click',()=>showPrinted(pIdx+1));
+document.getElementById('printedImg').addEventListener('click',()=>openViewer(pFolder+'/'+pFiles[pIdx]));
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('printedDetail').classList.contains('hidden'))return;
+  if(viewer.classList.contains('open'))return;
+  if(e.key==='ArrowLeft')showPrinted(pIdx-1);
+  if(e.key==='ArrowRight')showPrinted(pIdx+1);
+});
+
+// ═══ SLIDESHOW STATE ═══
+let slideFiles=[], slideFolder='', slideIdx=0;
+
+function openScanDetail(folder,name,files){
+  document.getElementById('detailTitle').textContent=name;
+  document.getElementById('detailH2').textContent=name;
+  slideFiles=files;
+  slideFolder=folder;
+  slideIdx=0;
+  document.getElementById('slideTotal').textContent=String(files.length).padStart(2,'0');
+  buildThumbs();
+  showSlide(0);
+  go('scanDetail');
+}
+
+function showSlide(i){
+  if(!slideFiles.length)return;
+  slideIdx=(i+slideFiles.length)%slideFiles.length;
+  const img=document.getElementById('slideImg');
+  img.classList.add('fade-out');
+  setTimeout(()=>{
+    img.src=slideFolder+'/'+slideFiles[slideIdx];
+    img.classList.remove('fade-out');
+  },200);
+  document.getElementById('slideNow').textContent=String(slideIdx+1).padStart(2,'0');
+  // update thumb active state
+  document.querySelectorAll('.slide-thumb').forEach((t,j)=>{
+    t.classList.toggle('active', j===slideIdx);
+  });
+}
+
+function buildThumbs(){
+  const wrap=document.getElementById('slideThumbs');
+  wrap.innerHTML='';
+  slideFiles.forEach((f,i)=>{
+    const t=document.createElement('div');
+    t.className='slide-thumb'+(i===slideIdx?' active':'');
+    t.innerHTML=`<img src="${slideFolder}/${f}" alt="thumb ${i+1}">`;
+    t.addEventListener('click',()=>showSlide(i));
+    t.addEventListener('mouseenter',()=>cur.classList.add('large'));
+    t.addEventListener('mouseleave',()=>cur.classList.remove('large'));
+    wrap.appendChild(t);
+  });
+}
+
+// Arrow buttons
+document.getElementById('slideLeft').addEventListener('click',()=>showSlide(slideIdx-1));
+document.getElementById('slideRight').addEventListener('click',()=>showSlide(slideIdx+1));
+
+// Click image → zoom viewer
+document.getElementById('slideImg').addEventListener('click',()=>{
+  openViewer(slideFolder+'/'+slideFiles[slideIdx]);
+});
+
+// Keyboard arrows
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('scanDetail').classList.contains('hidden'))return;
+  if(viewer.classList.contains('open'))return;
+  if(e.key==='ArrowLeft')showSlide(slideIdx-1);
+  if(e.key==='ArrowRight')showSlide(slideIdx+1);
+});
+
+// ═══ VIEWER — cursor-follow zoom (no free drag) ═══
+const viewer=document.getElementById('viewer');
+const vImg=document.getElementById('viewerImg');
+let vZoom=1.3;       // subtle zoom level
+let vActive=false;   // is cursor over the viewer area
+
+function openViewer(src){
+  vImg.src=src;
+  vImg.style.transform='scale(1)';
+  vImg.style.transformOrigin='center center';
+  vActive=false;
+  viewer.classList.add('open');
+}
+function closeViewer(){
+  viewer.classList.remove('open');
+  vImg.style.transform='scale(1)';
+  vActive=false;
+}
+document.getElementById('viewerClose').addEventListener('click', closeViewer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape' && viewer.classList.contains('open')) closeViewer()});
+
+// Scroll wheel adjusts zoom intensity (1.1x - 2.0x range — kept subtle)
+viewer.addEventListener('wheel',e=>{
+  e.preventDefault();
+  if(e.deltaY < 0) vZoom = Math.min(2.0, vZoom + 0.1);
+  else vZoom = Math.max(1.1, vZoom - 0.1);
+  if(vActive && lastE) updateZoom(lastE);
+},{passive:false});
+
+// Cursor-follow zoom: cursor over image = subtle zoom toward cursor position
+let lastE = null;
+function updateZoom(e){
+  if(!vImg.naturalWidth) return;
+  const rect = vImg.getBoundingClientRect();
+  // Use the IMAGE rect at scale 1 — get unscaled position
+  // To do this reliably even when scaled, reset scale first to read rect, then re-apply
+  if(e.clientX < rect.left || e.clientX > rect.right ||
+     e.clientY < rect.top  || e.clientY > rect.bottom){
+    vImg.style.transform = 'scale(1)';
+    vActive = false;
+    return;
+  }
+  const px = ((e.clientX - rect.left) / rect.width) * 100;
+  const py = ((e.clientY - rect.top)  / rect.height) * 100;
+  vImg.style.transformOrigin = `${px}% ${py}%`;
+  vImg.style.transform = `scale(${vZoom})`;
+  vActive = true;
+}
+
+viewer.addEventListener('mousemove', e=>{
+  if(!viewer.classList.contains('open')) return;
+  lastE = e;
+  updateZoom(e);
+});
+
+// When cursor leaves the viewer entirely, reset to full
+viewer.addEventListener('mouseleave', ()=>{
+  vImg.style.transform = 'scale(1)';
+  vActive = false;
+});
+
+// Click on backdrop (not image, not close btn) closes
+viewer.addEventListener('click', e=>{
+  if(e.target === viewer) closeViewer();
+});
+
+// ═══════════════ LANGUAGE SWITCHER ═══════════════
+(function(){
+  const T = {
+    // ── Homepage texts ──
+    "Categories": "Kategorije",
+    "Services": "Usluge",
+    "Contact": "Kontakt",
+        // ── New / updated translations ──
+    "Handheld structured-light scanner with 0.1 mm precision and built-in color capture. Built for shiny, dark, and reflective car panels — exactly where most scanners fail.":
+      "Ručni 3D skener sa strukturisanom svetlošću, preciznost 0.1 mm i ugrađeno snimanje u boji. Pravljen za sjajne, tamne i reflektujuće karoserije — tačno tamo gde većina skenera otkaže.",
+
+    "Enclosed CoreXY printer with 300×300×300 mm build volume. Runs PLA, PETG, ABS, ASA, PA, and PC at up to 600 mm/s. Big enough for splitters and full trim pieces in one shot.":
+      "Zatvoreni CoreXY štampač sa radnom zapreminom 300×300×300 mm. Štampa PLA, PETG, ABS, ASA, PA i PC do 600 mm/s. Dovoljno veliki za splittere i kompletne lajsne u jednom komadu.",
+
+    "Raw scan mesh, converted into clean parametric CAD. Surface reconstruction, geometry cleanup, output ready for print or further modification.":
+      "Sirovi mesh skena pretvoren u čist parametarski CAD. Rekonstrukcija površina, čišćenje geometrije, izlaz spreman za štampu ili dalje izmene.",
+	  "Complete design and manufacturing service for composite molds":
+"Kompletna usluga projektovanja i izrade kalupa za kompozitne materijale",
+
+
+    "Complete design and manufacturing service for composite molds. The process includes 3D modeling, geometry optimization, production preparation, and 3D printing of functional molds intended for the fabrication of fiberglass, carbon fiber, and other composite components..":
+      "Kompletna usluga projektovanja i izrade kalupa za kompozitne materijale. Proces obuhvata 3D modelovanje, optimizaciju geometrije, pripremu za proizvodnju i 3D štampu funkcionalnih kalupa namenjenih izradi delova od staklenih, karbonskih i drugih kompozitnih vlakana.",
+
+    "Replication of Broken or Discontinued Parts":
+      "Replikacija polomljenih ili nedostupnih delova",
+    "Broken, lost, or no longer in production? Scan whatever remains of the original, rebuild it in CAD, print a working replacement. Ideal for older, rare, or out-of-stock parts.":
+      "Polomljen, izgubljen ili više se ne proizvodi? Skeniram ono što je ostalo od originala, rekonstruišem u CAD-u, štampam novu funkcionalnu kopiju. Idealno za stare, retke ili više neproizvodjene delove.",
+    "Damaged part recovery": "re-modelovanje oštećenog dela",
+    "Legacy parts": "Oštećeni delovi",
+    "CAD rebuild": "CAD rekonstrukcija",
+	
+	"Consultations & Project Planning":
+	"Konsultacije i planiranje projekta",
+
+    "Talk through your project before committing. Material, feasibility, approach — honest assessment from a fellow enthusiast.":
+      "Pre nego što započnete projekat, prolazimo kroz sve ključne aspekte: Materijal, izvodljivost i pristup ,iskrena procena od nekoga ko razume proces i voli ovu oblast.",
+
+    // Case study UI
+    "View case study": "Pogledaj radove",
+    "Case Study": "Studija Slučaja",
+    "Case Study · Mold-based custom part": "Studija slučaja · Custom deo sa kalupom",
+    "Case Study · Broken part recovery": "Studija slučaja · Oporavak polomljenog dela",
+    "Custom Part Design": "Dizajn delova po meri",
+    "Part Replication": "Replikacija dela",
+
+    "— Equipment & Services": "Oprema i usluge",
+    "Personal workshop equipped with prosumer-grade scanning and printing hardware. Below — the actual tools behind every project, and what each one delivers.":
+      "Moja lična radionica opremljena je poluprofesionalnom opremom za 3D skeniranje i 3D štampu. Ispod možete videti alate iza svakog projekta i šta svaki od njih može da postigne.",
+    "Shining 3D Einstar — Handheld Scanning": "Shining 3D Einstar — Ručno Skeniranje",
+    "Prosumer-grade structured light handheld scanner using VCSEL infrared technology. Captures high-density point clouds with 0.1 mm point distance, 14 FPS speed, and built-in RGB color camera. Reliable on black, shiny, and reflective surfaces — exactly what car body work demands.":
+      "Ručni 3D skener srednjeg ranga koji koristi strukturisanu svetlost i VCSEL infracrvenu tehnologiju. Snima oblake tačaka visoke gustine, sa razmakom tačaka od 0.1 mm, brzinom od 14 sličica u sekundi i ugrađenom RGB kamerom za snimanje u boji. Pouzdano radi na crnim, sjajnim i reflektujućim površinama, što je upravo ono što rad na karoseriji vozila zahteva.",
+    "Point distance 0.1 mm": "Razmak tačaka 0.1 mm",
+    "14 FPS scan rate": "14 fps brzina skena",
+    "VCSEL infrared": "VCSEL infracrveni laser",
+    "Color capture": "Snimanje u boji",
+    "Creality K1 Max — FDM 3D Printing": "Creality K1 Max — FDM 3D Štampanje",
+    "High-speed CoreXY enclosed FDM printer with 300×300×300 mm build volume. Up to 600 mm/s print speed with 20,000 mm/s² acceleration. Hotend reaches 300°C with hardened steel nozzle — supports PLA, PETG, ABS, ASA, PA, PC and reinforced filaments. Big enough for bumper splitters and trim parts in one piece.":
+      "Brzi CoreXY zatvoreni FDM štampač sa radnom zapreminom 300×300×300 mm. Brzina štampe do 600 mm/s, sa ubrzanjem od 20.000 mm/s². Hotend dostiže 300°C i ima kaljenu čeličnu diznu, pa podržava PLA, PETG, ABS, ASA, PA, PC i ojačane filamente. Dovoljno veliki da splittere branika i lajsne odštampa u jednom komadu.",
+    "300×300×300 mm": "300×300×300 mm",
+    "600 mm/s max": "600 mm/s max",
+    "Hotend ≤300°C": "Hotend ≤300°C",
+    "PLA · PETG · ABS · ASA · PA · PC": "PLA · PETG · ABS · ASA · PA · PC",
+    "Reverse Engineering — Scan to CAD": "Obrnuto Inženjerstvo: od Skena do CAD-a",
+    "Converting raw scan mesh into clean, parametric CAD models. Surface reconstruction, refinement of legacy or out-of-production parts, geometry cleanup. Output is print-ready, modification-friendly, and ready for further design work.":
+      "Pretvaranje sirovog mesh skena u čiste, parametarske CAD modele. Rekonstrukcija površina, dorada starih ili više neproizvodjenih delova, čišćenje geometrije. Krajnji rezultat je spreman za štampu, lak za naknadne izmene i dalji dizajnerski rad.",
+    "Mesh → CAD": "Mesh do CAD-a",
+    "Surface reconstruction": "Rekonstrukcija površina",
+    "Print-ready output": "Spreman za štampu",
+    "Custom Part Design & OEM Modification": "Dizajn Delova po Meri i Modifikacija OEM",
+    "Designing custom aftermarket parts from scratch, or modifying existing OEM parts — fitment changes, aesthetic upgrades, design improvements. Scan the original, modify in CAD, print a version that bolts on without compromise.":
+      "Dizajn potpuno novih aftermarket delova ili modifikacija postojećih OEM delova: izmene nalegan​ja, estetska poboljšanja i unapređenja dizajna. Original se skenira, u CAD-u se prilagođava, a zatim se štampa verzija koja se montira bez kompromisa.",
+    "Custom aftermarket": "Izrada kalupa",
+    "OEM modification": "Modifikacija OEM-a",
+    "Bolt-on fitment": "Direktna montaža",
+    "Consultations & Project Planning": "Konsultacije i Planiranje Projekta",
+    "Talk through your project before committing. Material choice, design feasibility, manufacturing approach — honest assessment from a fellow enthusiast. Sometimes the best result starts with the right plan, not the first idea.":
+      "Razgovaramo o projektu pre nego što krenete. Izbor materijala, izvodljivost dizajna, pristup proizvodnji: iskrena procena od kolege entuzijaste. Ponekad najbolji rezultat počinje sa pravim planom, a ne sa prvom idejom.",
+    "Project planning": "Planiranje projekta",
+    "Feasibility": "Izvodljivost",
+    "Material advice": "Saveti o materijalu",
+    "— What I do": "Oprema i usluge",
+    "Surface reconstruction": "Rekonstrukcija površina",
+    "Project planning": "Planiranje projekta",
+    "Feasibility": "Izvodljivost",
+    "Material advice": "Saveti o materijalu",
+    "— Have a project in mind? —": "Imate projekat na umu?",
+    "Get in touch →": "Kontaktiraj →",
+    "— Get in touch": "Kontakt",
+    "Have a project in mind, or just curious about the process? Drop a message — I respond personally to every inquiry.":
+      "Imate projekat na umu, ili ste samo radoznali kako proces izgleda? Pošaljite poruku, odgovaram lično na svaki upit.",
+    "✉ Email": "✉ Email",
+    "◎ Instagram": "◎ Instagram",
+    "Primary contact": "Glavni kontakt",
+    "Project updates · DM open": "Update-i projekta · DM otvoren",
+    "— More contact options coming soon —": "Više opcija kontakta uskoro",
+    "MP Design": "MP Design",
+    "Enter": "Uđi",
+    "Choose Category": "Izaberi kategoriju",
+    "Select what you want to explore": "Izaberite šta želite da istražite",
+    "◈ Section 01": "◈ Sekcija 01",
+    "◇ Section 02": "◇ Sekcija 02",
+    "▲ Section 03": "▲ Sekcija 03",
+    "3D Scan\nArchive": "Arhiva 3D\nSkenova",
+    "3D Scan<br>Archive": "Arhiva 3D<br>Skenova",
+    "Design\nProjects": "Dizajn\nProjekti",
+    "Design<br>Projects": "Dizajn<br>Projekti",
+    "Printed\nParts": "Štampani\nDelovi",
+    "Printed<br>Parts": "Štampani<br>Delovi",
+    "Browse raw 3D scan data of vehicles — Audi A6, BMW S1000R, Citroen C2, Peugeot 508 SW, VW Golf 7 and more.":
+      "Pregled sirovih 3D skenova vozila: Audi A6, BMW S1000R, Citroen C2, Peugeot 508 SW, VW Golf 7 i drugi.",
+    "Complete reverse engineering projects — from scan to 3D printed final part. Full process documentation.":
+      "Kompletni projekti obrnutog inženjerstva — od skena do 3D štampanog finalnog dela.",
+    "Real-world photos of finished 3D printed parts installed and tested. The physical output of the design process.":
+      "Stvarne fotografije gotovih 3D štampanih delova, ugrađenih i testiranih u praksi. Fizički rezultat dizajn procesa.",
+    "Explore Archive": "Istraži arhivu",
+    "View Projects": "Vidi projekte",
+    "See Printed": "Istraži štampane delove",
+    "Back": "Nazad",
+    "3D Scan Archive": "Arhiva 3D Skenova",
+    "Select a vehicle to view scan data": "Izaberite deo",
+    "Design Projects": "Dizajn Projekti",
+    "Complete scan → 3D print case studies": "Kompletne studije slučaja: sken → 3D štampa",
+    "Printed Parts": "Štampani delovi",
+    "Real-world photos of finished 3D printed parts": "Stvarne fotke gotovih 3D štampanih delova",
+    "Citroen C2 · Choose Part": "Citroen C2 · Izaberi deo",
+    "Choose which part to explore": "Izaberite koji deo želite da istražite",
+    "Peugeot 508 SW · Parts": "Peugeot 508 SW · Delovi",
+    "Peugeot 508 SW": "Peugeot 508 SW",
+    "Select which part to view": "Izaberite koji deo želite da pregledate",
+    "Front Bumper": "Prednji branik",
+    "Rear Bumper": "Zadnji branik",
+    "Front Splitter": "Prednji splitter",
+    "Front bumper · view scans →": "Prednji branik · pogledaj skenove →",
+    "Rear bumper · view scans →": "Zadnji branik · pogledaj skenove →",
+    "Enter project →": "Uđi u projekat →",
+    "Enter project ↗": "Uđi u projekat ↗",
+    "View ↗": "Vidi ↗",
+    "View photos ↗": "Vidi fotke ↗",
+    "Choose part ↗": "Izaberi deo ↗",
+    "3 scan files": "3 sken fajla",
+    "2 scan files": "2 sken fajla",
+    "Multiple parts available": "Više delova dostupno",
+    "Coming soon": "Uskoro",
+    "Front Bumper · 3D Scan": "Prednji branik · 3D sken",
+    "Front · Rear · 3D Print": "Prednji branik · Zadnji branik · 3D štampa",
+    "Front Splitter · 3D Print": "Prednji splitter · 3D štampa",
+    "Front Bumper · 3D Print": "Prednji branik · 3D štampa",
+    "Front Bumper · 3 photos": "Prednji branik · 3 fotke",
+    "Rear Bumper · 2 photos": "Zadnji branik · 2 fotke",
+    "3 photos": "3 fotke",
+    "3D scan data · click image to zoom · arrows to navigate": "3D sken podaci · klik na sliku za zoom · strelice za navigaciju",
+    "Finished part · real-world photos · click to zoom": "Gotov deo · stvarne fotografije · klik za zoom",
+    "Categories": "Kategorije",
+    "3D Scan · Manufacturing · Design": "3D Skeniranje · Izrada · Dizajn",
+    "Automotive aftermarket parts": "Aftermarket auto delovi",
+    "Reverse Engineering Studio": "Reverse Engineering Studio",
+    "scroll": "skroluj",
+    // Project pages
+    "MP Design · Citroen C2": "MP Design · Citroen C2",
+    "MP Design · Citroen C2 · Rear": "MP Design · Citroen C2 · Zadnji",
+    "MP Design · Audi A6": "MP Design · Audi A6",
+    "MP Design · VW Golf 7 GTI": "MP Design · VW Golf 7 GTI",
+    "MP Design · Peugeot 508": "MP Design · Peugeot 508",
+    "Citroen C2 · Front Bumper": "Citroen C2 · Prednji branik",
+    "Citroen C2 · Rear Bumper": "Citroen C2 · Zadnji branik",
+    "Audi A6 · Front Splitter": "Audi A6 · Prednji splitter",
+    "VW Golf 7 GTI · Front Bumper": "VW Golf 7 GTI · Zadnji difuzor",
+    "VW Golf 7 GTI · Rear Diffuser": "VW Golf 7 GTI · Zadnji difuzor",
+    "Rear Diffuser · 3D Print": "Zadnji difuzor · 3D štampa",
+    "Rear Diffuser": "Zadnji difuzor",
+    "Peugeot 508 · Front Splitter": "Peugeot 508 · Prednji splitter",
+    "3D Scan · 001": "3D Sken · 001",
+    "3D Scan": "3D Sken",
+    "3D Print": "3D Štampa",
+    "hover to inspect": "pređi mišem za pregled",
+    "hover to inspect splitter": "pređi mišem za pregled splittera",
+    "hover to inspect bumper": "pređi mišem za pregled branika",
+    "hover to inspect rear": "pređi mišem za pregled zadnjeg dela",
+    "SCAN → PRINT": "SKEN → ŠTAMPA",
+    "← drag to compare →": "← prevuci za poređenje →",
+    "New part revealed": "Novi deo otkriven",
+    "new part": "novi deo",
+    "View Products →": "Pogledaj proizvode →",
+    "Products": "Proizvodi",
+    "Front Bumper · Final Output": "Prednji branik · Finalni rezultat",
+    "Rear Bumper · Final Output": "Zadnji branik · Finalni rezultat",
+    "Front Splitter · Final Output": "Prednji splitter · Finalni rezultat",
+    "3D Model — Interactive": "3D Model — Interaktivno",
+    "open full ↗": "otvori potpuno ↗",
+    "zoom ↗": "zoom ↗",
+    "click · zoom ↗": "klik · zoom ↗",
+    "scroll to zoom · drag to pan · ESC to close": "skrol za zoom · prevuci za pomeraj · ESC za zatvaranje",
+    "✕ Close": "✕ Zatvori",
+    "move cursor · zoom follows · ESC · close": "pomeraj kursor · zum prati · ESC · zatvori",
+    "— Want to see the real thing? —": "Želite da vidite uživo?",
+    "View installed photos →": "Vidi ugrađene fotke →",
+    "Project 01": "Projekat 01",
+    "Project 02": "Projekat 02",
+    "Project 03": "Projekat 03",
+    "Project 04": "Projekat 04",
+    "Part 01": "Deo 01",
+    "Part 02": "Deo 02",
+    "A personal portfolio & hobby project showcasing my work in 3D scanning, reverse engineering and additive manufacturing of automotive parts. Built by an enthusiast for fellow car & engineering lovers.":
+      "Lični portfolio i hobi projekat koji prikazuje moj rad na 3D skeniranju, obrnutom inženjerstvu i 3D štampi automobilskih delova. Pravi entuzijasta, za ostale zaljubljenike u kola i inženjering.",
+    "A personal portfolio &amp; <strong>hobby project</strong> showcasing my work in <strong>3D scanning</strong>, reverse engineering and additive manufacturing of automotive parts. Built by an enthusiast for fellow car &amp; engineering lovers.":
+      "Lični portfolio i <strong>hobi projekat</strong> koji prikazuje moj rad na <strong>3D skeniranju</strong>, obrnutom inženjerstvu i 3D štampi automobilskih delova. Pravi entuzijasta, za ostale zaljubljenike u kola i inženjering.",
+    // Scan sub items
+    "1": "1",
+    "Choose Part": "Izaberi deo",
+    "Prednji branik": "Prednji branik",
+    "Zadnji branik": "Zadnji branik"
+  };
+
+  function applyLang(lang){
+    document.documentElement.lang = lang;
+    // Build a normalized lookup (key with all whitespace collapsed)
+    const Tnorm = {};
+    Object.keys(T).forEach(k=>{
+      Tnorm[k.replace(/\s+/g,' ').trim()] = T[k];
+    });
+    document.querySelectorAll('[data-i18n-orig]').forEach(el=>{
+      const orig = el.dataset.i18nOrig;
+      const normKey = orig.replace(/\s+/g,' ').trim();
+      if(lang === 'sr' && Tnorm[normKey]) el.innerHTML = Tnorm[normKey];
+      else el.innerHTML = orig;
+    });
+    document.querySelectorAll('[data-i18n-orig-attr]').forEach(el=>{
+      const data = JSON.parse(el.dataset.i18nOrigAttr);
+      Object.entries(data).forEach(([attr, orig])=>{
+        const nk = orig.replace(/\s+/g,' ').trim();
+        if(lang === 'sr' && Tnorm[nk]) el.setAttribute(attr, Tnorm[nk]);
+        else el.setAttribute(attr, orig);
+      });
+    });
+    // Update toggle UI (topbar + intro)
+    document.querySelectorAll('.lang-toggle, .intro-lang-toggle').forEach(t=>{
+      t.querySelectorAll('.lang-opt').forEach(o=>{
+        o.classList.toggle('active', o.dataset.lang === lang);
+      });
+    });
+    try{localStorage.setItem('mpdesign_lang', lang);}catch(_){}
+  }
+
+  // Walk DOM and tag every translatable text node
+  function tagDom(){
+    // Use whitelist: tag elements whose innerHTML matches a T key OR data-sub etc
+    const candidates = document.querySelectorAll(
+      'h1,h2,h3,h4,p,.tb-section,.tb-tag,.cat-name,.cat-desc,.cat-enter,'+
+      '.gcard-name,.gcard-sub,.gcard-cta,.gcard-num,'+
+      '.peugeot-part-name,.peugeot-part-cta,.peugeot-part-num,'+
+      '.detail-img-label,.viewer-hint,.viewer-close,'+
+      '.h-tag,.h-sub,.h-story,.h-scroll span,.scan-state span,.scan-hint-r,'+
+      '.cmp-hdr h2,.cmp-hdr p,.drag-hint,.cmp-badge,'+
+      '.rp-tag,.rp-title,.rp-arrow-label,.rp-img-name,.rp-img-sub,.rp-next,'+
+      '.pp-back,.pp-hdr h2,.pp-hdr p,.pp-item-lbl,.pp-zoom-tag,.pp-slide-zoom,.pp-slide-counter,'+
+      '.real-build-cta-tag,.real-build-btn,'+
+      '.slide-counter,.slide-zoom-hint,.sec-ey,'+
+      '.v3d-label,.v3d-link,'+
+      '.service-num,.service-name,.service-desc,.service-tag,.services-cta-btn,'+
+      '.cs-eyebrow,.cs-title,.case-study-btn span,'+
+      '.contact-method-icon,.contact-method-label,.contact-method-value,.contact-footer-note,'+
+      '.gn-link'
+    );
+    candidates.forEach(el=>{
+      // Skip if element has IDs we don't want to touch
+      if(el.id === 'enterBtn' || el.classList.contains('lang-opt') || el.classList.contains('nav-back') || el.classList.contains('tb-back')) return;
+      // Skip if has children that are elements (avoid double-translating)
+      if(el.querySelector('span,div,h1,h2,h3,h4,p,svg,button') && !el.classList.contains('cat-name') && !el.classList.contains('rp-title') && !el.classList.contains('peugeot-part-name')) return;
+      const txt = el.innerHTML.trim();
+      if(!txt) return;
+      if(!el.dataset.i18nOrig) el.dataset.i18nOrig = txt;
+    });
+    // Handle ENTER button text node specifically (preserve event listeners)
+    const enterBtn = document.getElementById('enterBtn');
+    if(enterBtn){
+      enterBtn.childNodes.forEach(node=>{
+        if(node.nodeType === 3){
+          const t = node.textContent.trim();
+          if(t && T[t] && !node.__i18n_tagged){
+            node.__i18n_tagged = true;
+            node.__i18n_orig = t;
+          }
+        }
+      });
+    }
+    // tb-back, pp-back contain SVG + text node
+    document.querySelectorAll('.tb-back, .pp-back, .nav-back').forEach(el=>{
+      el.childNodes.forEach(node=>{
+        if(node.nodeType === 3){
+          const t = node.textContent.trim();
+          if(t && T[t] && !node.__i18n_tagged){
+            node.__i18n_tagged = true;
+            node.__i18n_orig = t;
+          }
+        }
+      });
+    });
+    // .cat-enter has a child div + text node "Explore Archive" etc
+    document.querySelectorAll('.cat-enter, .gcard-cta, .peugeot-part-cta, .v3d-link, .gn-link').forEach(el=>{
+      el.childNodes.forEach(node=>{
+        if(node.nodeType === 3){
+          const t = node.textContent.trim();
+          if(t && T[t] && !node.__i18n_tagged){
+            node.__i18n_tagged = true;
+            node.__i18n_orig = t;
+          }
+        }
+      });
+    });
+  }
+  
+  function applyTextNodes(lang){
+    function walk(node){
+      if(node.nodeType === 3 && node.__i18n_orig){
+        node.textContent = (lang === 'sr' && T[node.__i18n_orig]) ? T[node.__i18n_orig] : node.__i18n_orig;
+      } else if(node.nodeType === 1){
+        node.childNodes.forEach(walk);
+      }
+    }
+    walk(document.body);
+  }
+
+  // Inject language toggle into topbar
+  function injectToggle(){
+    // No longer inject into .topbar — the global nav already has #gnLangToggle
+    // and intro has .intro-lang-toggle. Avoid duplicate toggles per screen.
+
+    // Hook the intro-lang-toggle if present (homepage only)
+    document.querySelectorAll('.intro-lang-toggle .lang-opt').forEach(btn=>{
+      if(btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const lang = btn.dataset.lang;
+        applyLang(lang);
+        applyTextNodes(lang);
+      });
+      btn.addEventListener('mouseenter',()=>{if(typeof cur !== 'undefined') cur.classList.add('large');});
+      btn.addEventListener('mouseleave',()=>{if(typeof cur !== 'undefined') cur.classList.remove('large');});
+    });
+    // Hook global nav lang toggle (#gnLangToggle - already in HTML, not dynamically created)
+    document.querySelectorAll('#gnLangToggle .lang-opt').forEach(btn=>{
+      if(btn.dataset.bound) return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const lang = btn.dataset.lang;
+        applyLang(lang);
+        applyTextNodes(lang);
+      });
+      btn.addEventListener('mouseenter',()=>{if(typeof cur !== 'undefined') cur.classList.add('large');});
+      btn.addEventListener('mouseleave',()=>{if(typeof cur !== 'undefined') cur.classList.remove('large');});
+    });
+  }
+
+  // Init
+  function init(){
+    tagDom();
+    injectToggle();
+    let saved = 'en';
+    try{saved = localStorage.getItem('mpdesign_lang') || 'en';}catch(_){}
+    applyLang(saved);
+    applyTextNodes(saved);
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    setTimeout(init, 50);
+  }
+  // Also re-init when screens change (for dynamic content like printedDetail)
+  window.__applyCurrentLang = function(){
+    let saved = 'en';
+    try{saved = localStorage.getItem('mpdesign_lang') || 'en';}catch(_){}
+    tagDom();
+    applyLang(saved);
+    applyTextNodes(saved);
+  };
+})();
+
+
+// ═══════════ GLOBAL NAV CONTROLLER ═══════════
+(function(){
+  const nav = document.getElementById('globalNav');
+  if(!nav) return;
+
+  // Show nav when not on intro
+  function updateNavVisibility(){
+    const intro = document.getElementById('intro');
+    const isIntro = intro && !intro.classList.contains('hidden');
+    if(isIntro){
+      nav.classList.add('hidden-nav');
+    } else {
+      nav.classList.remove('hidden-nav');
+    }
+    // Update active link
+    const currentScreen = navStack[navStack.length-1];
+    document.querySelectorAll('.gn-link').forEach(link=>{
+      const target = link.dataset.nav;
+      link.classList.toggle('active',
+        target === currentScreen ||
+        (target === 'catSelect' && ['catSelect','scanList','designList','printedList',
+                                    'scanDetail','printedDetail','c2PartPick','peugeotParts'].includes(currentScreen)));
+    });
+  }
+
+  // Hook nav link clicks
+  document.querySelectorAll('.gn-link').forEach(link=>{
+    link.addEventListener('click', e=>{
+      e.stopPropagation();
+      const target = link.dataset.nav;
+      if(navStack[navStack.length-1] === target) return;
+      // Reset navStack so back behaves logically
+      navStack.length = 0;
+      navStack.push('intro', target);
+      fadeNav(()=>showScreen(target));
+    });
+    link.addEventListener('mouseenter',()=>{if(typeof cur !== 'undefined') cur.classList.add('large');});
+    link.addEventListener('mouseleave',()=>{if(typeof cur !== 'undefined') cur.classList.remove('large');});
+  });
+
+  // Brand button → home/catSelect
+  const brand = document.getElementById('gnBrand');
+  if(brand){
+    brand.addEventListener('click',()=>{
+      navStack.length = 0;
+      navStack.push('intro', 'catSelect');
+      fadeNav(()=>showScreen('catSelect'));
+    });
+    brand.addEventListener('mouseenter',()=>{if(typeof cur !== 'undefined') cur.classList.add('large');});
+    brand.addEventListener('mouseleave',()=>{if(typeof cur !== 'undefined') cur.classList.remove('large');});
+  }
+
+  // Services CTA → contact
+  const sBtn = document.getElementById('servicesCtaBtn');
+  if(sBtn){
+    sBtn.addEventListener('click',()=>{
+      navStack.length = 0;
+      navStack.push('intro', 'contact');
+      fadeNav(()=>showScreen('contact'));
+    });
+    sBtn.addEventListener('mouseenter',()=>{if(typeof cur !== 'undefined') cur.classList.add('large');});
+    sBtn.addEventListener('mouseleave',()=>{if(typeof cur !== 'undefined') cur.classList.remove('large');});
+  }
+
+  // Hook into showScreen
+  const _origShow = showScreen;
+  window.showScreen = function(id){
+    _origShow(id);
+    setTimeout(updateNavVisibility, 30);
+  };
+
+  // Initial check
+  setTimeout(updateNavVisibility, 100);
+  // Also watch for intro getting hidden
+  const obs = new MutationObserver(updateNavVisibility);
+  const intro = document.getElementById('intro');
+  if(intro) obs.observe(intro, {attributes:true, attributeFilter:['class']});
+
+  // Cursor large on lang toggles in nav
+  document.querySelectorAll('#gnLangToggle .lang-opt').forEach(b=>{
+    b.addEventListener('mouseenter',()=>{if(typeof cur !== 'undefined') cur.classList.add('large');});
+    b.addEventListener('mouseleave',()=>{if(typeof cur !== 'undefined') cur.classList.remove('large');});
+  });
+
+  // Service cards cursor — only contact-method (which IS a link), not service-card
+  document.querySelectorAll('.contact-method').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{if(typeof cur !== 'undefined') cur.classList.add('large');});
+    el.addEventListener('mouseleave',()=>{if(typeof cur !== 'undefined') cur.classList.remove('large');});
+  });
+})();
+
+
+// ═══════════ CASE STUDY VIEWER ═══════════
+const caseStudies = {
+  custom: {
+    title: 'Custom Part Design',
+    eyebrow: 'Case Study · Mold-based custom part',
+    files: [
+      'custom part design - kalup4.jpg',
+      'custom part design - kalup2.jpg',
+      'custom part design - kalup3.jpg',
+      'custom part design - kalup5.jpg',
+      'custom part design - kalup1.jpg'
+    ]
+  },
+  replica: {
+    title: 'Part Replication',
+    eyebrow: 'Case Study · Broken part recovery',
+    files: [
+      'polomljeni deo.jpg'
+    ]
+  }
+};
+const csModal = document.getElementById('caseStudy');
+const csImg = document.getElementById('csImg');
+const csTitle = document.getElementById('csTitle');
+const csEyebrow = document.getElementById('csEyebrow');
+const csCounter = document.getElementById('csCounter');
+const csThumbs = document.getElementById('csThumbs');
+let csCurrent = null;
+let csIndex = 0;
+
+function openCaseStudy(key){
+  const cs = caseStudies[key];
+  if(!cs) return;
+  csCurrent = cs;
+  csIndex = 0;
+  // Set text via i18n-orig so it gets translated by current language
+  csTitle.dataset.i18nOrig = cs.title;
+  csTitle.textContent = cs.title;
+  csEyebrow.dataset.i18nOrig = cs.eyebrow;
+  csEyebrow.textContent = cs.eyebrow;
+  // Re-apply current language if available
+  if(typeof window.__applyCurrentLang === 'function') window.__applyCurrentLang();
+  // Build thumbs
+  csThumbs.innerHTML = '';
+  cs.files.forEach((f,i)=>{
+    const t = document.createElement('div');
+    t.className = 'cs-thumb' + (i===0?' active':'');
+    t.innerHTML = `<img src="${f}" alt="">`;
+    t.addEventListener('click', ()=>{ csIndex = i; csUpdate(); });
+    csThumbs.appendChild(t);
+  });
+  csUpdate();
+  csModal.classList.add('open');
+}
+function csUpdate(){
+  if(!csCurrent) return;
+  csImg.src = csCurrent.files[csIndex];
+  csCounter.textContent = String(csIndex+1).padStart(2,'0') + ' / ' + String(csCurrent.files.length).padStart(2,'0');
+  csThumbs.querySelectorAll('.cs-thumb').forEach((t,i)=>t.classList.toggle('active', i===csIndex));
+}
+function csClose(){ csModal.classList.remove('open'); csCurrent = null; }
+function csNext(){ if(!csCurrent) return; csIndex = (csIndex+1) % csCurrent.files.length; csUpdate(); }
+function csPrev(){ if(!csCurrent) return; csIndex = (csIndex-1+csCurrent.files.length) % csCurrent.files.length; csUpdate(); }
+
+document.querySelectorAll('.case-study-btn').forEach(btn=>{
+  btn.addEventListener('click', e=>{
+    e.stopPropagation();
+    openCaseStudy(btn.dataset.case);
+  });
+});
+document.getElementById('csClose').addEventListener('click', csClose);
+document.getElementById('csNext').addEventListener('click', csNext);
+document.getElementById('csPrev').addEventListener('click', csPrev);
+document.addEventListener('keydown', e=>{
+  if(!csModal.classList.contains('open')) return;
+  if(e.key === 'Escape') csClose();
+  if(e.key === 'ArrowRight') csNext();
+  if(e.key === 'ArrowLeft') csPrev();
+});
+// Click backdrop to close
+csModal.addEventListener('click', e=>{
+  if(e.target === csModal) csClose();
+});
+// Hover the case-study button enlarges cursor
+document.querySelectorAll('.case-study-btn').forEach(btn=>{
+  btn.addEventListener('mouseenter',()=>{if(typeof cur!=='undefined')cur.classList.add('large')});
+  btn.addEventListener('mouseleave',()=>{if(typeof cur!=='undefined')cur.classList.remove('large')});
+});
+
+</script>
+</body>
+</html>
