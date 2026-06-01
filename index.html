@@ -1440,7 +1440,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
   <div class="cat-split">
     <div class="cat-card" data-go="scanList">
-      <video class="cat-card-video" autoplay muted loop playsinline><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
+      <video class="cat-card-video" autoplay muted loop playsinline preload="metadata"><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
       <div class="cat-card-video-vignette"></div>
       <div>
         <div class="cat-name">3D Scan<br>Archive</div>
@@ -1453,7 +1453,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     </div>
 
     <div class="cat-card" data-go="designList">
-      <video class="cat-card-video" autoplay muted loop playsinline><source src="dizajn priojekti.mp4" type="video/mp4"></video>
+      <video class="cat-card-video" autoplay muted loop playsinline preload="metadata"><source src="dizajn priojekti.mp4" type="video/mp4"></video>
       <div class="cat-card-video-vignette"></div>
       <div>
         <div class="cat-name">Design<br>Projects</div>
@@ -1466,7 +1466,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     </div>
 
     <div class="cat-card" data-go="printedList">
-      <video class="cat-card-video" autoplay muted loop playsinline><source src="video for 3d printing project section.mp4" type="video/mp4"></video>
+      <video class="cat-card-video" autoplay muted loop playsinline preload="metadata"><source src="video for 3d printing project section.mp4" type="video/mp4"></video>
       <div class="cat-card-video-vignette"></div>
       <div>
         <div class="cat-name">Printed<br>Parts</div>
@@ -1482,7 +1482,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
 <!-- ══════ SCAN LIST (grid of vehicles) ══════ -->
 <div id="scanList" class="screen grid-screen hidden">
-  <video class="scan-video-bg" autoplay muted loop playsinline><source src="3d skenovi arhiva.mp4" type="video/mp4"></video>
+  <video class="scan-video-bg lazy-video" muted loop playsinline preload="none" data-src="3d skenovi arhiva.mp4"></video>
   <div class="scan-video-vignette"></div>
   <div class="topbar">
     <button class="tb-back nav-back">
@@ -1660,7 +1660,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
 <!-- ══════ DESIGN LIST ══════ -->
 <div id="designList" class="screen grid-screen hidden">
-  <video class="design-video-bg" autoplay muted loop playsinline><source src="dizajn priojekti.mp4" type="video/mp4"></video>
+  <video class="design-video-bg lazy-video" muted loop playsinline preload="none" data-src="dizajn priojekti.mp4"></video>
   <div class="design-video-vignette"></div>
   <div class="topbar">
     <button class="tb-back nav-back">
@@ -1770,9 +1770,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 <!-- ══════ PRINTED LIST (3D Printed Projects) ══════ -->
 <div id="printedList" class="screen grid-screen hidden">
   <!-- Video lupa overlay (subtle) -->
-  <video class="printed-video-bg" autoplay muted loop playsinline>
-    <source src="video for 3d printing project section.mp4" type="video/mp4">
-  </video>
+  <video class="printed-video-bg lazy-video" muted loop playsinline preload="none" data-src="video for 3d printing project section.mp4"></video>
   <div class="printed-video-vignette"></div>
 
   <div class="topbar">
@@ -2210,6 +2208,8 @@ function showScreen(id){
   // Trigger reflow then ensure no 'out'
   void el.offsetWidth;
   el.classList.remove('out');
+  // Activate lazy videos in this screen, pause videos in others
+  if(window.__activateScreenVideos) window.__activateScreenVideos(id);
   // Init carousel on first visit to carousel screens
   if(id === 'scanList' || id === 'designList' || id === 'printedList'){
     setTimeout(()=>initCarousel(id), 80);
@@ -2541,12 +2541,14 @@ viewer.addEventListener('click', e=>{
     "Surface reconstruction": "Rekonstrukcija površina",
     "Print-ready output": "Spreman za štampu",
     "Custom Part Design & OEM Modification": "Dizajn Delova po Meri i Modifikacija OEM",
+    "Custom Part Design &amp; OEM Modification": "Dizajn delova po meri i modifikacija OEM",
     "Designing custom aftermarket parts from scratch, or modifying existing OEM parts — fitment changes, aesthetic upgrades, design improvements. Scan the original, modify in CAD, print a version that bolts on without compromise.":
       "Dizajn potpuno novih aftermarket delova ili modifikacija postojećih OEM delova: izmene nalegan​ja, estetska poboljšanja i unapređenja dizajna. Original se skenira, u CAD-u se prilagođava, a zatim se štampa verzija koja se montira bez kompromisa.",
     "Custom aftermarket": "Izrada kalupa",
     "OEM modification": "Modifikacija OEM-a",
     "Bolt-on fitment": "Direktna montaža",
     "Consultations & Project Planning": "Konsultacije i Planiranje Projekta",
+    "Consultations &amp; Project Planning": "Konsultacije i planiranje projekta",
     "Talk through your project before committing. Material choice, design feasibility, manufacturing approach — honest assessment from a fellow enthusiast. Sometimes the best result starts with the right plan, not the first idea.":
       "Razgovaramo o projektu pre nego što krenete. Izbor materijala, izvodljivost dizajna, pristup proizvodnji: iskrena procena od kolege entuzijaste. Ponekad najbolji rezultat počinje sa pravim planom, a ne sa prvom idejom.",
     "Project planning": "Planiranje projekta",
@@ -3032,6 +3034,38 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
   btn.addEventListener('mouseenter',()=>{if(typeof cur!=='undefined')cur.classList.add('large')});
   btn.addEventListener('mouseleave',()=>{if(typeof cur!=='undefined')cur.classList.remove('large')});
 });
+
+
+// ═══ LAZY-LOAD VIDEOS — only load when entering the relevant screen ═══
+(function(){
+  function activateVideo(videoEl){
+    if(!videoEl || videoEl.dataset.activated) return;
+    const src = videoEl.dataset.src;
+    if(!src) return;
+    videoEl.src = src;
+    videoEl.load();
+    videoEl.play().catch(()=>{}); // ignore autoplay rejection
+    videoEl.dataset.activated = '1';
+  }
+  function pauseVideo(videoEl){
+    if(!videoEl || !videoEl.dataset.activated) return;
+    try { videoEl.pause(); } catch(e){}
+  }
+  // Watch screen visibility — whenever a .screen becomes non-hidden, activate its videos
+  window.__activateScreenVideos = function(screenId){
+    const screen = document.getElementById(screenId);
+    if(!screen) return;
+    screen.querySelectorAll('video.lazy-video').forEach(v=>{
+      activateVideo(v);
+    });
+    // Pause videos in OTHER screens to save resources
+    document.querySelectorAll('.screen').forEach(s=>{
+      if(s.id !== screenId){
+        s.querySelectorAll('video.lazy-video').forEach(pauseVideo);
+      }
+    });
+  };
+})();
 
 </script>
 </body>
