@@ -1481,15 +1481,30 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   }
   .topbar .tb-back{
     font-size:10px !important; padding:7px 13px !important; letter-spacing:.18em !important;
+    order:2 !important;
+    margin-left:auto !important;
   }
-  .topbar .tb-tag{
-    font-size:9px !important; letter-spacing:.14em !important; margin-left:auto;
-    max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  .topbar .tb-tag, .topbar .tb-section{
+    font-size:9px !important; letter-spacing:.14em !important;
+    order:1 !important;
+    margin-left:0 !important; margin-right:auto !important;
+    max-width:60%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
   .topbar .tb-divider{display:none !important}
 
   /* ═══ CATEGORIES (catSelect) ═══ */
-  .cat-screen, #catSelect{padding:90px 16px 30px !important; min-height:auto !important; height:auto !important}
+  /* Allow vertical scroll on mobile (desktop has it as fixed full-viewport flex) */
+  #catSelect, #services, #contact, #scanList, #designList, #printedList,
+  #scanDetail, #printedDetail, #c2PartPick, #peugeotParts{
+    position:absolute !important;
+    inset:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch !important;
+    height:auto !important;
+    display:block !important;
+  }
+  .cat-screen, #catSelect{padding:90px 16px 40px !important; min-height:100vh !important; height:auto !important}
   .cat-header{margin:0 0 22px 0 !important; padding:0 !important; text-align:center}
   .cat-header h1{font-size:30px !important; line-height:1 !important; letter-spacing:.02em !important}
   .cat-header p{font-size:11px !important; letter-spacing:.18em !important; margin-top:8px !important}
@@ -3631,6 +3646,79 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(check, 200);
   });
+})();
+
+
+// ═══════════════════════════════════════════════════════════════════
+// MOBILE TAP HANDLER — distinguish tap from swipe on carousel cards
+// ═══════════════════════════════════════════════════════════════════
+(function(){
+  if(window.innerWidth > 768) return;
+
+  function attachTapHandler(el, handler){
+    let startX=0, startY=0, startTime=0, moved=false;
+    el.addEventListener('touchstart', e=>{
+      const t = e.touches[0];
+      startX = t.clientX; startY = t.clientY;
+      startTime = Date.now();
+      moved = false;
+    }, {passive:true});
+    el.addEventListener('touchmove', e=>{
+      const t = e.touches[0];
+      const dx = Math.abs(t.clientX - startX);
+      const dy = Math.abs(t.clientY - startY);
+      if(dx > 8 || dy > 8) moved = true;
+    }, {passive:true});
+    el.addEventListener('touchend', e=>{
+      const elapsed = Date.now() - startTime;
+      // Tap if: no significant move AND not too long press (under 500ms)
+      if(!moved && elapsed < 500){
+        e.preventDefault();
+        handler();
+      }
+    });
+  }
+
+  function setupMobileTaps(){
+    // Carousel cards (.gcard with data-action)
+    document.querySelectorAll('.gcard[data-action]').forEach(card=>{
+      if(card.dataset.mobileTapBound) return;
+      card.dataset.mobileTapBound = '1';
+      attachTapHandler(card, ()=>{
+        // Trigger the same click handler by dispatching a click
+        card.click();
+      });
+    });
+    // Category cards
+    document.querySelectorAll('.cat-card').forEach(card=>{
+      if(card.dataset.mobileTapBound) return;
+      card.dataset.mobileTapBound = '1';
+      attachTapHandler(card, ()=>card.click());
+    });
+    // Peugeot/C2 part cards
+    document.querySelectorAll('.peugeot-part, .c2-part').forEach(card=>{
+      if(card.dataset.mobileTapBound) return;
+      card.dataset.mobileTapBound = '1';
+      attachTapHandler(card, ()=>card.click());
+    });
+  }
+
+  // Run after DOM is ready, and also after screen changes (for dynamically shown content)
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', setupMobileTaps);
+  } else {
+    setupMobileTaps();
+  }
+  // Re-bind whenever a new screen is shown (catSelect → scanList etc.)
+  const _origShow = window.showScreen;
+  if(typeof _origShow === 'function'){
+    window.showScreen = function(id){
+      _origShow(id);
+      setTimeout(setupMobileTaps, 200);
+    };
+  }
+  // Also re-attach periodically as safety net
+  setInterval(setupMobileTaps, 1500);
 })();
 
 </script>
