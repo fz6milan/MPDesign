@@ -1370,31 +1370,98 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
    ═══════════════════════════════════════════════════════════════════ */
 @media (max-width: 768px){
 
-  /* Hide custom cursor on mobile — touch devices don't need it */
+  /* Hide custom cursor on mobile */
   #cursor{display:none !important}
-  * {cursor:auto !important}
-  button, a, .gcard, .cat-card, .peugeot-part, .grid-card, .gn-link, .gn-brand,
-  .lang-opt, .h-btn, .nav-back, .tb-back, .case-study-btn, .services-cta-btn,
-  .slide-arrow, .carousel-arrow, .cs-arrow, .cs-thumb, .v3d-link {cursor:pointer !important}
+  *{cursor:auto !important}
 
-  /* ─── GLOBAL NAV ─── */
+  /* ═══ GLOBAL NAV ═══ */
   .global-nav{
-    height:48px !important;
-    padding:0 14px !important;
+    height:52px !important;
+    padding:0 12px !important;
   }
-  .gn-brand-logo{height:26px !important}
-  .gn-links{gap:14px !important}
-  .gn-link{font-size:9px !important; letter-spacing:.18em !important; padding:6px 4px !important}
-  .gn-link::after{display:none !important}
-  #gnLangToggle{font-size:9px !important; padding:5px 9px !important; gap:6px !important}
-  #gnLangToggle .lang-sep{margin:0 2px}
+  .gn-brand-logo{height:24px !important}
+  .gn-links{gap:18px !important}
+  .gn-link{
+    font-size:10px !important;
+    letter-spacing:.16em !important;
+    padding:4px 2px !important;
+  }
+  .gn-link::before{display:none !important}
+  .gn-link::after{height:1px !important; bottom:-4px !important}
+  #gnLangToggle{
+    font-size:10px !important;
+    padding:5px 9px !important;
+    gap:5px !important;
+    border:1px solid rgba(255,255,255,.1) !important;
+    border-radius:0 !important;
+    background:rgba(255,255,255,.02) !important;
+  }
 
-  /* Shift content down for smaller nav */
+  /* ═══ INTRO ═══ */
+  .hero-emboss-text, .hero-top{display:none !important}
+  .hero-center{
+    inset:0 !important;
+    padding:0 24px 0 24px !important;
+    justify-content:center !important;
+  }
+  .hero-logo-wrap{margin-bottom:36px !important}
+  .intro-logo{
+    width:clamp(170px, 55vw, 240px) !important;
+  }
+  .h-btn{
+    font-size:11px !important;
+    letter-spacing:.32em !important;
+    padding:16px 60px !important;
+  }
+
+  /* Hero story — push to bottom, hide tags on tiny screens */
+  .hero-bottom{
+    position:absolute !important;
+    bottom:24px !important;
+    left:0 !important; right:0 !important;
+    padding:0 20px !important;
+    text-align:center;
+  }
+  .h-story{
+    font-size:11px !important;
+    line-height:1.5 !important;
+    max-width:340px !important;
+    margin:0 auto 10px !important;
+  }
+  .h-tag{
+    font-size:9px !important;
+    letter-spacing:.22em !important;
+    display:block !important;
+  }
+  .h-tag::before, .h-tag::after{
+    width:12px !important; margin:0 6px !important;
+  }
+  .h-sub{
+    font-size:8px !important;
+    letter-spacing:.26em !important;
+    margin-top:2px !important;
+    display:block !important;
+  }
+
+  /* Intro EN/SR toggle */
+  .intro-lang-toggle{
+    top:16px !important;
+    right:16px !important;
+    font-size:10px !important;
+    padding:6px 11px !important;
+    border:1px solid rgba(255,255,255,.12) !important;
+    background:rgba(0,0,0,.4) !important;
+    border-radius:0 !important;
+  }
+
+  /* ═══ TOPBAR (shared) ═══ */
   body:has(.global-nav:not(.hidden-nav)) .grid-screen,
   body:has(.global-nav:not(.hidden-nav)) #scanList,
   body:has(.global-nav:not(.hidden-nav)) #designList,
-  body:has(.global-nav:not(.hidden-nav)) #printedList{
-    padding-top:96px !important;
+  body:has(.global-nav:not(.hidden-nav)) #printedList,
+  body:has(.global-nav:not(.hidden-nav)) #scanDetail,
+  body:has(.global-nav:not(.hidden-nav)) #printedDetail{
+    padding-top:104px !important;
   }
   body:has(.global-nav:not(.hidden-nav)) .grid-screen .topbar,
   body:has(.global-nav:not(.hidden-nav)) #scanList .topbar,
@@ -1402,113 +1469,103 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   body:has(.global-nav:not(.hidden-nav)) #printedList .topbar,
   body:has(.global-nav:not(.hidden-nav)) #scanDetail .topbar,
   body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
-    top:48px !important;
-    height:48px !important;
+    top:52px !important;
+    height:52px !important;
     padding:0 12px !important;
   }
   body:has(.global-nav:not(.hidden-nav)) .scan-video-bg,
   body:has(.global-nav:not(.hidden-nav)) .design-video-bg,
   body:has(.global-nav:not(.hidden-nav)) .printed-video-bg{
-    inset:96px 0 0 0 !important;
-    height:calc(100% - 96px) !important;
+    inset:104px 0 0 0 !important;
+    height:calc(100% - 104px) !important;
   }
-  body:has(.global-nav:not(.hidden-nav)) #scanDetail,
-  body:has(.global-nav:not(.hidden-nav)) #printedDetail{
-    padding-top:96px !important;
-  }
-
   .topbar .tb-back{
-    font-size:10px !important; padding:7px 12px !important; letter-spacing:.18em !important;
+    font-size:10px !important; padding:7px 13px !important; letter-spacing:.18em !important;
   }
   .topbar .tb-tag{
-    font-size:9px !important; letter-spacing:.16em !important; margin-left:auto;
-    max-width:50%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    font-size:9px !important; letter-spacing:.14em !important; margin-left:auto;
+    max-width:55%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
   .topbar .tb-divider{display:none !important}
 
-  /* ─── INTRO ─── */
-  .hero-emboss-text{display:none}
-  .hero-top{display:none}
-  .hero-center{
-    padding-bottom:6vh !important;
-  }
-  .hero-logo-wrap{margin-bottom:18px !important}
-  .intro-logo{
-    width:clamp(180px, 60vw, 260px) !important;
-  }
-  .h-btn{
-    font-size:11px !important; letter-spacing:.32em !important;
-    padding:16px 56px !important;
-  }
-  .hero-bottom{
-    bottom:18px !important; padding:0 18px !important;
-  }
-  .h-story{
-    font-size:11px !important; line-height:1.6 !important;
-    max-width:90% !important; margin:0 auto 14px !important;
-  }
-  .h-tag{
-    font-size:9px !important; letter-spacing:.22em !important;
-  }
-  .h-tag::before, .h-tag::after{width:14px !important; margin:0 8px !important}
-  .h-sub{font-size:8px !important; letter-spacing:.28em !important; margin-top:4px}
-  .intro-lang-toggle{top:14px !important; right:14px !important; font-size:9px !important; padding:5px 9px !important}
-
-  /* ─── CATEGORIES (catSelect) ─── */
-  .cat-screen, #catSelect{padding:80px 14px 30px !important}
-  .cat-hero{margin-bottom:24px !important}
-  .cat-hero h1{font-size:32px !important; line-height:1 !important}
-  .cat-hero p{font-size:11px !important; letter-spacing:.18em !important; margin-top:8px}
+  /* ═══ CATEGORIES (catSelect) ═══ */
+  .cat-screen, #catSelect{padding:90px 16px 30px !important}
+  .cat-hero{margin-bottom:24px !important; text-align:center}
+  .cat-hero h1{font-size:32px !important; line-height:1 !important; letter-spacing:.02em !important}
+  .cat-hero p{font-size:11px !important; letter-spacing:.18em !important; margin-top:10px}
   .cat-grid{
     grid-template-columns:1fr !important;
+    grid-template-rows:auto !important;
     gap:14px !important;
     max-width:520px;
-    margin:0 auto;
+    height:auto !important;
+    margin:0 auto !important;
   }
   .cat-card{
-    aspect-ratio:16/9 !important;
-    padding:24px !important;
+    aspect-ratio:16/10 !important;
+    height:auto !important;
+    padding:22px !important;
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    justify-content:flex-end !important;
   }
-  .cat-name{font-size:22px !important; line-height:1.05 !important}
-  .cat-desc{font-size:11px !important; line-height:1.5 !important; margin-top:8px}
-  .cat-enter{font-size:9px !important; letter-spacing:.22em !important; margin-top:12px}
-
-  /* ─── LIST SCREENS (scanList, designList, printedList) — HORIZONTAL SNAP SWIPE ─── */
-  #scanList, #designList, #printedList{
-    padding-top:96px !important;
-    padding-bottom:30px !important;
+  .cat-card .cat-card-video{
+    opacity:.22 !important;
   }
-  #scanList .list-hero, #designList .list-hero, #printedList .list-hero{
-    padding:18px 14px 12px !important; text-align:center;
-  }
-  #scanList .list-hero h1, #designList .list-hero h1, #printedList .list-hero h1{
+  .cat-name{
     font-size:24px !important;
+    line-height:1 !important;
+    letter-spacing:.02em !important;
+    white-space:normal !important;
+    word-spacing:normal !important;
   }
-  #scanList .list-hero p, #designList .list-hero p, #printedList .list-hero p{
-    font-size:10px !important; letter-spacing:.18em !important;
+  .cat-name br{display:inline !important}
+  .cat-desc{
+    font-size:11px !important;
+    line-height:1.5 !important;
+    margin-top:8px !important;
+    letter-spacing:0 !important;
+    word-spacing:normal !important;
   }
+  .cat-enter{
+    font-size:9px !important;
+    letter-spacing:.22em !important;
+    margin-top:14px !important;
+    word-spacing:.05em !important;
+  }
+  .cat-icon{font-size:11px !important}
 
-  /* Hide desktop carousel arrows on mobile */
+  /* ═══ LIST SCREENS — Horizontal swipe carousel ═══ */
+  #scanList, #designList, #printedList{
+    padding-bottom:80px !important;
+  }
+  .list-hero{padding:20px 16px 14px !important; text-align:center}
+  .list-hero h1{font-size:26px !important; letter-spacing:.02em !important}
+  .list-hero p{font-size:10px !important; letter-spacing:.18em !important; margin-top:6px}
+
+  /* Carousel arrows hidden on mobile */
   .carousel-arrow{display:none !important}
 
-  /* Transform the absolute-positioned 3D carousel into a horizontal swipe row */
+  /* Convert 3D coverflow to flat horizontal swipe row */
   .grid-cards{
     position:relative !important;
     height:auto !important;
-    min-height:480px !important;
+    min-height:auto !important;
     perspective:none !important;
     display:flex !important;
     flex-direction:row !important;
     overflow-x:auto !important;
     overflow-y:hidden !important;
     scroll-snap-type:x mandatory !important;
-    scroll-padding:0 14px !important;
+    scroll-padding-left:16px !important;
+    scroll-padding-right:16px !important;
     gap:14px !important;
-    padding:14px !important;
+    padding:18px 16px !important;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
+    perspective:none !important;
   }
-  .grid-cards::-webkit-scrollbar{display:none}
+  .grid-cards::-webkit-scrollbar{display:none !important}
   .grid-cards .gcard{
     position:relative !important;
     top:auto !important; left:auto !important;
@@ -1516,61 +1573,84 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     flex:0 0 calc(100vw - 56px) !important;
     max-width:380px !important;
     width:calc(100vw - 56px) !important;
-    aspect-ratio:4/5 !important;
+    aspect-ratio:3/4 !important;
     height:auto !important;
     scroll-snap-align:center !important;
     opacity:1 !important;
     box-shadow:0 10px 30px rgba(0,0,0,.5) !important;
     border:1px solid rgba(255,255,255,.12) !important;
     transition:none !important;
+    rotate:0 !important;
+  }
+  .grid-cards .gcard.pos-l1,
+  .grid-cards .gcard.pos-r1,
+  .grid-cards .gcard.pos-l2,
+  .grid-cards .gcard.pos-r2,
+  .grid-cards .gcard.pos-active,
+  .grid-cards .gcard.hidden-l,
+  .grid-cards .gcard.hidden-r{
+    position:relative !important;
+    transform:none !important;
+    opacity:1 !important;
+    left:auto !important; top:auto !important;
   }
   .grid-cards .gcard .gcard-img{
-    width:100% !important; height:65% !important;
+    width:100% !important; height:60% !important;
+    position:relative !important;
   }
-  .grid-cards .gcard .gcard-info{
-    padding:18px !important;
+  .grid-cards .gcard .gcard-overlay{
+    position:relative !important; padding:18px !important;
+    background:linear-gradient(180deg, transparent, rgba(0,0,0,.85)) !important;
   }
-  .grid-cards .gcard-name{font-size:18px !important; line-height:1.1 !important}
-  .grid-cards .gcard-sub{font-size:10px !important; letter-spacing:.18em !important; margin-top:6px}
+  .grid-cards .gcard-num{font-size:10px !important; letter-spacing:.32em !important}
+  .grid-cards .gcard-name{font-size:18px !important; line-height:1.1 !important; margin-top:6px}
+  .grid-cards .gcard-sub{font-size:10px !important; letter-spacing:.18em !important; margin-top:4px}
   .grid-cards .gcard-cta{font-size:9px !important; letter-spacing:.22em !important; margin-top:10px}
-  .grid-cards .gcard-counter{font-size:9px !important}
+  .gcard-corner{display:none !important}
 
-  /* Carousel dots become smaller and right under the cards */
+  /* Carousel dots — visible and tappable */
   .carousel-dots{
-    bottom:18px !important; left:0; right:0;
+    position:relative !important;
+    bottom:auto !important;
+    margin:14px auto 0 !important;
     justify-content:center;
     padding:0 14px;
+    display:flex;
+    gap:6px;
   }
-  .carousel-dot{width:6px !important; height:6px !important}
-  .carousel-dot.active{width:18px !important}
+  .carousel-dot{
+    width:6px !important; height:6px !important;
+    background:rgba(255,255,255,.2) !important;
+    border-radius:50%;
+  }
+  .carousel-dot.active{
+    width:20px !important;
+    border-radius:3px !important;
+    background:#1a9fff !important;
+  }
 
-  /* ─── PART PICKER (Peugeot/C2 part picker) ─── */
+  /* ═══ PART PICKER (Peugeot/C2 part picker) ═══ */
   .peugeot-parts, .c2-parts{
     grid-template-columns:1fr !important;
     gap:12px !important;
-    padding:18px 14px !important;
+    padding:18px 16px !important;
+    max-width:none !important;
   }
   .peugeot-part, .c2-part{
     aspect-ratio:16/10 !important;
     padding:20px !important;
   }
+  .peugeot-part-num, .c2-part-num{font-size:9px !important; letter-spacing:.22em !important}
   .peugeot-part-name, .c2-part-name{font-size:18px !important}
   .peugeot-part-desc, .c2-part-desc{font-size:11px !important; margin-top:6px}
-  .peugeot-part-num, .c2-part-num{font-size:9px !important; letter-spacing:.22em !important}
   .peugeot-part-cta, .c2-part-cta{font-size:9px !important; letter-spacing:.22em !important; margin-top:8px}
 
-  /* ─── DETAIL VIEWS (scanDetail, printedDetail) ─── */
-  #scanDetail .detail-hero, #printedDetail .detail-hero{
-    padding:14px !important;
-  }
+  /* ═══ DETAIL VIEWS ═══ */
+  #scanDetail .detail-hero, #printedDetail .detail-hero{padding:16px !important; text-align:center}
   #scanDetail .detail-hero h2, #printedDetail .detail-hero h2{font-size:22px !important}
-  #scanDetail .detail-hero p, #printedDetail .detail-hero p{
-    font-size:10px !important; letter-spacing:.18em !important; margin-top:6px;
-  }
-  .detail-stage{padding:0 12px !important}
-  .slide-arrow{
-    width:38px !important; height:38px !important;
-  }
+  #scanDetail .detail-hero p, #printedDetail .detail-hero p{font-size:10px !important; letter-spacing:.18em !important; margin-top:6px}
+  .detail-stage{padding:0 12px !important; aspect-ratio:4/5 !important}
+  .slide-arrow{width:38px !important; height:38px !important}
   .slide-prev{left:8px !important}
   .slide-next{right:8px !important}
   .slide-counter, .slide-zoom-hint{font-size:9px !important; letter-spacing:.22em !important}
@@ -1578,36 +1658,33 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .slide-thumbs{gap:6px !important; flex:1 1 100%; justify-content:center}
   .slide-thumb{width:44px !important; height:32px !important}
 
-  /* ─── SERVICES ─── */
-  .services-screen{padding:80px 14px 30px !important}
+  /* ═══ SERVICES ═══ */
+  .services-screen{padding:90px 16px 30px !important}
   .services-inner{padding:0 !important}
-  .services-hero{margin-bottom:24px !important}
-  .services-hero h1{font-size:30px !important}
-  .services-hero .sec-ey{font-size:9px !important; letter-spacing:.32em !important}
-  .services-hero p{font-size:12px !important; line-height:1.55 !important; margin-top:10px}
+  .services-hero{margin-bottom:26px !important; text-align:center}
+  .services-hero h1{font-size:30px !important; letter-spacing:.02em !important}
+  .services-hero .sec-ey{font-size:9px !important; letter-spacing:.28em !important}
+  .services-hero p{font-size:11px !important; line-height:1.55 !important; margin-top:10px; max-width:none}
   .services-grid{gap:14px !important}
   .service-card{
     grid-template-columns:1fr !important;
-    padding:20px !important; gap:10px !important;
+    padding:22px 20px !important; gap:10px !important;
   }
   .service-num{font-size:11px !important; letter-spacing:.32em !important}
-  .service-name{font-size:14px !important; line-height:1.3 !important}
+  .service-name{font-size:15px !important; line-height:1.3 !important}
   .service-desc{font-size:11px !important; line-height:1.55 !important; margin-top:6px}
   .service-tags{gap:6px !important; margin-top:10px}
-  .service-tag{font-size:8px !important; padding:4px 8px !important; letter-spacing:.14em !important}
-  .case-study-btn{
-    font-size:9px !important; letter-spacing:.22em !important;
-    padding:9px 14px !important; margin-top:12px !important;
-  }
-  .services-cta{padding:28px 14px !important}
-  .services-cta-tag{font-size:9px !important; letter-spacing:.32em !important}
+  .service-tag{font-size:8px !important; padding:4px 9px !important; letter-spacing:.14em !important}
+  .case-study-btn{font-size:9px !important; letter-spacing:.22em !important; padding:9px 14px !important; margin-top:12px !important}
+  .services-cta{padding:30px 14px !important}
+  .services-cta-tag{font-size:9px !important; letter-spacing:.28em !important}
   .services-cta-btn{font-size:11px !important; padding:14px 32px !important; letter-spacing:.28em !important}
 
-  /* ─── CASE STUDY MODAL ─── */
-  .cs-header{padding:36px 14px 18px !important}
+  /* ═══ CASE STUDY MODAL ═══ */
+  .cs-header{padding:40px 14px 18px !important}
   .cs-eyebrow{font-size:9px !important; letter-spacing:.28em !important; margin-bottom:8px}
   .cs-title{font-size:22px !important; letter-spacing:.02em !important}
-  .cs-close{top:14px !important; right:14px !important; width:36px !important; height:36px !important}
+  .cs-close{top:14px !important; right:14px !important; width:38px !important; height:38px !important}
   .cs-close svg{width:14px !important; height:14px !important}
   .cs-stage{padding:0 14px !important}
   .cs-img{max-width:94vw !important; max-height:55vh !important}
@@ -1619,46 +1696,50 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .cs-thumbs{gap:5px !important; flex:1 1 100%; justify-content:center}
   .cs-thumb{width:36px !important; height:26px !important}
 
-  /* ─── CONTACT ─── */
-  .contact-screen{padding:80px 14px 30px !important}
+  /* ═══ CONTACT ═══ */
+  .contact-screen{padding:90px 16px 30px !important}
+  .contact-hero{text-align:center}
   .contact-hero h1{font-size:30px !important}
   .contact-hero .sec-ey{font-size:9px !important}
-  .contact-hero p{font-size:11px !important; line-height:1.6 !important}
+  .contact-hero p{font-size:11px !important; line-height:1.6 !important; margin-top:10px}
   .contact-methods{
     grid-template-columns:1fr !important;
     gap:14px !important;
-    margin-top:24px;
+    margin-top:26px;
   }
-  .contact-method{padding:22px 18px !important}
+  .contact-method{padding:24px 20px !important; text-align:left}
   .contact-method-icon{font-size:24px !important}
   .contact-method-label{font-size:9px !important; letter-spacing:.28em !important}
   .contact-method-value{font-size:14px !important; margin-top:4px}
   .contact-footer-note{font-size:9px !important; letter-spacing:.22em !important; margin-top:24px}
 
-  /* ─── VIEWER (image zoom) ─── */
+  /* ═══ VIEWER ═══ */
   .viewer{cursor:auto !important}
-  .viewer-img{
-    max-width:96vw !important; max-height:80vh !important;
-  }
-  .viewer-hint{font-size:9px !important; letter-spacing:.18em !important; bottom:14px !important}
+  .viewer-img{max-width:96vw !important; max-height:78vh !important}
+  .viewer-hint{font-size:9px !important; letter-spacing:.18em !important; bottom:14px !important; padding:0 14px}
   .viewer-close{top:14px !important; right:14px !important; font-size:11px !important; padding:9px 14px !important}
 
-  /* ─── DESIGN PROJECTS — Enter project CTA ─── */
-  .gcard-cta{display:inline-flex !important; align-items:center; gap:6px}
-
-  /* Touch-friendly tap targets */
+  /* Touch-friendly */
   button, .gn-link, .lang-opt, .nav-back, .tb-back, .h-btn, .cat-card, .gcard,
   .case-study-btn, .services-cta-btn, .contact-method, .slide-arrow, .cs-arrow,
   .peugeot-part, .c2-part {
     -webkit-tap-highlight-color:transparent;
   }
-
 }
 
 /* ─── EXTRA-SMALL PHONES (<400px) ─── */
 @media (max-width: 400px){
-  .gn-links{gap:10px !important}
-  .gn-link{font-size:8px !important}
+  .gn-links{gap:14px !important}
+  .gn-link{font-size:9px !important}
+  .intro-logo{width:clamp(150px, 50vw, 200px) !important}
+  .hero-logo-wrap{margin-bottom:28px !important}
+  .h-btn{padding:14px 48px !important; font-size:10px !important}
+  .h-story{font-size:10px !important; max-width:300px !important}
+  .cat-name{font-size:20px !important}
+  .grid-cards .gcard{flex-basis:calc(100vw - 40px) !important; width:calc(100vw - 40px) !important}
+  .services-hero h1, .contact-hero h1{font-size:26px !important}
+  .service-name{font-size:14px !important}
+}
   .intro-logo{width:clamp(150px, 55vw, 220px) !important}
   .h-btn{padding:14px 44px !important; font-size:10px !important}
   .cat-name{font-size:20px !important}
@@ -2382,6 +2463,44 @@ function initCarousel(screenId){
   const cards = Array.from(gridCards.querySelectorAll('.gcard'));
   if(cards.length < 2) return;
 
+  // ─── MOBILE: skip the 3D coverflow logic entirely.
+  // Cards already laid out as a horizontal swipe row by CSS.
+  // Build dots, sync them with native scroll, and stop.
+  if(window.innerWidth <= 768){
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'carousel-dots';
+    cards.forEach((_,i)=>{
+      const d = document.createElement('button');
+      d.className = 'carousel-dot' + (i===0?' active':'');
+      d.addEventListener('click', ()=>{
+        cards[i].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+      });
+      dotsWrap.appendChild(d);
+    });
+    // Place dots AFTER .grid-cards in the DOM
+    gridCards.parentNode.insertBefore(dotsWrap, gridCards.nextSibling);
+
+    // Update active dot on scroll
+    let scrollTimer = null;
+    gridCards.addEventListener('scroll', ()=>{
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(()=>{
+        const containerCenter = gridCards.scrollLeft + gridCards.clientWidth/2;
+        let closest = 0, minDist = Infinity;
+        cards.forEach((card,i)=>{
+          const cardCenter = card.offsetLeft + card.offsetWidth/2;
+          const dist = Math.abs(cardCenter - containerCenter);
+          if(dist < minDist){ minDist = dist; closest = i; }
+        });
+        dotsWrap.querySelectorAll('.carousel-dot').forEach((d,i)=>{
+          d.classList.toggle('active', i===closest);
+        });
+      }, 80);
+    });
+    return; // STOP — no 3D classes, no arrows
+  }
+
+  // ─── DESKTOP carousel (original logic) ───
   // Arrows
   const leftBtn = document.createElement('button');
   leftBtn.className = 'carousel-arrow left';
