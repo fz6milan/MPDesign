@@ -499,44 +499,37 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
 
 
 
-  /* ═══════════ MOBILE PATCH v3 — proper slider alignment ═══════════ */
+  /* ═══════════ MOBILE PATCH v4 — match 1080x1920 aspect ═══════════ */
   
-  /* Scan-wrap (hero) — slika u box-u, NEMA hover blur */
+  /* Scan-wrap (hero) — aspect 9/16 to match mobile images */
   .scan-wrap{
     width:calc(100vw - 24px) !important;
     max-width:none !important;
-    aspect-ratio:4/3 !important;
-    max-height:55vh !important;
+    aspect-ratio:9/16 !important;
+    max-height:75vh !important;
     margin:0 auto !important;
     overflow:hidden !important;
     cursor:auto !important;
     position:relative !important;
-    pointer-events:none !important;  /* spreci klik koji moze da napravi crni overlay */
+    pointer-events:none !important;
   }
   .scan-base{
     width:100% !important;
     height:100% !important;
-    object-fit:contain !important;
+    object-fit:cover !important;
     object-position:center !important;
     position:absolute !important;
     inset:0 !important;
+    top:0 !important; left:0 !important;
     opacity:1 !important;
     pointer-events:none !important;
   }
-  /* DISABLE hover-zoom effect entirely on mobile */
   .scan-zoom, .scan-flash, .sz-scan, .sz-print{
     display:none !important;
   }
-  .scan-state{
-    bottom:10px !important; left:10px !important;
-    z-index:5 !important;
-  }
+  .scan-state{bottom:10px !important; left:10px !important; z-index:5 !important}
   .scan-state span{font-size:9px !important; letter-spacing:.2em !important}
-  .scan-hint-r{
-    bottom:10px !important; right:10px !important;
-    font-size:9px !important;
-    z-index:5 !important;
-  }
+  .scan-hint-r{bottom:10px !important; right:10px !important; font-size:9px !important; z-index:5 !important}
 
   /* Reveal Panel */
   .rp{
@@ -549,29 +542,28 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
   .rp-title{font-size:28px !important; line-height:1 !important; text-align:center !important}
   .rp-img-wrap{
     width:100% !important;
-    aspect-ratio:4/3 !important;
+    aspect-ratio:9/16 !important;
+    max-height:60vh !important;
     overflow:hidden !important;
     position:relative !important;
   }
   .rp-img-wrap img{
     width:100% !important;
     height:100% !important;
-    max-width:none !important;
-    max-height:none !important;
-    object-fit:contain !important;
+    object-fit:cover !important;
     object-position:center !important;
     position:absolute !important;
     inset:0 !important;
+    top:0 !important; left:0 !important;
     margin:0 !important;
   }
 
-  /* ═══ CMP SLIDER — slike SAVRSENO ALIGNED ═══ */
+  /* ═══ CMP SLIDER — aspect 9/16, slike perfectly aligned ═══ */
   .cmp-wrap{
     width:calc(100vw - 24px) !important;
     max-width:none !important;
-    aspect-ratio:4/3 !important;
-    min-height:280px !important;
-    max-height:60vh !important;
+    aspect-ratio:9/16 !important;
+    max-height:75vh !important;
     margin:14px auto !important;
     cursor:auto !important;
     touch-action:none !important;
@@ -580,11 +572,11 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     user-select:none !important;
     -webkit-user-select:none !important;
   }
-  /* cmp-before: ZA SCAN SLIKU — pun box, sredina */
+  /* cmp-before: SCAN — pokriva ceo box, savrseno centrirano */
   .cmp-before{
     width:100% !important;
     height:100% !important;
-    object-fit:contain !important;
+    object-fit:cover !important;
     object-position:center !important;
     position:absolute !important;
     inset:0 !important;
@@ -592,7 +584,7 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     z-index:1 !important;
     pointer-events:none !important;
   }
-  /* cmp-aw: CONTAINER ZA 3D PRINT — clipuje desnu polovinu sa width % */
+  /* cmp-aw: container za 3D print — clipuje desnu polovinu */
   .cmp-aw{
     position:absolute !important;
     top:0 !important;
@@ -603,13 +595,12 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     z-index:2 !important;
     pointer-events:none !important;
   }
-  /* cmp-after: ZA 3D PRINT — SAME positioning kao cmp-before, ali inside cmp-aw (clipped) */
+  /* cmp-after: 3D PRINT — IDENTICNA sirina kao cmp-before, ali clipovana po cmp-aw */
+  /* Trick: cmp-after width = cmp-wrap width (set by JS), object-position right = right edge */
   .cmp-after{
-    width:calc(100vw - 24px) !important;
-    max-width:none !important;
     height:100% !important;
-    object-fit:contain !important;
-    object-position:center !important;
+    object-fit:cover !important;
+    object-position:right center !important;
     position:absolute !important;
     top:0 !important;
     right:0 !important;
@@ -637,16 +628,17 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
   .cmp-badge.r{right:14px !important}
   .drag-hint{font-size:9px !important; letter-spacing:.22em !important; bottom:14px !important; z-index:12 !important}
 
-  /* Products slideshow */
+  /* Products slideshow — 9/16 aspect for mobile product renders */
   .pp-slide-stage{
-    aspect-ratio:4/3 !important;
-    max-height:55vh !important;
+    aspect-ratio:9/16 !important;
+    max-height:70vh !important;
     width:100% !important;
   }
   .pp-slide-img{
     width:100% !important;
     height:100% !important;
-    object-fit:contain !important;
+    object-fit:cover !important;
+    object-position:center !important;
   }
   /* ════════════ END MOBILE PATCH ════════════ */
 
@@ -1312,7 +1304,7 @@ try{
 </script>
 
 <script>
-// ═══ MOBILE: CMP SLIDER TOUCH SUPPORT v2 ═══
+// ═══ MOBILE: CMP SLIDER TOUCH SUPPORT v3 ═══
 (function(){
   if(window.innerWidth > 768) return;
   const wrap = document.getElementById('cmpWrap');
@@ -1323,13 +1315,22 @@ try{
   const badgeL = document.getElementById('badgeL');
   if(!wrap || !aw || !div) return;
 
-  // Make sure cmp-after width matches cmp-wrap (so slider clip works correctly)
+  // CRITICAL: wrap must receive touch even though pointer-events:none would apply
+  wrap.style.pointerEvents = 'auto';
+  wrap.style.touchAction = 'none';
+
+  // Sync cmp-after width with cmp-wrap so slider clip is perfectly aligned
   function syncAfterWidth(){
     const wrapW = wrap.getBoundingClientRect().width;
-    if(after) after.style.width = wrapW + 'px';
+    if(after){
+      after.style.width = wrapW + 'px';
+      after.style.maxWidth = wrapW + 'px';
+    }
   }
   syncAfterWidth();
   window.addEventListener('resize', syncAfterWidth);
+  setTimeout(syncAfterWidth, 100);
+  setTimeout(syncAfterWidth, 500);
 
   let dragging = false;
   function setPosition(clientX){
