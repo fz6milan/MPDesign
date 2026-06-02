@@ -728,6 +728,12 @@ body > #scroller{top:104px!important}
 @media(max-width:768px){
   .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
 }
+
+/* VW GTI mobile: portrait phone images for compare → use 3/4 container */
+@media(max-width:768px){
+  .cmp-wrap{aspect-ratio:3/4!important;max-height:56vh!important}
+  .cmp-before,.cmp-after{object-fit:cover!important;object-position:center 40%!important}
+}
 </style>
 </head>
 <body>
@@ -801,9 +807,9 @@ body > #scroller{top:104px!important}
       <p>drag to compare</p>
     </div>
     <div class="cmp-wrap" id="cmpWrap">
-      <img class="cmp-before" src="01_slider_before.png" alt="Scan">
+      <img class="cmp-before" src="../Folder - telefon/VW 7 GTI/vw_print.png" alt="Scan">
       <div class="cmp-aw" id="afterWrap">
-        <img class="cmp-after" id="afterImg" src="02.png" alt="3D Print">
+        <img class="cmp-after" id="afterImg" src="../Folder - telefon/VW 7 GTI/vw_scan.png" alt="3D Print">
       </div>
       <div class="cmp-div" id="cmpDiv">
         <div class="cmp-handle">
@@ -1624,6 +1630,7 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
 </script>
 
 
+<script>
 // Reset viewer zoom when products panel closes
 (function(){
   var ppBack = document.getElementById('ppBack');
@@ -1644,4 +1651,5 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
     obs.observe(ppPanel, {attributes:true, attributeFilter:['class']});
   }
 })();
+</script>
 </body></html>
