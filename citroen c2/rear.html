@@ -500,8 +500,6 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
 
 
   /* ═══════════ MOBILE PATCH v4 — match 1080x1920 aspect ═══════════ */
-  
-  /* Scan-wrap (hero) — aspect 9/16 to match mobile images */
   .scan-wrap{
     width:calc(100vw - 24px) !important;
     max-width:none !important;
@@ -531,8 +529,6 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
   .scan-state{bottom:10px !important; left:10px !important; z-index:5 !important}
   .scan-state span{font-size:9px !important; letter-spacing:.2em !important}
   .scan-hint-r{bottom:10px !important; right:10px !important; font-size:9px !important; z-index:5 !important}
-
-  /* Reveal Panel */
   .rp{
     grid-template-columns:1fr !important;
     padding:24px 14px !important;
@@ -558,8 +554,6 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     top:0 !important; left:0 !important;
     margin:0 !important;
   }
-
-  /* ═══ CMP SLIDER — aspect 9/16, slike perfectly aligned ═══ */
   .cmp-wrap{
     width:calc(100vw - 24px) !important;
     max-width:none !important;
@@ -573,7 +567,6 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     user-select:none !important;
     -webkit-user-select:none !important;
   }
-  /* cmp-before: SCAN — pokriva ceo box, savrseno centrirano */
   .cmp-before{
     width:100% !important;
     height:100% !important;
@@ -585,61 +578,90 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     z-index:1 !important;
     pointer-events:none !important;
   }
-  /* cmp-aw: container za 3D print — clipuje desnu polovinu */
   .cmp-aw{
     position:absolute !important;
-    top:0 !important;
-    bottom:0 !important;
-    right:0 !important;
+    top:0 !important; bottom:0 !important; right:0 !important;
     height:100% !important;
     overflow:hidden !important;
     z-index:2 !important;
     pointer-events:none !important;
   }
-  /* cmp-after: 3D PRINT — IDENTICNA sirina kao cmp-before, ali clipovana po cmp-aw */
-  /* Trick: cmp-after width = cmp-wrap width (set by JS), object-position right = right edge */
   .cmp-after{
     height:100% !important;
     object-fit:cover !important;
     object-position:right center !important;
     position:absolute !important;
-    top:0 !important;
-    right:0 !important;
+    top:0 !important; right:0 !important;
     z-index:2 !important;
     pointer-events:none !important;
   }
-  .cmp-div{
-    z-index:10 !important;
-    width:2px !important;
-    pointer-events:none !important;
-  }
+  .cmp-div{z-index:10 !important; width:2px !important; pointer-events:none !important}
   .cmp-handle{
-    width:48px !important;
-    height:48px !important;
-    z-index:11 !important;
-    pointer-events:none !important;
+    width:48px !important; height:48px !important;
+    z-index:11 !important; pointer-events:none !important;
   }
   .cmp-handle svg{width:22px !important; height:22px !important}
   .cmp-badge{
     font-size:9px !important; padding:5px 9px !important;
-    letter-spacing:.18em !important; top:14px !important;
-    z-index:12 !important;
+    letter-spacing:.18em !important; top:14px !important; z-index:12 !important;
   }
   .cmp-badge.l{left:14px !important}
   .cmp-badge.r{right:14px !important}
   .drag-hint{font-size:9px !important; letter-spacing:.22em !important; bottom:14px !important; z-index:12 !important}
+  .pp-slide-stage{aspect-ratio:9/16 !important; max-height:70vh !important; width:100% !important}
+  .pp-slide-img{width:100% !important; height:100% !important; object-fit:cover !important; object-position:center !important}
 
-  /* Products slideshow — 9/16 aspect for mobile product renders */
-  .pp-slide-stage{
-    aspect-ratio:9/16 !important;
-    max-height:70vh !important;
+
+  /* ═══════════ MOBILE PATCH v5 — clean reveal + lupa anim ═══════════ */
+  /* Remove ALL cyan blur/glow on reveal panel for mobile (clean look) */
+  .reveal-panel{
+    position:static !important;
     width:100% !important;
+    background:transparent !important;
+    border-left:none !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    box-shadow:none !important;
+    padding:30px 14px !important;
+    opacity:1 !important;
+    pointer-events:auto !important;
+    gap:18px !important;
   }
-  .pp-slide-img{
-    width:100% !important;
-    height:100% !important;
-    object-fit:cover !important;
-    object-position:center !important;
+  .rp-img-wrap{
+    border:1.5px solid rgba(26,159,255,.6) !important;
+    box-shadow:none !important;  /* NEMA cyan glow oko slike */
+    background:transparent !important;
+  }
+  .rp-img-wrap::before, .rp-img-wrap::after{
+    width:14px !important; height:14px !important;
+    border-width:2px !important;
+  }
+  /* Image inside rp-img-wrap stays product render */
+  
+  /* LUPA ANIMATION — fade in/out preko scan-wrap-a */
+  .scan-wrap::after{
+    content:'';
+    position:absolute !important;
+    top:50% !important;
+    left:50% !important;
+    width:54px !important;
+    height:54px !important;
+    transform:translate(-50%, -50%) !important;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a9fff' stroke-width='1.5' stroke-linecap='round'><circle cx='10' cy='10' r='6'/><line x1='14.5' y1='14.5' x2='20' y2='20'/><line x1='7' y1='10' x2='13' y2='10'/><line x1='10' y1='7' x2='10' y2='13'/></svg>");
+    background-size:contain !important;
+    background-repeat:no-repeat !important;
+    background-position:center !important;
+    opacity:0;
+    z-index:6 !important;
+    pointer-events:none !important;
+    filter:drop-shadow(0 0 8px rgba(26,159,255,.7));
+    animation:mobileLupaPulse 3.4s ease-in-out infinite !important;
+  }
+  @keyframes mobileLupaPulse{
+    0%   { opacity:0; transform:translate(-50%, -50%) scale(.85); }
+    25%  { opacity:1; transform:translate(-50%, -50%) scale(1); }
+    65%  { opacity:1; transform:translate(-50%, -50%) scale(1.04); }
+    100% { opacity:0; transform:translate(-50%, -50%) scale(.9); }
   }
   /* ════════════ END MOBILE PATCH ════════════ */
 
@@ -1303,68 +1325,6 @@ try{
 })();
 
 </script>
-
-<script>
-// ═══ MOBILE: CMP SLIDER TOUCH SUPPORT v3 ═══
-(function(){
-  if(window.innerWidth > 768) return;
-  const wrap = document.getElementById('cmpWrap');
-  const aw = document.getElementById('afterWrap');
-  const div = document.getElementById('cmpDiv');
-  const after = document.getElementById('afterImg');
-  const hint = document.getElementById('dragHint');
-  const badgeL = document.getElementById('badgeL');
-  if(!wrap || !aw || !div) return;
-
-  // CRITICAL: wrap must receive touch even though pointer-events:none would apply
-  wrap.style.pointerEvents = 'auto';
-  wrap.style.touchAction = 'none';
-
-  // Sync cmp-after width with cmp-wrap so slider clip is perfectly aligned
-  function syncAfterWidth(){
-    const wrapW = wrap.getBoundingClientRect().width;
-    if(after){
-      after.style.width = wrapW + 'px';
-      after.style.maxWidth = wrapW + 'px';
-    }
-  }
-  syncAfterWidth();
-  window.addEventListener('resize', syncAfterWidth);
-  setTimeout(syncAfterWidth, 100);
-  setTimeout(syncAfterWidth, 500);
-
-  let dragging = false;
-  function setPosition(clientX){
-    const rect = wrap.getBoundingClientRect();
-    let pct = ((clientX - rect.left) / rect.width) * 100;
-    pct = Math.max(0, Math.min(100, pct));
-    aw.style.width = (100 - pct) + '%';
-    div.style.left = pct + '%';
-    if(hint) hint.style.opacity = '0';
-    if(badgeL) badgeL.style.opacity = pct < 25 ? '0' : '1';
-  }
-
-  wrap.addEventListener('touchstart', e=>{
-    dragging = true;
-    if(e.touches[0]) setPosition(e.touches[0].clientX);
-    e.preventDefault();
-  }, {passive:false});
-
-  wrap.addEventListener('touchmove', e=>{
-    if(!dragging) return;
-    if(e.touches[0]) setPosition(e.touches[0].clientX);
-    e.preventDefault();
-  }, {passive:false});
-
-  wrap.addEventListener('touchend', ()=>{ dragging = false; });
-
-  wrap.addEventListener('mousedown', e=>{ dragging = true; setPosition(e.clientX); });
-  document.addEventListener('mousemove', e=>{ if(dragging) setPosition(e.clientX); });
-  document.addEventListener('mouseup', ()=>{ dragging = false; });
-})();
-</script>
-
-
 <script>
 // Mobile: replace rp-img-wrap image with isolated product render
 (function(){
@@ -1378,6 +1338,55 @@ try{
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', swap);
   else swap();
   setTimeout(swap, 200);
+})();
+</script>
+
+
+<script>
+// ═══ MOBILE: CMP SLIDER TOUCH SUPPORT v3 ═══
+(function(){
+  if(window.innerWidth > 768) return;
+  const wrap = document.getElementById('cmpWrap');
+  const aw = document.getElementById('afterWrap');
+  const div = document.getElementById('cmpDiv');
+  const after = document.getElementById('afterImg');
+  const hint = document.getElementById('dragHint');
+  const badgeL = document.getElementById('badgeL');
+  if(!wrap || !aw || !div) return;
+  wrap.style.pointerEvents = 'auto';
+  wrap.style.touchAction = 'none';
+  function syncAfterWidth(){
+    const wrapW = wrap.getBoundingClientRect().width;
+    if(after){ after.style.width = wrapW + 'px'; after.style.maxWidth = wrapW + 'px'; }
+  }
+  syncAfterWidth();
+  window.addEventListener('resize', syncAfterWidth);
+  setTimeout(syncAfterWidth, 100);
+  setTimeout(syncAfterWidth, 500);
+  let dragging = false;
+  function setPosition(clientX){
+    const rect = wrap.getBoundingClientRect();
+    let pct = ((clientX - rect.left) / rect.width) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    aw.style.width = (100 - pct) + '%';
+    div.style.left = pct + '%';
+    if(hint) hint.style.opacity = '0';
+    if(badgeL) badgeL.style.opacity = pct < 25 ? '0' : '1';
+  }
+  wrap.addEventListener('touchstart', e=>{
+    dragging = true;
+    if(e.touches[0]) setPosition(e.touches[0].clientX);
+    e.preventDefault();
+  }, {passive:false});
+  wrap.addEventListener('touchmove', e=>{
+    if(!dragging) return;
+    if(e.touches[0]) setPosition(e.touches[0].clientX);
+    e.preventDefault();
+  }, {passive:false});
+  wrap.addEventListener('touchend', ()=>{ dragging = false; });
+  wrap.addEventListener('mousedown', e=>{ dragging = true; setPosition(e.clientX); });
+  document.addEventListener('mousemove', e=>{ if(dragging) setPosition(e.clientX); });
+  document.addEventListener('mouseup', ()=>{ dragging = false; });
 })();
 </script>
 
