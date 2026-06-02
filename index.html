@@ -1493,9 +1493,10 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .topbar .tb-divider{display:none !important}
 
   /* ═══ CATEGORIES (catSelect) ═══ */
-  /* All mobile screens: allow vertical scroll. position:fixed from desktop replaced. */
-  #catSelect, #services, #contact, #scanList, #designList, #printedList,
-  #c2PartPick, #peugeotParts{
+  /* Mobile screens: scrollable. CRITICAL: use :not(.hidden) so .screen.hidden{display:none} still works! */
+  #catSelect:not(.hidden), #services:not(.hidden), #contact:not(.hidden),
+  #scanList:not(.hidden), #designList:not(.hidden), #printedList:not(.hidden),
+  #c2PartPick:not(.hidden), #peugeotParts:not(.hidden){
     position:absolute !important;
     inset:0 !important;
     overflow-y:auto !important;
@@ -1505,13 +1506,14 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     display:block !important;
     touch-action:pan-y !important;
   }
-  /* scanDetail / printedDetail handled separately below with flex layout */
-  #scanDetail, #printedDetail{
+  #scanDetail:not(.hidden), #printedDetail:not(.hidden){
     position:absolute !important;
     inset:0 !important;
     -webkit-overflow-scrolling:touch !important;
     touch-action:pan-y !important;
   }
+  /* Make sure hidden screens stay hidden */
+  .screen.hidden{display:none !important}
   .cat-screen, #catSelect{padding:90px 16px 40px !important; min-height:100vh !important; height:auto !important}
   .cat-header{margin:0 0 22px 0 !important; padding:0 !important; text-align:center}
   .cat-header h1{font-size:30px !important; line-height:1 !important; letter-spacing:.02em !important}
@@ -1707,7 +1709,8 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .peugeot-part-cta, .c2-part-cta{font-size:9px !important; letter-spacing:.22em !important; margin-top:8px}
 
   /* ═══ DETAIL VIEWS — scanDetail and printedDetail ═══ */
-  #scanDetail, #printedDetail{
+  /* CRITICAL: :not(.hidden) so .screen.hidden{display:none} still wins on hidden screens */
+  #scanDetail:not(.hidden), #printedDetail:not(.hidden){
     display:flex !important;
     flex-direction:column !important;
     overflow-y:auto !important;
