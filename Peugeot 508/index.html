@@ -479,9 +479,9 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
 
 
 
-  /* ═══════════ MOBILE PATCH v2 — touch slider + clean reveal ═══════════ */
+  /* ═══════════ MOBILE PATCH v3 — proper slider alignment ═══════════ */
   
-  /* Scan-wrap (hero zoom slika gore) — slika ostaje u boxu, NEMA hover blur preko cele slike */
+  /* Scan-wrap (hero) — slika u box-u, NEMA hover blur */
   .scan-wrap{
     width:calc(100vw - 24px) !important;
     max-width:none !important;
@@ -490,30 +490,35 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     margin:0 auto !important;
     overflow:hidden !important;
     cursor:auto !important;
+    position:relative !important;
+    pointer-events:none !important;  /* spreci klik koji moze da napravi crni overlay */
   }
   .scan-base{
     width:100% !important;
     height:100% !important;
     object-fit:contain !important;
     object-position:center !important;
+    position:absolute !important;
     inset:0 !important;
+    opacity:1 !important;
+    pointer-events:none !important;
   }
-  /* IZRICITO: na mobile-u NE prikazuj scan-zoom (drugi sloj sa BLUR efektom preko slike) */
+  /* DISABLE hover-zoom effect entirely on mobile */
   .scan-zoom, .scan-flash, .sz-scan, .sz-print{
     display:none !important;
   }
   .scan-state{
-    bottom:10px !important;
-    left:10px !important;
+    bottom:10px !important; left:10px !important;
+    z-index:5 !important;
   }
   .scan-state span{font-size:9px !important; letter-spacing:.2em !important}
   .scan-hint-r{
-    bottom:10px !important;
-    right:10px !important;
+    bottom:10px !important; right:10px !important;
     font-size:9px !important;
+    z-index:5 !important;
   }
 
-  /* Reveal Panel — slika ostaje u box-u, sa CLIP-PATH za gornju polovinu blur-a */
+  /* Reveal Panel */
   .rp{
     grid-template-columns:1fr !important;
     padding:24px 14px !important;
@@ -521,12 +526,7 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     width:100% !important;
     max-width:none !important;
   }
-  .rp-title{
-    font-size:28px !important;
-    line-height:1 !important;
-    text-align:center !important;
-  }
-  /* CRITICAL: rp-img-wrap is the CONTAINER. Image inside must obey aspect. */
+  .rp-title{font-size:28px !important; line-height:1 !important; text-align:center !important}
   .rp-img-wrap{
     width:100% !important;
     aspect-ratio:4/3 !important;
@@ -545,7 +545,7 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     margin:0 !important;
   }
 
-  /* CMP COMPARE SLIDER — touch-friendly veliki box */
+  /* ═══ CMP SLIDER — slike SAVRSENO ALIGNED ═══ */
   .cmp-wrap{
     width:calc(100vw - 24px) !important;
     max-width:none !important;
@@ -557,42 +557,65 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     touch-action:none !important;
     position:relative !important;
     overflow:hidden !important;
+    user-select:none !important;
+    -webkit-user-select:none !important;
   }
+  /* cmp-before: ZA SCAN SLIKU — pun box, sredina */
   .cmp-before{
     width:100% !important;
     height:100% !important;
     object-fit:contain !important;
     object-position:center !important;
-    inset:0 !important;
     position:absolute !important;
+    inset:0 !important;
+    top:0 !important; left:0 !important;
+    z-index:1 !important;
+    pointer-events:none !important;
   }
+  /* cmp-aw: CONTAINER ZA 3D PRINT — clipuje desnu polovinu sa width % */
   .cmp-aw{
-    right:0 !important;
+    position:absolute !important;
     top:0 !important;
     bottom:0 !important;
+    right:0 !important;
     height:100% !important;
     overflow:hidden !important;
+    z-index:2 !important;
+    pointer-events:none !important;
   }
+  /* cmp-after: ZA 3D PRINT — SAME positioning kao cmp-before, ali inside cmp-aw (clipped) */
   .cmp-after{
     width:calc(100vw - 24px) !important;
     max-width:none !important;
     height:100% !important;
     object-fit:contain !important;
-    object-position:right center !important;
-    right:0 !important;
+    object-position:center !important;
     position:absolute !important;
+    top:0 !important;
+    right:0 !important;
+    z-index:2 !important;
+    pointer-events:none !important;
+  }
+  .cmp-div{
+    z-index:10 !important;
+    width:2px !important;
+    pointer-events:none !important;
   }
   .cmp-handle{
     width:48px !important;
     height:48px !important;
     z-index:11 !important;
+    pointer-events:none !important;
   }
   .cmp-handle svg{width:22px !important; height:22px !important}
-  .cmp-div{z-index:10 !important; width:2px !important}
-  .cmp-badge{font-size:9px !important; padding:5px 9px !important; letter-spacing:.18em !important; top:14px !important}
+  .cmp-badge{
+    font-size:9px !important; padding:5px 9px !important;
+    letter-spacing:.18em !important; top:14px !important;
+    z-index:12 !important;
+  }
   .cmp-badge.l{left:14px !important}
   .cmp-badge.r{right:14px !important}
-  .drag-hint{font-size:9px !important; letter-spacing:.22em !important; bottom:14px !important}
+  .drag-hint{font-size:9px !important; letter-spacing:.22em !important; bottom:14px !important; z-index:12 !important}
 
   /* Products slideshow */
   .pp-slide-stage{
@@ -1270,18 +1293,26 @@ try{
 </script>
 
 <script>
-// ═══ MOBILE: CMP SLIDER TOUCH SUPPORT ═══
+// ═══ MOBILE: CMP SLIDER TOUCH SUPPORT v2 ═══
 (function(){
   if(window.innerWidth > 768) return;
   const wrap = document.getElementById('cmpWrap');
   const aw = document.getElementById('afterWrap');
   const div = document.getElementById('cmpDiv');
+  const after = document.getElementById('afterImg');
   const hint = document.getElementById('dragHint');
   const badgeL = document.getElementById('badgeL');
   if(!wrap || !aw || !div) return;
 
-  let dragging = false;
+  // Make sure cmp-after width matches cmp-wrap (so slider clip works correctly)
+  function syncAfterWidth(){
+    const wrapW = wrap.getBoundingClientRect().width;
+    if(after) after.style.width = wrapW + 'px';
+  }
+  syncAfterWidth();
+  window.addEventListener('resize', syncAfterWidth);
 
+  let dragging = false;
   function setPosition(clientX){
     const rect = wrap.getBoundingClientRect();
     let pct = ((clientX - rect.left) / rect.width) * 100;
@@ -1304,18 +1335,10 @@ try{
     e.preventDefault();
   }, {passive:false});
 
-  wrap.addEventListener('touchend', ()=>{
-    dragging = false;
-  });
+  wrap.addEventListener('touchend', ()=>{ dragging = false; });
 
-  // Also enable mouse for testing
-  wrap.addEventListener('mousedown', e=>{
-    dragging = true;
-    setPosition(e.clientX);
-  });
-  document.addEventListener('mousemove', e=>{
-    if(dragging) setPosition(e.clientX);
-  });
+  wrap.addEventListener('mousedown', e=>{ dragging = true; setPosition(e.clientX); });
+  document.addEventListener('mousemove', e=>{ if(dragging) setPosition(e.clientX); });
   document.addEventListener('mouseup', ()=>{ dragging = false; });
 })();
 </script>
