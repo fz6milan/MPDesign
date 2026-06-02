@@ -3648,61 +3648,58 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
 
 
 // ═══════════════════════════════════════════════════════════════════
-// MOBILE: Ensure tap-to-click works on touch devices
-// Browser native click events should fire automatically on tap if:
-//   - element has cursor:pointer (some iOS versions require this)
-//   - touchend doesn't preventDefault
-// We don't intercept touch events here — we let native click happen,
-// just ensure clickable elements are flagged with pointer cursor.
+// MOBILE TAP — Global touch handler using elementFromPoint
+// Catches taps anywhere in document, simulates click on stationary touch
 // ═══════════════════════════════════════════════════════════════════
 (function(){
   if(window.innerWidth > 768) return;
-  // Add tap-listener as a SAFETY NET in case some browsers fail to emit click after touch.
-  // We use pointerup which works on all modern touch devices.
-  function makeTappable(selector){
-    document.querySelectorAll(selector).forEach(el=>{
-      if(el.dataset.tapReady) return;
-      el.dataset.tapReady = '1';
-      el.style.cursor = 'pointer';
-      // Track if it was a real tap (not a swipe)
-      let startX=0, startY=0, moved=false;
-      el.addEventListener('touchstart', e=>{
-        const t = e.touches[0];
-        startX = t.clientX; startY = t.clientY;
-        moved = false;
-      }, {passive:true});
-      el.addEventListener('touchmove', e=>{
-        const t = e.touches[0];
-        if(Math.abs(t.clientX-startX) > 10 || Math.abs(t.clientY-startY) > 10) moved = true;
-      }, {passive:true});
-      el.addEventListener('touchend', e=>{
-        if(moved) return; // it was a swipe, don't treat as tap
-        // Don't preventDefault — let native click also fire if browser wants
-        // But schedule our own click dispatch as safety net (in case native doesn't fire)
-        const target = e.target;
-        const clickEvt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
-        // Small delay to let any native click happen first; if it does, our second one is ignored thanks to dataset.lastClicked guard
-        setTimeout(()=>{
-          if(el.dataset.lastClicked && Date.now() - parseInt(el.dataset.lastClicked) < 100) return;
-          el.dataset.lastClicked = String(Date.now());
-          el.dispatchEvent(clickEvt);
-        }, 50);
-      }, {passive:true});
-      // Mark native clicks too
-      el.addEventListener('click', ()=>{
-        el.dataset.lastClicked = String(Date.now());
-      });
-    });
-  }
-  function setup(){
-    makeTappable('.gcard[data-action]');
-    makeTappable('.cat-card');
-    makeTappable('.peugeot-part');
-    makeTappable('.c2-part');
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
-  else setup();
-  setInterval(setup, 1200);
+
+  let touchStart = null;
+
+  document.addEventListener('touchstart', function(e){
+    if(e.touches.length !== 1){ touchStart = null; return; }
+    const t = e.touches[0];
+    touchStart = {x: t.clientX, y: t.clientY, time: Date.now()};
+  }, {passive:true, capture:true});
+
+  document.addEventListener('touchend', function(e){
+    if(!touchStart) return;
+    if(e.changedTouches.length !== 1) return;
+    const t = e.changedTouches[0];
+    const dx = Math.abs(t.clientX - touchStart.x);
+    const dy = Math.abs(t.clientY - touchStart.y);
+    const elapsed = Date.now() - touchStart.time;
+    const x = t.clientX, y = t.clientY;
+    touchStart = null;
+
+    // Only treat as tap if movement < 10px and duration < 600ms
+    if(dx > 10 || dy > 10 || elapsed > 600) return;
+
+    // Find what was tapped
+    const tgt = document.elementFromPoint(x, y);
+    if(!tgt) return;
+    const clickable = tgt.closest(
+      '.gcard[data-action], .cat-card[data-go], .peugeot-part, .c2-part, ' +
+      '.case-study-btn, .services-cta-btn, .v3d-link, .real-build-btn, ' +
+      '.pp-item, .product-thumb, .slide-thumb, .cs-thumb, .slide-arrow, ' +
+      '.cs-arrow, .pp-close, .cs-close, .nav-back, .tb-back, ' +
+      '.gn-link, .gn-brand, .lang-opt, .h-btn, ' +
+      '.carousel-dot, .product-arrow, .carousel-arrow'
+    );
+    if(!clickable) return;
+
+    // Avoid double-firing if native click also fires
+    if(clickable.dataset._lastTap && Date.now() - parseInt(clickable.dataset._lastTap) < 300) return;
+    clickable.dataset._lastTap = String(Date.now());
+
+    // Prevent the native click that may follow this touchend
+    e.preventDefault();
+    // Dispatch click programmatically
+    setTimeout(function(){
+      const evt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
+      clickable.dispatchEvent(evt);
+    }, 0);
+  }, {passive:false, capture:true});
 })();
 
 </script>
