@@ -511,7 +511,8 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     overflow:hidden !important;
     cursor:auto !important;
     position:relative !important;
-    pointer-events:none !important;
+    pointer-events:auto !important;
+    touch-action:pan-y !important;
   }
   .scan-base{
     width:100% !important;
@@ -737,7 +738,7 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     <div class="rp-arrow-label">new part</div>
   </div>
   <div class="rp-img-wrap">
-    <img src="c2_3dprint_frontbumper.png" alt="Front Bumper">
+    <img src="c2_3dprint_frontbumper.png" alt="Front Bumper" data-mobile-src="../Folder - telefon/Citroen c2/front/product_1.png">
   </div>
   <div class="rp-img-name">Front Bumper</div>
   <div class="rp-img-sub">Citroen C2 · Additive Manufacturing</div>
@@ -1363,6 +1364,23 @@ try{
   wrap.addEventListener('mousedown', e=>{ dragging = true; setPosition(e.clientX); });
   document.addEventListener('mousemove', e=>{ if(dragging) setPosition(e.clientX); });
   document.addEventListener('mouseup', ()=>{ dragging = false; });
+})();
+</script>
+
+
+<script>
+// Mobile: replace rp-img-wrap image with isolated product render
+(function(){
+  if(window.innerWidth > 768) return;
+  function swap(){
+    document.querySelectorAll('img[data-mobile-src]').forEach(img=>{
+      const target = img.getAttribute('data-mobile-src');
+      if(target) img.setAttribute('src', target);
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', swap);
+  else swap();
+  setTimeout(swap, 200);
 })();
 </script>
 
