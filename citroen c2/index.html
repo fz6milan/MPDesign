@@ -612,31 +612,9 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
   .pp-slide-img{width:100% !important; height:100% !important; object-fit:cover !important; object-position:center !important}
 
 
-  /* ═══════════ MOBILE PATCH v5 — clean reveal + lupa anim ═══════════ */
-  /* Remove ALL cyan blur/glow on reveal panel for mobile (clean look) */
-  .reveal-panel{
-    position:static !important;
-    width:100% !important;
-    background:transparent !important;
-    border-left:none !important;
-    backdrop-filter:none !important;
-    -webkit-backdrop-filter:none !important;
-    box-shadow:none !important;
-    padding:30px 14px !important;
-    opacity:1 !important;
-    pointer-events:auto !important;
-    gap:18px !important;
-  }
-  .rp-img-wrap{
-    border:1.5px solid rgba(26,159,255,.6) !important;
-    box-shadow:none !important;  /* NEMA cyan glow oko slike */
-    background:transparent !important;
-  }
-  .rp-img-wrap::before, .rp-img-wrap::after{
-    width:14px !important; height:14px !important;
-    border-width:2px !important;
-  }
-  /* Image inside rp-img-wrap stays product render */
+  /* ═══════════ MOBILE PATCH v5 — reveal panel hidden on mobile ═══════════ */
+  /* Reveal panel replaced by inline mob-reveal section in scroller */
+  .reveal-panel{display:none !important}
   /* ════════════ END MOBILE PATCH ════════════ */
 
 
@@ -657,6 +635,12 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
   .cmp-hdr h2{font-size:20px !important}
   .rp-title{font-size:20px !important}
 }
+
+/* ═══ MOB-REVEAL: hidden by default, shown on mobile ═══ */
+.mob-reveal{display:none}
+.mob-rev-img{width:100%;aspect-ratio:4/3;overflow:hidden;border:1.5px solid rgba(26,159,255,.6);position:relative}
+.mob-rev-img img{width:100%;height:100%;object-fit:cover;display:block}
+@media(max-width:768px){.mob-reveal{display:flex!important;flex-direction:column;align-items:center;gap:18px;padding:30px 14px!important;min-height:auto!important}}
 </style>
 </head>
 <body>
@@ -728,6 +712,15 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
       <div class="cmp-badge r">3D Print</div>
       <div class="drag-hint" id="dragHint">← drag to compare →</div>
     </div>
+  </section>
+  <!-- ═══ MOB-REVEAL: inline new-part section (mobile only) ═══ -->
+  <section class="mob-reveal">
+    <div class="rp-tag" data-i18n-orig="New part revealed">New part revealed</div>
+    <div class="rp-title" data-i18n-orig="Front<br><span>Bumper</span>">Front<br><span>Bumper</span></div>
+    <div class="mob-rev-img"><img src="../Folder - telefon/Citroen c2/front/product_1.png" alt="Front Bumper"></div>
+    <div class="rp-img-name" data-i18n-orig="Front Bumper">Front Bumper</div>
+    <div class="rp-img-sub" data-i18n-orig="Citroen C2 · Additive Manufacturing">Citroen C2 · Additive Manufacturing</div>
+    <button class="rp-next mob-rev-btn" data-i18n-orig="View Products →">View Products →</button>
   </section>
 </div>
 
@@ -1375,7 +1368,14 @@ try{
   document.addEventListener('mousemove', e=>{ if(dragging) setPosition(e.clientX); });
   document.addEventListener('mouseup', ()=>{ dragging = false; });
 })();
+
+// Mob-reveal button (mobile only)
+document.querySelectorAll('.mob-rev-btn').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.getElementById('productsPanel').classList.add('open');
+  });
+});
+
 </script>
 
-</body>
-</html>
+</body></html>
