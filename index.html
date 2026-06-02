@@ -1580,6 +1580,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
     perspective:none !important;
+    touch-action:pan-x !important;
   }
   .grid-cards::-webkit-scrollbar{display:none !important}
   .grid-cards .gcard{
@@ -1597,6 +1598,8 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     border:1px solid rgba(255,255,255,.12) !important;
     transition:none !important;
     rotate:0 !important;
+    touch-action:manipulation !important;
+    cursor:pointer !important;
   }
   .grid-cards .gcard.pos-l1,
   .grid-cards .gcard.pos-r1,
@@ -3645,82 +3648,61 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
 
 
 // ═══════════════════════════════════════════════════════════════════
-// MOBILE TAP HANDLER — distinguish tap from swipe on carousel cards
+// MOBILE: Ensure tap-to-click works on touch devices
+// Browser native click events should fire automatically on tap if:
+//   - element has cursor:pointer (some iOS versions require this)
+//   - touchend doesn't preventDefault
+// We don't intercept touch events here — we let native click happen,
+// just ensure clickable elements are flagged with pointer cursor.
 // ═══════════════════════════════════════════════════════════════════
 (function(){
   if(window.innerWidth > 768) return;
-
-  function attachTapHandler(el, handler){
-    let startX=0, startY=0, startTime=0, moved=false;
-    el.addEventListener('touchstart', e=>{
-      const t = e.touches[0];
-      startX = t.clientX; startY = t.clientY;
-      startTime = Date.now();
-      moved = false;
-    }, {passive:true});
-    el.addEventListener('touchmove', e=>{
-      const t = e.touches[0];
-      const dx = Math.abs(t.clientX - startX);
-      const dy = Math.abs(t.clientY - startY);
-      if(dx > 8 || dy > 8) moved = true;
-    }, {passive:true});
-    el.addEventListener('touchend', e=>{
-      const elapsed = Date.now() - startTime;
-      // Tap if: no significant move AND not too long press (under 500ms)
-      if(!moved && elapsed < 500){
-        e.preventDefault();
-        handler();
-      }
-    });
-  }
-
-  function setupMobileTaps(){
-    // Carousel cards (.gcard with data-action)
-    document.querySelectorAll('.gcard[data-action]').forEach(card=>{
-      if(card.dataset.mobileTapBound) return;
-      card.dataset.mobileTapBound = '1';
-      attachTapHandler(card, ()=>{
-        // Manually dispatch a synthetic click event
-        const evt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
-        card.dispatchEvent(evt);
-      });
-    });
-    // Category cards
-    document.querySelectorAll('.cat-card').forEach(card=>{
-      if(card.dataset.mobileTapBound) return;
-      card.dataset.mobileTapBound = '1';
-      attachTapHandler(card, ()=>{
-        const evt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
-        card.dispatchEvent(evt);
-      });
-    });
-    // Peugeot/C2 part cards
-    document.querySelectorAll('.peugeot-part, .c2-part').forEach(card=>{
-      if(card.dataset.mobileTapBound) return;
-      card.dataset.mobileTapBound = '1';
-      attachTapHandler(card, ()=>{
-        const evt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
-        card.dispatchEvent(evt);
+  // Add tap-listener as a SAFETY NET in case some browsers fail to emit click after touch.
+  // We use pointerup which works on all modern touch devices.
+  function makeTappable(selector){
+    document.querySelectorAll(selector).forEach(el=>{
+      if(el.dataset.tapReady) return;
+      el.dataset.tapReady = '1';
+      el.style.cursor = 'pointer';
+      // Track if it was a real tap (not a swipe)
+      let startX=0, startY=0, moved=false;
+      el.addEventListener('touchstart', e=>{
+        const t = e.touches[0];
+        startX = t.clientX; startY = t.clientY;
+        moved = false;
+      }, {passive:true});
+      el.addEventListener('touchmove', e=>{
+        const t = e.touches[0];
+        if(Math.abs(t.clientX-startX) > 10 || Math.abs(t.clientY-startY) > 10) moved = true;
+      }, {passive:true});
+      el.addEventListener('touchend', e=>{
+        if(moved) return; // it was a swipe, don't treat as tap
+        // Don't preventDefault — let native click also fire if browser wants
+        // But schedule our own click dispatch as safety net (in case native doesn't fire)
+        const target = e.target;
+        const clickEvt = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
+        // Small delay to let any native click happen first; if it does, our second one is ignored thanks to dataset.lastClicked guard
+        setTimeout(()=>{
+          if(el.dataset.lastClicked && Date.now() - parseInt(el.dataset.lastClicked) < 100) return;
+          el.dataset.lastClicked = String(Date.now());
+          el.dispatchEvent(clickEvt);
+        }, 50);
+      }, {passive:true});
+      // Mark native clicks too
+      el.addEventListener('click', ()=>{
+        el.dataset.lastClicked = String(Date.now());
       });
     });
   }
-
-  // Run after DOM is ready, and also after screen changes (for dynamically shown content)
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', setupMobileTaps);
-  } else {
-    setupMobileTaps();
+  function setup(){
+    makeTappable('.gcard[data-action]');
+    makeTappable('.cat-card');
+    makeTappable('.peugeot-part');
+    makeTappable('.c2-part');
   }
-  // Re-bind whenever a new screen is shown (catSelect → scanList etc.)
-  const _origShow = window.showScreen;
-  if(typeof _origShow === 'function'){
-    window.showScreen = function(id){
-      _origShow(id);
-      setTimeout(setupMobileTaps, 200);
-    };
-  }
-  // Also re-attach periodically as safety net
-  setInterval(setupMobileTaps, 1500);
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+  else setup();
+  setInterval(setup, 1200);
 })();
 
 </script>
