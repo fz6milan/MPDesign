@@ -3703,5 +3703,66 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
 })();
 
 </script>
+
+<!-- DEBUG OVERLAY (temporary) -->
+<div id="debugLog" style="position:fixed;top:0;left:0;right:0;background:rgba(255,0,0,.9);color:white;padding:6px 10px;z-index:999999;font-size:11px;font-family:monospace;max-height:140px;overflow-y:auto;pointer-events:none;line-height:1.4">debug: ready</div>
+<script>
+(function(){
+  if(window.innerWidth > 768) return; // mobile only
+  const dl = document.getElementById('debugLog');
+  let lines = [];
+  window.__debugLog = function(msg){
+    lines.push(new Date().toISOString().substr(14,8) + ' ' + msg);
+    if(lines.length > 8) lines.shift();
+    dl.innerHTML = lines.join('<br>');
+  };
+
+  window.__debugLog('mobile debug ready, w=' + window.innerWidth);
+
+  // Monitor touch
+  document.addEventListener('touchstart', e=>{
+    const t = e.touches[0];
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    const cl = el ? (el.className || el.tagName) : 'none';
+    window.__debugLog('touchstart on ' + String(cl).substr(0,40));
+  }, {passive:true, capture:true});
+
+  document.addEventListener('touchend', e=>{
+    const t = e.changedTouches[0];
+    const el = document.elementFromPoint(t.clientX, t.clientY);
+    const clickable = el ? el.closest('.gcard[data-action], .cat-card, .peugeot-part') : null;
+    if(clickable){
+      window.__debugLog('touchend → found: ' + (clickable.dataset.action || clickable.dataset.go || 'unknown'));
+    } else {
+      window.__debugLog('touchend → no clickable found');
+    }
+  }, {passive:true, capture:true});
+
+  // Hook all click events
+  document.addEventListener('click', e=>{
+    const card = e.target.closest('.gcard[data-action], .cat-card, .peugeot-part');
+    if(card){
+      window.__debugLog('CLICK on ' + (card.dataset.action || card.dataset.go || 'unknown'));
+    }
+  }, {capture:true});
+
+  // Wrap openScanDetail to log
+  if(typeof openScanDetail === 'function'){
+    const _orig = openScanDetail;
+    window.openScanDetail = function(folder, name, files){
+      window.__debugLog('openScanDetail: ' + name + ' files=' + (files && files.length));
+      try {
+        _orig(folder, name, files);
+        window.__debugLog('openScanDetail OK');
+      } catch(err){
+        window.__debugLog('ERR: ' + err.message);
+      }
+    };
+  } else {
+    window.__debugLog('openScanDetail not yet defined');
+  }
+})();
+</script>
+
 </body>
 </html>
