@@ -1493,9 +1493,9 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .topbar .tb-divider{display:none !important}
 
   /* ═══ CATEGORIES (catSelect) ═══ */
-  /* Allow vertical scroll on mobile (desktop has it as fixed full-viewport flex) */
+  /* All mobile screens: allow vertical scroll. position:fixed from desktop replaced. */
   #catSelect, #services, #contact, #scanList, #designList, #printedList,
-  #scanDetail, #printedDetail, #c2PartPick, #peugeotParts{
+  #c2PartPick, #peugeotParts{
     position:absolute !important;
     inset:0 !important;
     overflow-y:auto !important;
@@ -1503,6 +1503,14 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     -webkit-overflow-scrolling:touch !important;
     height:auto !important;
     display:block !important;
+    touch-action:pan-y !important;
+  }
+  /* scanDetail / printedDetail handled separately below with flex layout */
+  #scanDetail, #printedDetail{
+    position:absolute !important;
+    inset:0 !important;
+    -webkit-overflow-scrolling:touch !important;
+    touch-action:pan-y !important;
   }
   .cat-screen, #catSelect{padding:90px 16px 40px !important; min-height:100vh !important; height:auto !important}
   .cat-header{margin:0 0 22px 0 !important; padding:0 !important; text-align:center}
@@ -1698,18 +1706,76 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .peugeot-part-desc, .c2-part-desc{font-size:11px !important; margin-top:6px}
   .peugeot-part-cta, .c2-part-cta{font-size:9px !important; letter-spacing:.22em !important; margin-top:8px}
 
-  /* ═══ DETAIL VIEWS ═══ */
-  #scanDetail .detail-hero, #printedDetail .detail-hero{padding:16px !important; text-align:center}
-  #scanDetail .detail-hero h2, #printedDetail .detail-hero h2{font-size:22px !important}
-  #scanDetail .detail-hero p, #printedDetail .detail-hero p{font-size:10px !important; letter-spacing:.18em !important; margin-top:6px}
-  .detail-stage{padding:0 12px !important; aspect-ratio:4/5 !important}
-  .slide-arrow{width:38px !important; height:38px !important}
-  .slide-prev{left:8px !important}
-  .slide-next{right:8px !important}
+  /* ═══ DETAIL VIEWS — scanDetail and printedDetail ═══ */
+  #scanDetail, #printedDetail{
+    display:flex !important;
+    flex-direction:column !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    height:auto !important;
+    min-height:100vh !important;
+  }
+  #scanDetail .grid-header, #printedDetail .grid-header{
+    padding:14px 16px !important;
+    text-align:center !important;
+    flex-shrink:0 !important;
+  }
+  #scanDetail .grid-header h2, #printedDetail .grid-header h2{
+    font-size:22px !important;
+    line-height:1.1 !important;
+  }
+  #scanDetail .grid-header p, #printedDetail .grid-header p{
+    font-size:10px !important; letter-spacing:.18em !important; margin-top:6px !important;
+  }
+  /* Stage container — give it explicit dimensions */
+  .slideshow-wrap{
+    flex:0 0 auto !important;
+    min-height:0 !important;
+    padding:0 12px 14px !important;
+    overflow:visible !important;
+    display:block !important;
+  }
+  .slideshow-stage{
+    position:relative !important;
+    flex:initial !important;
+    max-height:none !important;
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:4/3 !important;
+    min-height:280px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:hidden !important;
+  }
+  .slide-img{
+    position:absolute !important;
+    inset:6% !important;
+    max-width:88% !important;
+    max-height:88% !important;
+    width:auto !important;
+    height:auto !important;
+    object-fit:contain !important;
+    cursor:pointer !important;
+  }
+  .slide-arrow{
+    width:38px !important; height:38px !important;
+    z-index:5 !important;
+  }
+  .slide-prev, .slide-arrow.left{left:6px !important}
+  .slide-next, .slide-arrow.right{right:6px !important}
   .slide-counter, .slide-zoom-hint{font-size:9px !important; letter-spacing:.22em !important}
-  .detail-footer{padding:14px !important; flex-wrap:wrap; gap:10px}
-  .slide-thumbs{gap:6px !important; flex:1 1 100%; justify-content:center}
-  .slide-thumb{width:44px !important; height:32px !important}
+  .slideshow-footer{
+    padding:12px 14px 20px !important;
+    flex-direction:column !important;
+    gap:10px !important;
+    align-items:center !important;
+    flex-shrink:0 !important;
+  }
+  .slide-thumbs{
+    gap:6px !important; flex-wrap:wrap; justify-content:center !important;
+  }
+  .slide-thumb{width:48px !important; height:36px !important}
 
   /* ═══ SERVICES ═══ */
   .services-screen{padding:90px 16px 30px !important}
