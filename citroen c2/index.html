@@ -689,9 +689,46 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
   .mob-tap-badge.vis{opacity:1}
   @keyframes tapBadgePulse{0%,100%{border-color:rgba(26,159,255,.18)}50%{border-color:rgba(26,159,255,.7)}}
 }
+
+/* ═══ VEHICLE PAGE GLOBAL NAV ═══ */
+.veh-nav{opacity:1!important;transform:none!important;pointer-events:auto!important}
+.veh-nav ~ .topbar,
+body > .topbar{top:52px!important;z-index:200!important}
+body > #scroller{padding-top:104px!important}
+@media(max-width:768px){
+  .veh-nav{height:48px!important;padding:0 10px!important}
+  .gn-brand-logo{height:22px!important}
+  .gn-links{gap:10px!important}
+  .gn-link{font-size:9px!important;padding:4px 2px!important}
+  .veh-nav ~ .topbar,body > .topbar{top:48px!important}
+  body > #scroller{padding-top:96px!important}
+}
+/* ── FIX scan-wrap aspect-ratio on mobile (16:9 images) ── */
+@media(max-width:768px){
+  .scan-wrap{aspect-ratio:16/9!important}
+}
+/* ── cmp-wrap same ── */
+@media(max-width:768px){
+  .cmp-wrap{aspect-ratio:16/9!important}
+}
 </style>
 </head>
 <body>
+<nav class="global-nav veh-nav" id="globalNav">
+  <button class="gn-brand" id="gnBrand"><img class="gn-brand-logo" src="../logo.png" alt="MP Design"></button>
+  <div class="gn-links">
+    <button class="gn-link" data-goto="catSelect" data-i18n-orig="Categories">Categories</button>
+    <button class="gn-link" data-goto="services"  data-i18n-orig="Services">Services</button>
+    <button class="gn-link" data-goto="contact"   data-i18n-orig="Contact">Contact</button>
+  </div>
+  <div class="gn-right">
+    <div class="lang-toggle" id="gnLangToggle">
+      <button class="lang-opt" data-lang="en">EN</button>
+      <span class="lang-sep">·</span>
+      <button class="lang-opt" data-lang="sr">SR</button>
+    </div>
+  </div>
+</nav>
 <div id="cursor"></div>
 <!-- LUPA magnifier -->
 <div id="lupa">
@@ -1490,6 +1527,45 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
   // Tap to toggle
   sw.addEventListener('click', function(){ setReveal(!revealed); });
 })();
+
+// ═══ VEHICLE NAV: links back to main page ═══
+(function(){
+  // Nav links
+  document.querySelectorAll('.veh-nav .gn-link').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var goto = btn.dataset.goto;
+      if(goto) try{sessionStorage.setItem('mpdesign_goto', goto);}catch(_){}
+      window.location.href = '../index.html';
+    });
+  });
+  // Brand logo → back home
+  var gnBrand = document.getElementById('gnBrand');
+  if(gnBrand) gnBrand.addEventListener('click', function(){
+    window.location.href = '../index.html';
+  });
+  // Lang toggle
+  var savedLang = 'en';
+  try{ savedLang = localStorage.getItem('mpdesign_lang') || 'en'; }catch(_){}
+  function applyLangVeh(lang){
+    document.querySelectorAll('[data-i18n-orig]').forEach(function(el){
+      var orig = el.dataset.i18nOrig;
+      var normKey = orig.replace(/\s+/g,' ').trim();
+      if(lang==='sr' && typeof T!=='undefined' && T[normKey]) el.innerHTML = T[normKey];
+      else el.innerHTML = orig;
+    });
+    document.querySelectorAll('.lang-opt').forEach(function(o){
+      o.classList.toggle('active', o.dataset.lang===lang);
+    });
+    try{localStorage.setItem('mpdesign_lang', lang);}catch(_){}
+  }
+  document.querySelectorAll('.lang-opt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      applyLangVeh(btn.dataset.lang);
+    });
+  });
+  applyLangVeh(savedLang);
+})();
+
 </script>
 
 </body></html>

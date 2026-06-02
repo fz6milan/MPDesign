@@ -3779,6 +3779,18 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
   }, {passive:false, capture:true});
 })();
 
+
+// ═══ Handle goto from vehicle sub-pages ═══
+(function(){
+  try{
+    var goto = sessionStorage.getItem('mpdesign_goto');
+    if(goto){
+      sessionStorage.removeItem('mpdesign_goto');
+      setTimeout(function(){ go(goto); }, 200);
+    }
+  }catch(_){}
+})();
+
 </script>
 
 
