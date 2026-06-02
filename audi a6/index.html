@@ -471,6 +471,119 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
   button, .pp-item, .v3d-link, .real-build-btn, .product-thumb, .tb-back, .gn-link, .lang-opt{
     -webkit-tap-highlight-color:transparent;
   }
+
+
+  /* ═══════════ MOBILE PATCH — slika ostaje u okviru ═══════════ */
+  /* Scan hero — slika sva u box-u, contained */
+  .scan-wrap{
+    width:calc(100vw - 24px) !important;
+    max-width:none !important;
+    aspect-ratio:4/3 !important;
+    max-height:55vh !important;
+    margin:0 auto !important;
+    overflow:hidden !important;
+  }
+  .scan-base, .sz-scan, .sz-print{
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+    object-position:center !important;
+  }
+  .scan-hint-r{
+    bottom:14px !important;
+    right:14px !important;
+    font-size:9px !important;
+  }
+  .scan-state{
+    bottom:14px !important;
+    left:14px !important;
+  }
+
+  /* Reveal Panel — "NEW PART REVEALED" slika ostaje u box-u */
+  .rp{
+    grid-template-columns:1fr !important;
+    padding:24px 14px !important;
+    gap:18px !important;
+    width:100% !important;
+    max-width:none !important;
+  }
+  .rp-left, .rp-right{
+    width:100% !important;
+    max-width:none !important;
+  }
+  .rp-title{
+    font-size:28px !important;
+    line-height:1 !important;
+    text-align:center !important;
+  }
+  .rp-img-wrap{
+    width:100% !important;
+    aspect-ratio:4/3 !important;
+    overflow:hidden !important;
+    position:relative !important;
+  }
+  .rp-img-wrap img{
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    object-fit:contain !important;
+    object-position:center !important;
+    position:relative !important;
+    inset:auto !important;
+    margin:0 !important;
+  }
+  .rp-arrow-row{
+    flex-wrap:nowrap !important;
+  }
+  .rp-arrow{
+    width:auto !important;
+    margin:6px auto !important;
+  }
+
+  /* Compare Slider — DRAG TO COMPARE — veći box, slike full */
+  .cmp-wrap, .cmp{
+    width:calc(100vw - 24px) !important;
+    max-width:none !important;
+    margin:14px auto !important;
+  }
+  .cmp-stage{
+    aspect-ratio:4/3 !important;
+    min-height:300px !important;
+    max-height:60vh !important;
+    width:100% !important;
+    position:relative !important;
+    overflow:hidden !important;
+  }
+  .cmp-before, .cmp-after{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+    position:absolute !important;
+    inset:0 !important;
+  }
+  .cmp-handle{
+    width:36px !important;
+    height:36px !important;
+    z-index:10 !important;
+  }
+  .cmp-line, .cmp-divider{
+    z-index:5 !important;
+  }
+
+  /* Products Panel — slike preview-a */
+  .pp-slide-stage{
+    aspect-ratio:4/3 !important;
+    max-height:55vh !important;
+    width:100% !important;
+  }
+  .pp-slide-img{
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+  }
+  /* ════════════ END MOBILE PATCH ════════════ */
+
 }
 
 @media (max-width: 400px){
