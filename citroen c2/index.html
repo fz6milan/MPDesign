@@ -748,6 +748,11 @@ body > #scroller{top:104px!important}
   .mob-scan-print{object-fit:cover!important;background:none!important}
 }
 /* ═══════════ END VEHICLE NAV ═══════════ */
+
+/* ── tb-tag mobile font size fix ── */
+@media(max-width:768px){
+  .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
+}
 </style>
 </head>
 <body>
@@ -1668,4 +1673,25 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
 
 </script>
 
+
+// Reset viewer zoom when products panel closes
+(function(){
+  var ppBack = document.getElementById('ppBack');
+  var ppPanel = document.getElementById('productsPanel');
+  function resetOnClose(){
+    if(typeof closeViewer==='function') closeViewer();
+    var vi = document.getElementById('viewerImg');
+    if(vi){ vi.style.transform='scale(1)'; vi.style.transformOrigin='center center'; }
+    var si = document.getElementById('ppSlideImg');
+    if(si){ si.style.transform=''; si.style.transformOrigin=''; }
+  }
+  if(ppBack) ppBack.addEventListener('click', resetOnClose);
+  // Also reset when panel closes via back navigation
+  if(ppPanel){
+    const obs = new MutationObserver(function(muts){
+      muts.forEach(function(m){ if(!ppPanel.classList.contains('open')) resetOnClose(); });
+    });
+    obs.observe(ppPanel, {attributes:true, attributeFilter:['class']});
+  }
+})();
 </body></html>

@@ -492,7 +492,7 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
     width:100% !important;
     height:100% !important;
     object-fit:cover !important;
-    object-position:center !important;
+    object-position:center 60% !important;
     position:absolute !important;
     inset:0 !important;
     top:0 !important; left:0 !important;
@@ -723,6 +723,11 @@ body > #scroller{top:104px!important}
   .mob-scan-print{object-fit:cover!important;background:none!important}
 }
 /* ═══════════ END VEHICLE NAV ═══════════ */
+
+/* ── tb-tag mobile font size fix ── */
+@media(max-width:768px){
+  .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
+}
 </style>
 </head>
 <body>
@@ -769,9 +774,9 @@ body > #scroller{top:104px!important}
   <section>
     <div class="sec-ey">3D Scan · 001</div>
     <div class="scan-wrap" id="scanWrap">
-      <img class="scan-base" src="01_slider_before.png" alt="C2 Scan">
+      <img class="scan-base" src="03_zoom_effectneutral.png" alt="C2 Scan">
       <div class="scan-zoom">
-        <img class="sz-scan" src="01_slider_before.png" alt="Scan Bumper">
+        <img class="sz-scan" src="03_zoom_effectneutral.png" alt="Scan Bumper">
         <img class="sz-print" src="03_zoom_effectchange.png" alt="Print Bumper">
         <div class="scan-flash"></div>
       </div>
@@ -1232,6 +1237,7 @@ try{
     "Select which part to view": "Izaberite koji deo želite da pregledate",
     "Front Bumper": "Prednji branik",
     "Rear Bumper": "Zadnji branik",
+    "VW Golf 7 GTI · Rear Diffuser": "VW Golf 7 GTI · Zadnji difuzer",
     "Rear<br><span>Bumper</span>": "Zadnji<br><span>branik</span>",
     "Front<br><span>Bumper</span>": "Prednji<br><span>branik</span>",
     "Front<br><span>Splitter</span>": "Prednji<br><span>splitter</span>",
@@ -1617,4 +1623,25 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
 
 </script>
 
+
+// Reset viewer zoom when products panel closes
+(function(){
+  var ppBack = document.getElementById('ppBack');
+  var ppPanel = document.getElementById('productsPanel');
+  function resetOnClose(){
+    if(typeof closeViewer==='function') closeViewer();
+    var vi = document.getElementById('viewerImg');
+    if(vi){ vi.style.transform='scale(1)'; vi.style.transformOrigin='center center'; }
+    var si = document.getElementById('ppSlideImg');
+    if(si){ si.style.transform=''; si.style.transformOrigin=''; }
+  }
+  if(ppBack) ppBack.addEventListener('click', resetOnClose);
+  // Also reset when panel closes via back navigation
+  if(ppPanel){
+    const obs = new MutationObserver(function(muts){
+      muts.forEach(function(m){ if(!ppPanel.classList.contains('open')) resetOnClose(); });
+    });
+    obs.observe(ppPanel, {attributes:true, attributeFilter:['class']});
+  }
+})();
 </body></html>
