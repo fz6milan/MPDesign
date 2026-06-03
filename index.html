@@ -563,7 +563,8 @@ body::before{
   align-content:center;
 }
 .peugeot-part{
-  position:relative;overflow:hidden;cursor:none;
+  position:relative;overflow:hidden;cursor:pointer;
+  min-height:220px;aspect-ratio:4/3;
   border:1px solid rgba(255,255,255,.1);
   background:linear-gradient(135deg, rgba(20,20,20,.7), rgba(8,8,8,.85));
   display:flex;flex-direction:column;justify-content:flex-end;
@@ -1869,6 +1870,13 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 @media (max-width: 768px){
   .mobile-only-card{display:flex !important}
 }
+
+@media(max-width:768px){
+  .slide-img{cursor:pointer!important;touch-action:manipulation!important}
+  .slideshow-stage{min-height:280px!important}
+  .slide-arrow{z-index:30!important;pointer-events:auto!important}
+  .slide-arrow svg{pointer-events:none!important}
+}
 </style>
 </head>
 <body>
@@ -2071,7 +2079,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     </div>
 
     <div class="gcard" data-action="fz6Parts">
-      <img class="gcard-img" src="scan files/yamaha fz6/01.png" alt="Yamaha FZ6 Belly">
+      <img class="gcard-img" src="scan%20files/yamaha%20fz6/01.png" alt="Yamaha FZ6 Belly">
       <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
       <div class="gcard-cta">Choose part ↗</div>
       <div class="gcard-overlay">
@@ -2388,7 +2396,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   </div>
   <div class="peugeot-parts">
     <div class="peugeot-part" data-folder="scan files/yamaha fz6" data-name="Yamaha FZ6 — Belly Pan" data-name-sr="Yamaha FZ6 — Belly pan" data-files='["01.png","02.png"]'>
-      <img src="scan files/yamaha fz6/01.png" alt="Belly Pan">
+      <img src="scan%20files/yamaha%20fz6/01.png" alt="Belly Pan">
       <div class="peugeot-part-overlay">
         <div class="peugeot-part-num">Part 01</div>
         <div class="peugeot-part-name" data-i18n-orig="Belly Pan">Belly Pan</div>
@@ -2396,7 +2404,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
       </div>
     </div>
     <div class="peugeot-part" data-folder="Folder - telefon/Scanned images/yamaha fz6/blatobran" data-name="Yamaha FZ6 — Front Fender" data-name-sr="Yamaha FZ6 — Prednji blatobran" data-files='["blatobran_1.png","blatobran_2.png","blatobran_3.png","blatobran_4.png"]'>
-      <img src="Folder - telefon/Scanned images/yamaha fz6/blatobran/blatobran_1.png" alt="Front Fender">
+      <img src="Folder%20-%20telefon/Scanned%20images/yamaha%20fz6/blatobran/blatobran_1.png" alt="Front Fender">
       <div class="peugeot-part-overlay">
         <div class="peugeot-part-num">Part 02</div>
         <div class="peugeot-part-name" data-i18n-orig="Front Fender">Front Fender</div>
@@ -2990,9 +2998,18 @@ document.getElementById('slideLeft').addEventListener('click',()=>showSlide(slid
 document.getElementById('slideRight').addEventListener('click',()=>showSlide(slideIdx+1));
 
 // Click image → zoom viewer
-document.getElementById('slideImg').addEventListener('click',()=>{
-  openViewer(slideFolder+'/'+slideFiles[slideIdx]);
-});
+// Scan archive image: click + touch to open viewer
+(function(){
+  var si = document.getElementById('slideImg');
+  var _tx=0, _ty=0;
+  si.addEventListener('touchstart',function(e){ _tx=e.touches[0].clientX; _ty=e.touches[0].clientY; },{passive:true});
+  si.addEventListener('touchend',function(e){
+    var dx=Math.abs(e.changedTouches[0].clientX-_tx);
+    var dy=Math.abs(e.changedTouches[0].clientY-_ty);
+    if(dx<15 && dy<15) openViewer(slideFolder+'/'+slideFiles[slideIdx]);
+  },{passive:true});
+  si.addEventListener('click',function(){ openViewer(slideFolder+'/'+slideFiles[slideIdx]); });
+})();
 
 // Keyboard arrows
 document.addEventListener('keydown',e=>{
