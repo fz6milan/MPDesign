@@ -2988,8 +2988,12 @@ function openScanDetail(folder,name,files,nameSr){
     var _sx=0, _sy=0;
     st.ontouchstart = function(e){ _sx=e.touches[0].clientX; _sy=e.touches[0].clientY; };
     st.ontouchend   = function(e){
-      var dx=Math.abs(e.changedTouches[0].clientX-_sx);
-      var dy=Math.abs(e.changedTouches[0].clientY-_sy);
+      var t=e.changedTouches[0];
+      var dx=Math.abs(t.clientX-_sx);
+      var dy=Math.abs(t.clientY-_sy);
+      // Skip if tap on arrow buttons
+      var el=document.elementFromPoint(t.clientX,t.clientY);
+      if(el && el.closest && el.closest('.slide-arrow')) return;
       if(dx<25 && dy<35 && slideFiles.length)
         openViewer(slideFolder+'/'+slideFiles[slideIdx]);
     };
