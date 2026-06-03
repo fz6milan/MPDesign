@@ -1446,6 +1446,10 @@ try{
     walk(document.body);
   }
 
+  // Expose so external changeLang() can reach them across scopes
+  window.__mpApplyLang = applyLang;
+  window.__mpApplyTextNodes = applyTextNodes;
+
   // Inject language toggle into topbar
   function injectToggle(){
     // Toggle removed from project pages — language preference is set from homepage and persists via localStorage
@@ -1650,8 +1654,8 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
     try{localStorage.setItem('mpdesign_lang', lang);}catch(_){}
     window.__mpLang = lang;
     // Use the page's native translation system
-    if(typeof applyLang === 'function') applyLang(lang);
-    if(typeof applyTextNodes === 'function') applyTextNodes(lang);
+    if(window.__mpApplyLang) window.__mpApplyLang(lang);
+    if(window.__mpApplyTextNodes) window.__mpApplyTextNodes(lang);
     // Sync ALL lang-opt buttons on the page (global nav + any other)
     document.querySelectorAll('.lang-opt').forEach(function(o){
       o.classList.toggle('active', o.dataset.lang === lang);
