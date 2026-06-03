@@ -753,6 +753,22 @@ body > #scroller{top:104px!important}
 @media(max-width:768px){
   .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
 }
+
+@media(max-width:768px){
+  .cmp-wrap{aspect-ratio:4/3!important;max-height:55vh!important}
+  .cmp-before,.cmp-after{
+    object-fit:contain!important;
+    object-position:center center!important;
+    background:#000!important;
+  }
+  .scan-wrap{aspect-ratio:4/3!important;max-height:50vh!important}
+  .scan-base,.mob-scan-print{
+    object-fit:contain!important;
+    object-position:center center!important;
+    background:#000!important;
+  }
+  .drag-hint{font-size:9px!important;opacity:.5!important}
+}
 </style>
 </head>
 <body>
