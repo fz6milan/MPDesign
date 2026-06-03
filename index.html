@@ -3738,6 +3738,22 @@ viewer.addEventListener('click', e=>{
     applyLang(saved);
     applyTextNodes(saved);
   }
+  // Design list gcard click handler (goScreen + goUrl)
+  document.addEventListener('click', function(e){
+    var card = e.target.closest('.gcard[data-action]');
+    if(!card) return;
+    // Skip scan archive cards — handled by scanScroll
+    if(card.closest('#scanScroll')) return;
+    var action = card.dataset.action;
+    if(action === 'goScreen' && card.dataset.screen) {
+      go(card.dataset.screen);
+    } else if(action === 'goUrl' && card.dataset.url) {
+      var po = document.getElementById('pageOut');
+      if(po){ po.style.transition='opacity .5s'; po.style.opacity='1'; }
+      setTimeout(function(){ window.location.href = card.dataset.url; }, 450);
+    }
+  });
+
   // Scan archive gcard click handler
   document.getElementById('scanScroll').addEventListener('click', function(e){
     var card = e.target.closest('.gcard');
