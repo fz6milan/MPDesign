@@ -730,15 +730,17 @@ body > #scroller{top:104px!important}
 }
 
 @media(max-width:768px){
-  .cmp-wrap{aspect-ratio:16/9!important;max-height:52vh!important}
+  .cmp-wrap{aspect-ratio:16/9!important;max-height:54vh!important;background:#080808}
   .cmp-before,.cmp-after{
-    object-fit:cover!important;
+    object-fit:contain!important;
     object-position:center center!important;
+    background:#080808!important;
   }
-  .scan-wrap{aspect-ratio:16/9!important;max-height:50vh!important}
+  .scan-wrap{aspect-ratio:16/9!important;max-height:50vh!important;background:#080808}
   .scan-base,.mob-scan-print{
-    object-fit:cover!important;
+    object-fit:contain!important;
     object-position:center center!important;
+    background:#080808!important;
   }
 }
 </style>
