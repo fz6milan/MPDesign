@@ -731,8 +731,9 @@ body > #scroller{top:104px!important}
   .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
 }
 
-/* VW GTI mobile: portrait phone images for compare → use 3/4 container */
+/* VW GTI mobile: portrait phone images — both scan + cmp use 3/4 portrait */
 @media(max-width:768px){
+  .scan-wrap{aspect-ratio:3/4!important;max-height:60vh!important}
   .cmp-wrap{aspect-ratio:3/4!important;max-height:56vh!important}
   .cmp-before,.cmp-after{object-fit:cover!important;object-position:center center!important}
 }
