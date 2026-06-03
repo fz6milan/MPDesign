@@ -1999,13 +1999,16 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   scrollbar-width:none;
   gap:10px;
   padding:0 6vw;
-  align-items:stretch;
+  align-items:center;
   min-height:0;
 }
 .scan-scroll::-webkit-scrollbar{display:none}
 
 .gcard{
   flex:0 0 88vw;
+  min-height:65vh;
+  height:calc(100vh - 180px);
+  max-height:calc(100vh - 180px);
   scroll-snap-align:center;
   position:relative;
   overflow:hidden;
@@ -2996,32 +2999,6 @@ document.querySelectorAll('.cat-card').forEach(card=>{
 });
 
 // ═══ GRID CARDS ═══
-document.querySelectorAll('.gcard[data-action]').forEach(card=>{
-  card.addEventListener('click',()=>{
-    const action=card.dataset.action;
-    if(action==='scanDetail'){
-      const folder=card.dataset.folder;
-      const name=card.dataset.name;
-      const nameSr=card.dataset.nameSr||name;
-      const files=JSON.parse(card.dataset.files||'[]');
-      openScanDetail(folder,name,files,nameSr);
-    } else if(action==='peugeotParts'){
-      go('peugeotParts');
-    } else if(action==='fz6Parts'){
-      go('fz6Parts');
-    } else if(action==='goUrl'){
-      po.style.transition='opacity .6s';po.style.opacity='1';
-      setTimeout(()=>window.location.href=card.dataset.url,600);
-    } else if(action==='goScreen'){
-      go(card.dataset.screen);
-    } else if(action==='goPrinted'){
-      const folder=card.dataset.folder;
-      const name=card.dataset.name;
-      const nameSr=card.dataset.nameSr||name;
-      const files=JSON.parse(card.dataset.files||'[]');
-      openPrintedDetail(folder,name,files,nameSr);
-    }
-  });
 });
 
 // ═══ PEUGEOT PARTS (and other peugeot-part elements) ═══
