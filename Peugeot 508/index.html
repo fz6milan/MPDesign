@@ -739,15 +739,26 @@ body > #scroller{top:104px!important}
     transform:none!important;
   }
 }
+
+/* header dots + mobile fit (match main SPA) */
+.gn-icon{display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:8px;vertical-align:middle;opacity:.5}
+@media(max-width:768px){
+  .veh-nav.global-nav{padding:0 12px!important}
+  .veh-nav .gn-links{gap:10px!important}
+  .veh-nav .gn-link{font-size:9px!important;letter-spacing:.14em!important;padding:8px 4px!important}
+  .veh-nav .gn-icon{width:4px!important;height:4px!important;margin-right:5px!important}
+  .veh-nav .lang-toggle{margin-left:8px!important;padding:5px 8px!important}
+  .veh-nav .lang-opt{font-size:9px!important}
+}
 </style>
 </head>
 <body>
 <nav class="global-nav veh-nav" id="globalNav">
   <button class="gn-brand" id="gnBrand"><img class="gn-brand-logo" src="../logo.png" alt="MP Design"></button>
   <div class="gn-links">
-    <button class="gn-link" data-goto="catSelect" data-i18n-orig="Categories">Categories</button>
-    <button class="gn-link" data-goto="services"  data-i18n-orig="Services">Services</button>
-    <button class="gn-link" data-goto="contact"   data-i18n-orig="Contact">Contact</button>
+    <button class="gn-link" data-goto="catSelect" data-i18n-orig="Categories"><span class="gn-icon"></span>Categories</button>
+    <button class="gn-link" data-goto="services"  data-i18n-orig="Services"><span class="gn-icon"></span>Services</button>
+    <button class="gn-link" data-goto="contact"   data-i18n-orig="Contact"><span class="gn-icon"></span>Contact</button>
   </div>
   <div class="gn-right">
     <div class="lang-toggle" id="gnLangToggle">
@@ -1314,6 +1325,8 @@ try{
     "3D scan data · click image to zoom · arrows to navigate": "3D sken podaci · klik na sliku za zoom · strelice za navigaciju",
     "Finished part · real-world photos · click to zoom": "Gotov deo · stvarne fotografije · klik za zoom",
     "Categories": "Kategorije",
+    "Services": "Usluge",
+    "Contact": "Kontakt",
     "3D Scan · Manufacturing · Design": "3D Skeniranje · Izrada · Dizajn",
     "Automotive aftermarket parts": "Aftermarket auto delovi",
     "Reverse Engineering Studio": "Reverse Engineering Studio",
