@@ -3013,25 +3013,43 @@ document.getElementById('slideLeft').addEventListener('click',()=>showSlide(slid
 document.getElementById('slideRight').addEventListener('click',()=>showSlide(slideIdx+1));
 
 // Click image → zoom viewer
-// Scan archive image: click stage to open viewer
+// Scan archive image: tap=zoom, swipe=navigate
 (function(){
   var stage = document.getElementById('slideStage');
   if(!stage) return;
-  var si = document.getElementById('slideImg');
-  var _tx=0, _ty=0, _moved=false;
+  var _tx=0, _ty=0, _ts=0, _lastSwipe=0;
+
   stage.addEventListener('touchstart',function(e){
-    _tx=e.touches[0].clientX; _ty=e.touches[0].clientY; _moved=false;
+    _tx=e.touches[0].clientX;
+    _ty=e.touches[0].clientY;
+    _ts=Date.now();
   },{passive:true});
-  stage.addEventListener('touchmove',function(){ _moved=true; },{passive:true});
+
   stage.addEventListener('touchend',function(e){
-    if(_moved) return;
-    var dx=Math.abs(e.changedTouches[0].clientX-_tx);
-    var dy=Math.abs(e.changedTouches[0].clientY-_ty);
-    if(dx<20 && dy<20 && slideFiles.length) openViewer(slideFolder+'/'+slideFiles[slideIdx]);
+    var cx=e.changedTouches[0].clientX, cy=e.changedTouches[0].clientY;
+    var dx=cx-_tx, dy=cy-_ty;
+    var adx=Math.abs(dx), ady=Math.abs(dy);
+    var dt=Date.now()-_ts;
+
+    // Swipe: horizontal > 45px AND faster than 400ms AND more horizontal than vertical
+    if(adx>45 && adx>ady*1.2 && dt<400){
+      _lastSwipe=Date.now();
+      if(dx<0) showSlide(slideIdx+1);
+      else     showSlide(slideIdx-1);
+      return;
+    }
+
+    // Tap: small movement AND not too slow
+    if(adx<20 && ady<30 && dt<500){
+      if(e.target.closest && e.target.closest('.slide-arrow')) return;
+      if(slideFiles.length) openViewer(slideFolder+'/'+slideFiles[slideIdx]);
+    }
   },{passive:true});
+
+  // Desktop click (also covers tap fallback)
   stage.addEventListener('click',function(e){
-    // Don't trigger if clicking arrow buttons
     if(e.target.closest('.slide-arrow')) return;
+    if(Date.now()-_lastSwipe < 500) return; // ignore click triggered by swipe
     if(slideFiles.length) openViewer(slideFolder+'/'+slideFiles[slideIdx]);
   });
 })();
