@@ -2980,7 +2980,25 @@ function openScanDetail(folder,name,files,nameSr){
   h2El.dataset.i18nOrig = name;
   slideFiles=files; slideFolder=folder; slideIdx=0;
   document.getElementById('slideTotal').textContent=String(files.length).padStart(2,'0');
-  buildThumbs(); showSlide(0); go('scanDetail');
+  buildThumbs(); showSlide(0);
+  // Attach viewer click — inside openScanDetail so scope is guaranteed
+  (function attachStageClick(){
+    var st = document.getElementById('slideStage');
+    if(!st) return;
+    var _sx=0, _sy=0;
+    st.ontouchstart = function(e){ _sx=e.touches[0].clientX; _sy=e.touches[0].clientY; };
+    st.ontouchend   = function(e){
+      var dx=Math.abs(e.changedTouches[0].clientX-_sx);
+      var dy=Math.abs(e.changedTouches[0].clientY-_sy);
+      if(dx<25 && dy<35 && slideFiles.length)
+        openViewer(slideFolder+'/'+slideFiles[slideIdx]);
+    };
+    st.onclick = function(e){
+      if(e.target.closest && e.target.closest('.slide-arrow')) return;
+      if(slideFiles.length) openViewer(slideFolder+'/'+slideFiles[slideIdx]);
+    };
+  })();
+  go('scanDetail');
 }
 
 function showSlide(i){
@@ -3018,33 +3036,7 @@ document.getElementById('slideLeft').addEventListener('click',()=>showSlide(slid
 document.getElementById('slideRight').addEventListener('click',()=>showSlide(slideIdx+1));
 
 // Click image → zoom viewer
-// Scan archive: click/tap stage = open viewer zoom
-(function(){
-  var stage = document.getElementById('slideStage');
-  if(!stage) return;
-  var _t0=0, _x0=0, _y0=0;
-  // Track touch to distinguish tap from swipe
-  stage.addEventListener('touchstart',function(e){
-    _t0=Date.now(); _x0=e.touches[0].clientX; _y0=e.touches[0].clientY;
-  },{passive:true});
-  stage.addEventListener('touchend',function(e){
-    var dx=Math.abs(e.changedTouches[0].clientX-_x0);
-    var dy=Math.abs(e.changedTouches[0].clientY-_y0);
-    var dt=Date.now()-_t0;
-    // Tap = small movement, not a swipe
-    if(dx<25 && dy<40 && dt<500){
-      if(e.target.closest && e.target.closest('.slide-arrow')) return;
-      if(typeof slideFiles!=='undefined' && slideFiles.length)
-        openViewer(slideFolder+'/'+slideFiles[slideIdx]);
-    }
-  },{passive:true});
-  // Desktop click fallback
-  stage.addEventListener('click',function(e){
-    if(e.target.closest && e.target.closest('.slide-arrow')) return;
-    if(typeof slideFiles!=='undefined' && slideFiles.length)
-      openViewer(slideFolder+'/'+slideFiles[slideIdx]);
-  });
-})();
+
 
 // Keyboard arrows
 document.addEventListener('keydown',e=>{
