@@ -1686,8 +1686,9 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
     try{localStorage.setItem('mpdesign_lang', lang);}catch(_){}
     window.__mpLang = lang;
     // Use the page's native translation system
-    if(window.__mpApplyLang) window.__mpApplyLang(lang);
-    if(window.__mpApplyTextNodes) window.__mpApplyTextNodes(lang);
+    // Use page's complete re-translation (reads localStorage we just set, runs tagDom+applyLang+applyTextNodes)
+    if(window.__applyCurrentLang){ window.__applyCurrentLang(); }
+    else { if(window.__mpApplyLang) window.__mpApplyLang(lang); if(window.__mpApplyTextNodes) window.__mpApplyTextNodes(lang); }
     // Sync ALL lang-opt buttons on the page (global nav + any other)
     document.querySelectorAll('.lang-opt').forEach(function(o){
       o.classList.toggle('active', o.dataset.lang === lang);
