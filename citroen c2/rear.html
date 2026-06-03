@@ -743,9 +743,10 @@ body > #scroller{top:104px!important}
   .lang-opt{font-size:8px!important;padding:2px 4px!important}
   body > .topbar{top:44px!important}
   body > #scroller{top:96px!important}
-  .scan-wrap{aspect-ratio:16/9!important}
+  .scan-wrap{aspect-ratio:4/3!important}
   .cmp-wrap{aspect-ratio:16/9!important}
   .mob-scan-print{object-fit:cover!important;background:none!important}
+  .scan-base{object-fit:contain!important;object-position:center center!important;background:#000!important}
 }
 /* ═══════════ END VEHICLE NAV ═══════════ */
 
@@ -823,7 +824,7 @@ body > #scroller{top:104px!important}
   <section>
     <div class="cmp-hdr">
       <h2>SCAN → PRINT</h2>
-      <p>drag to compare</p>
+      <p data-i18n-orig="drag to compare">drag to compare</p>
     </div>
     <div class="cmp-wrap" id="cmpWrap">
       <img class="cmp-before" src="rear/rear_scan.png" alt="Scan">
@@ -923,7 +924,7 @@ body > #scroller{top:104px!important}
 <div class="viewer" id="viewer">
   <button class="viewer-close" id="viewerClose">✕ Close</button>
   <img class="viewer-img" id="viewerImg" src="" alt="">
-  <div class="viewer-hint">move cursor · zoom follows · ESC · close</div>
+  
 </div>
 
 <script>
@@ -1285,6 +1286,24 @@ try{
     "Select which part to view": "Izaberite koji deo želite da pregledate",
     "Front Bumper": "Prednji branik",
     "Rear Bumper": "Zadnji branik",
+    "drag to compare": "prevuci za poređenje",
+    "← drag to compare →": "← prevuci za poređenje →",
+    "DRAG TO COMPARE": "PREVUCI ZA POREĐENJE",
+    "Scroll for more": "Skroluj za više",
+    "SCROLL FOR MORE": "SKROLUJ ZA VIŠE",
+    "scroll": "skroluj",
+    "3D Print": "3D Štampa",
+    "3D PRINT": "3D ŠTAMPA",
+    "View Products →": "Pogledaj proizvode →",
+    "tap · reveal": "tapni · otkrij",
+    "◈ tap · reveal": "◈ tapni · otkrij",
+    "◈ 3D ŠTAMPA": "◈ 3D ŠTAMPA",
+    "New part revealed": "Novi deo otkriven",
+    "Scroll": "Skroluj",
+    "SCROLL": "SKROLUJ",
+    "hover to inspect splitter": "hover za pregled splitera",
+    "hover to inspect bumper": "hover za pregled branika",
+    "hover to inspect diffuser": "hover za pregled difuzora",
     "Rear<br><span>Bumper</span>": "Zadnji<br><span>branik</span>",
     "Front<br><span>Bumper</span>": "Prednji<br><span>branik</span>",
     "Front<br><span>Splitter</span>": "Prednji<br><span>splitter</span>",
@@ -1645,27 +1664,36 @@ document.querySelectorAll('.mob-rev-btn').forEach(function(b){
   if(gnBrand) gnBrand.addEventListener('click', function(){
     window.location.href = '../index.html';
   });
-  // Lang toggle
+  // Lang toggle — delegates to the page's own applyLang to avoid conflict
   var savedLang = 'en';
   try{ savedLang = localStorage.getItem('mpdesign_lang') || 'en'; }catch(_){}
-  function applyLangVeh(lang){
-    document.querySelectorAll('[data-i18n-orig]').forEach(function(el){
-      var orig = el.dataset.i18nOrig;
-      var normKey = orig.replace(/\s+/g,' ').trim();
-      if(lang==='sr' && typeof T!=='undefined' && T[normKey]) el.innerHTML = T[normKey];
-      else el.innerHTML = orig;
-    });
-    document.querySelectorAll('.lang-opt').forEach(function(o){
-      o.classList.toggle('active', o.dataset.lang===lang);
-    });
+
+  function changeLang(lang){
     try{localStorage.setItem('mpdesign_lang', lang);}catch(_){}
+    window.__mpLang = lang;
+    // Use the page's native translation system
+    if(typeof applyLang === 'function') applyLang(lang);
+    if(typeof applyTextNodes === 'function') applyTextNodes(lang);
+    // Sync ALL lang-opt buttons on the page (global nav + any other)
+    document.querySelectorAll('.lang-opt').forEach(function(o){
+      o.classList.toggle('active', o.dataset.lang === lang);
+    });
   }
+
+  // Prevent double-fire on mobile (touchend + click)
+  var _lastLangClick = 0;
   document.querySelectorAll('.lang-opt').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      applyLangVeh(btn.dataset.lang);
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      var now = Date.now();
+      if(now - _lastLangClick < 300) return; // debounce
+      _lastLangClick = now;
+      changeLang(btn.dataset.lang);
     });
   });
-  applyLangVeh(savedLang);
+
+  // Apply saved language on load (after page init runs)
+  setTimeout(function(){ changeLang(savedLang); }, 80);
 })();
 
 </script>

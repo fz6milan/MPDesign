@@ -2084,17 +2084,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     </div>
 
     <!-- Yamaha FZ6 — Front Fender (Blatobran). Mobile-only card (desktop scan not available). -->
-    <div class="gcard mobile-only-card" data-action="scanDetail" data-folder="Folder - telefon/Scanned images/yamaha fz6/blatobran" data-name="Yamaha FZ6 · Front Fender" data-files='["blatobran_1.png","blatobran_2.png","blatobran_3.png","blatobran_4.png"]'>
-      <img class="gcard-img" src="Folder - telefon/Scanned images/yamaha fz6/blatobran/blatobran_1.png" alt="Yamaha FZ6 Front Fender">
-      <div class="gcard-corner tl"></div><div class="gcard-corner br"></div>
-      <div class="gcard-cta">View ↗</div>
-      <div class="gcard-overlay">
-        <div class="gcard-num">07</div>
-        <div class="gcard-info">
-          <div class="gcard-name">Yamaha FZ6</div>
-          <div class="gcard-sub">Front Fender · 4 scan files</div>
-        </div>
-      </div>
+    
     </div>
 
   </div>
@@ -2161,7 +2151,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
       </button>
 
       <img class="slide-img" id="slideImg" src="" alt="">
-      <div class="slide-zoom-hint">click · zoom ↗</div>
+      
 
       <button class="slide-arrow right" id="slideRight">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
@@ -2372,7 +2362,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M15 6L9 12l6 6"/></svg>
       </button>
       <img class="slide-img" id="printedImg" src="" alt="">
-      <div class="slide-zoom-hint">click · zoom ↗</div>
+      
       <button class="slide-arrow right" id="printedRight">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
       </button>
@@ -2381,7 +2371,41 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
       <div class="slide-counter"><strong id="printedNow">01</strong> / <span id="printedTotal">03</span></div>
       <div class="slide-thumbs" id="printedThumbs"></div>
     </div>
+  
+<!-- ══════ YAMAHA FZ6 PARTS SELECTOR ══════ -->
+<div id="fz6Parts" class="screen grid-screen hidden">
+  <div class="topbar">
+    <button class="tb-back nav-back">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
+      Back
+    </button>
+    <div class="tb-divider"></div>
+    <div class="tb-section" data-i18n-orig="Yamaha FZ6 · Parts">Yamaha FZ6 · Parts</div>
   </div>
+  <div class="grid-header">
+    <h2 data-i18n-orig="Yamaha FZ6">Yamaha FZ6</h2>
+    <p data-i18n-orig="Select which part to view">Select which part to view</p>
+  </div>
+  <div class="peugeot-parts">
+    <div class="peugeot-part" data-folder="scan files/yamaha fz6" data-name="Yamaha FZ6 — Belly Pan" data-name-sr="Yamaha FZ6 — Belly pan" data-files='["01.png","02.png"]'>
+      <img src="scan files/yamaha fz6/01.png" alt="Belly Pan">
+      <div class="peugeot-part-overlay">
+        <div class="peugeot-part-num">Part 01</div>
+        <div class="peugeot-part-name" data-i18n-orig="Belly Pan">Belly Pan</div>
+        <div class="peugeot-part-cta" data-i18n-orig="Belly pan · view scans →">Belly pan · view scans →</div>
+      </div>
+    </div>
+    <div class="peugeot-part" data-folder="Folder - telefon/Scanned images/yamaha fz6/blatobran" data-name="Yamaha FZ6 — Front Fender" data-name-sr="Yamaha FZ6 — Prednji blatobran" data-files='["blatobran_1.png","blatobran_2.png","blatobran_3.png","blatobran_4.png"]'>
+      <img src="Folder - telefon/Scanned images/yamaha fz6/blatobran/blatobran_1.png" alt="Front Fender">
+      <div class="peugeot-part-overlay">
+        <div class="peugeot-part-num">Part 02</div>
+        <div class="peugeot-part-name" data-i18n-orig="Front Fender">Front Fender</div>
+        <div class="peugeot-part-cta" data-i18n-orig="Front fender · view scans →">Front fender · view scans →</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 </div>
 
 <!-- ═══════════ SERVICES SCREEN ═══════════ -->
@@ -2548,7 +2572,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 <div class="viewer" id="viewer">
   <button class="viewer-close" id="viewerClose">✕ Close</button>
   <img class="viewer-img" id="viewerImg" src="" alt="">
-  <div class="viewer-hint">move cursor · zoom follows · ESC · close</div>
+  
 </div>
 
 <script>
@@ -3202,6 +3226,14 @@ viewer.addEventListener('click', e=>{
     "Select which part to view": "Izaberite koji deo želite da pregledate",
     "Front Bumper": "Prednji branik",
     "Rear Bumper": "Zadnji branik",
+    "drag to compare": "prevuci za poređenje",
+    "← drag to compare →": "← prevuci za poređenje →",
+    "Scroll for more": "Skroluj za više",
+    "SCROLL FOR MORE": "SKROLUJ ZA VIŠE",
+    "3D Print": "3D Štampa",
+    "View Products →": "Pogledaj proizvode →",
+    "3D scan data, click image to zoom, arrows for navigation": "3D sken podaci, klikni sliku za zum, strelice za navigaciju",
+    "3D SCAN DATA · CLICK IMAGE TO ZOOM · ARROWS FOR NAVIGATION": "3D SKEN PODACI · KLIKNI SLIKU ZA ZUM · STRELICE ZA NAVIGACIJU",
     "Front Splitter": "Prednji splitter",
     "Front bumper · view scans →": "Prednji branik · pogledaj skenove →",
     "Rear bumper · view scans →": "Zadnji branik · pogledaj skenove →",
@@ -3841,6 +3873,35 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
   }catch(_){}
 })();
 
+
+// ── TOUCH SWIPE on scan/printed detail slide stage ──
+// SWIPE SLIDE STAGE
+(function(){
+  var stage = document.querySelector('.slide-stage');
+  if(!stage) return;
+  var sx=0, sy=0;
+  stage.addEventListener('touchstart',function(e){ sx=e.touches[0].clientX; sy=e.touches[0].clientY; },{passive:true});
+  stage.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)){
+      if(dx<0) { var r=document.getElementById('slideRight'); if(r) r.click(); }
+      else     { var l=document.getElementById('slideLeft');  if(l) l.click(); }
+    }
+  },{passive:true});
+  // Also add swipe to printed detail stage
+  var pstage = document.querySelector('.printed-slide-stage');
+  if(pstage){
+    var px=0, py=0;
+    pstage.addEventListener('touchstart',function(e){px=e.touches[0].clientX;py=e.touches[0].clientY;},{passive:true});
+    pstage.addEventListener('touchend',function(e){
+      var dx=e.changedTouches[0].clientX-px, dy=e.changedTouches[0].clientY-py;
+      if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){
+        if(dx<0){var r=document.getElementById('printedRight');if(r)r.click();}
+        else    {var l=document.getElementById('printedLeft'); if(l)l.click();}
+      }
+    },{passive:true});
+  }
+})();
 </script>
 
 
