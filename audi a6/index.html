@@ -718,13 +718,14 @@ body > #scroller{top:104px!important}
 
 @media(max-width:768px){
   .scan-wrap,.cmp-wrap{
-    aspect-ratio:16/9!important;width:100%!important;
-    max-height:56vh!important;overflow:hidden!important;
+    aspect-ratio:16/10!important;width:100%!important;
+    max-height:58vh!important;overflow:hidden!important;
   }
   .scan-base,.mob-scan-print,.cmp-before,.cmp-after{
-    object-fit:contain!important;
-    transform:scale(1.1)!important;
-    transform-origin:center 47%!important;
+    width:100%!important;height:100%!important;
+    object-fit:cover!important;
+    object-position:center 49%!important;
+    transform:none!important;
   }
 }
 </style>
@@ -773,7 +774,7 @@ body > #scroller{top:104px!important}
   <section>
     <div class="sec-ey">3D Scan · 001</div>
     <div class="scan-wrap" id="scanWrap">
-      <img class="scan-base" src="audi_a6scanbumper.png" alt="C2 Scan">
+      <img class="scan-base" src="m_scan.png" alt="C2 Scan">
       <div class="scan-zoom">
         <img class="sz-scan" src="audi_a6scanbumper.png" alt="Scan Bumper">
         <img class="sz-print" src="audi_a63dbumper.png" alt="Print Bumper">
@@ -784,7 +785,7 @@ body > #scroller{top:104px!important}
         <span class="ss-print">3D Print</span>
       </div>
       <div class="scan-hint-r">hover to inspect splitter</div>
-      <img class="mob-scan-print" src="audi_a63dbumper.png" alt="3D Print">
+      <img class="mob-scan-print" src="m_print.png" alt="3D Print">
       <div class="mob-tap-badge"><span>◈ tap · reveal</span></div>
     </div>
     <div class="scroll-down-cue">
@@ -800,9 +801,9 @@ body > #scroller{top:104px!important}
       <p data-i18n-orig="drag to compare">drag to compare</p>
     </div>
     <div class="cmp-wrap" id="cmpWrap">
-      <img class="cmp-before" src="audi_a6scanbumper.png" alt="Scan">
+      <img class="cmp-before" src="m_scan.png" alt="Scan">
       <div class="cmp-aw" id="afterWrap">
-        <img class="cmp-after" id="afterImg" src="audi_a63dbumper.png" alt="3D Print">
+        <img class="cmp-after" id="afterImg" src="m_print.png" alt="3D Print">
       </div>
       <div class="cmp-div" id="cmpDiv">
         <div class="cmp-handle">

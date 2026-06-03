@@ -734,19 +734,6 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
 body > .topbar{top:52px!important;z-index:300!important}
 body > #scroller{top:104px!important}
 /* ── Mobile ── */
-@media(max-width:768px){
-  .global-nav{height:44px!important;padding:0 8px!important}
-  .gn-brand-logo{height:22px!important}
-  .gn-links{gap:2px!important}
-  .gn-link{font-size:8px!important;padding:5px 5px!important;letter-spacing:.1em!important}
-  .lang-toggle{padding:4px 6px!important}
-  .lang-opt{font-size:8px!important;padding:2px 4px!important}
-  body > .topbar{top:44px!important}
-  body > #scroller{top:96px!important}
-  .scan-wrap{aspect-ratio:4/3!important}
-  .cmp-wrap{aspect-ratio:16/9!important}
-  .mob-scan-print{object-fit:cover!important;object-position:center center!important}
-}
 /* ═══════════ END VEHICLE NAV ═══════════ */
 
 /* ── tb-tag mobile font size fix ── */
@@ -755,17 +742,15 @@ body > #scroller{top:104px!important}
 }
 
 @media(max-width:768px){
-  .cmp-wrap{aspect-ratio:16/9!important;max-height:54vh!important;background:#080808}
-  .cmp-before,.cmp-after{
-    object-fit:contain!important;
-    object-position:center center!important;
-    background:#080808!important;
+  .scan-wrap,.cmp-wrap{
+    aspect-ratio:16/10!important;width:100%!important;
+    max-height:58vh!important;overflow:hidden!important;
   }
-  .scan-wrap{aspect-ratio:16/9!important;max-height:50vh!important;background:#080808}
-  .scan-base,.mob-scan-print{
-    object-fit:contain!important;
-    object-position:center center!important;
-    background:#080808!important;
+  .scan-base,.mob-scan-print,.cmp-before,.cmp-after{
+    width:100%!important;height:100%!important;
+    object-fit:cover!important;
+    object-position:center 55%!important;
+    transform:none!important;
   }
 }
 </style>
@@ -814,7 +799,7 @@ body > #scroller{top:104px!important}
   <section>
     <div class="sec-ey">3D Scan · 001</div>
     <div class="scan-wrap" id="scanWrap">
-      <img class="scan-base" src="c2_scan.png" alt="C2 Scan">
+      <img class="scan-base" src="m_front_scan.png" alt="C2 Scan">
       <div class="scan-zoom">
         <img class="sz-scan" src="c2_scan_frontbumper.png" alt="Scan Bumper">
         <img class="sz-print" src="c2_3dprint_frontbumper.png" alt="Print Bumper">
@@ -825,7 +810,7 @@ body > #scroller{top:104px!important}
         <span class="ss-print">3D Print</span>
       </div>
       <div class="scan-hint-r">hover to inspect</div>
-      <img class="mob-scan-print" src="../Folder - telefon/Citroen c2/front/c2_front_3dprint.png" alt="3D Print">
+      <img class="mob-scan-print" src="m_front_print.png" alt="3D Print">
       <div class="mob-tap-badge"><span>◈ tap · reveal</span></div>
     </div>
     <div class="scroll-down-cue">
@@ -841,9 +826,9 @@ body > #scroller{top:104px!important}
       <p data-i18n-orig="drag to compare">drag to compare</p>
     </div>
     <div class="cmp-wrap" id="cmpWrap">
-      <img class="cmp-before" src="c2_scan_frontbumper.png" alt="Scan">
+      <img class="cmp-before" src="m_front_scan.png" alt="Scan">
       <div class="cmp-aw" id="afterWrap">
-        <img class="cmp-after" id="afterImg" src="c2_3dprint_frontbumper.png" alt="3D Print">
+        <img class="cmp-after" id="afterImg" src="m_front_print.png" alt="3D Print">
       </div>
       <div class="cmp-div" id="cmpDiv">
         <div class="cmp-handle">
