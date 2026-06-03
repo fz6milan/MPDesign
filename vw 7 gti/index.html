@@ -732,34 +732,12 @@ body > #scroller{top:104px!important}
 }
 
 /* VW GTI mobile: portrait phone images — both scan + cmp use 3/4 portrait */
-@media(max-width:768px){
-  .scan-wrap{aspect-ratio:3/4!important;max-height:60vh!important}
-  .cmp-wrap{aspect-ratio:3/4!important;max-height:56vh!important}
-  .cmp-before,.cmp-after{object-fit:cover!important;object-position:center center!important}
-}
+
 
 @media(max-width:768px){
-  .scan-wrap{
-    aspect-ratio:16/9!important;max-height:54vh!important;
-    overflow:hidden!important;
-  }
-  .scan-base,.mob-scan-print{
-    object-fit:contain!important;
-    object-position:center center!important;
-    background:transparent!important;
-    transform:scale(1.8)!important;
-    transform-origin:center center!important;
-  }
-  .cmp-wrap{
-    aspect-ratio:16/9!important;max-height:54vh!important;
-    overflow:hidden!important;
-  }
-  .cmp-before,.cmp-after{
-    object-fit:contain!important;
-    object-position:center center!important;
-    background:transparent!important;
-    transform:scale(1.8)!important;
-    transform-origin:center center!important;
+  .scan-wrap,.cmp-wrap{aspect-ratio:16/9!important;max-height:54vh!important;overflow:hidden!important}
+  .scan-base,.mob-scan-print,.cmp-before,.cmp-after{
+    object-fit:contain!important;transform:scale(1.8)!important;transform-origin:center!important
   }
 }
 </style>

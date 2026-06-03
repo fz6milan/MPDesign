@@ -754,28 +754,11 @@ body > #scroller{top:104px!important}
   .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
 }
 
+
 @media(max-width:768px){
-  .scan-wrap{
-    aspect-ratio:16/9!important;max-height:54vh!important;
-    overflow:hidden!important;
-  }
-  .scan-base,.mob-scan-print{
-    object-fit:contain!important;
-    object-position:center center!important;
-    background:transparent!important;
-    transform:scale(1.3)!important;
-    transform-origin:center center!important;
-  }
-  .cmp-wrap{
-    aspect-ratio:16/9!important;max-height:54vh!important;
-    overflow:hidden!important;
-  }
-  .cmp-before,.cmp-after{
-    object-fit:contain!important;
-    object-position:center center!important;
-    background:transparent!important;
-    transform:scale(1.3)!important;
-    transform-origin:center center!important;
+  .scan-wrap,.cmp-wrap{aspect-ratio:16/9!important;max-height:54vh!important;overflow:hidden!important}
+  .scan-base,.mob-scan-print,.cmp-before,.cmp-after{
+    object-fit:contain!important;transform:scale(1.3)!important;transform-origin:center!important
   }
 }
 </style>
