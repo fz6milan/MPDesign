@@ -736,7 +736,7 @@ body > #scroller{top:104px!important}
 }
 
 /* header dots + mobile fit (match main SPA) */
-.gn-icon{display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:8px;vertical-align:middle;opacity:.5}
+.gn-icon{display:inline-block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5)!important;margin-right:8px;vertical-align:middle;opacity:1}
 @media(max-width:768px){
   .veh-nav.global-nav{padding:0 12px!important}
   .veh-nav .gn-links{gap:10px!important}
@@ -744,6 +744,11 @@ body > #scroller{top:104px!important}
   .veh-nav .gn-icon{width:4px!important;height:4px!important;margin-right:5px!important}
   .veh-nav .lang-toggle{margin-left:8px!important;padding:5px 8px!important}
   .veh-nav .lang-opt{font-size:9px!important}
+}
+
+/* tb-tag: fit full long descriptions */
+@media(max-width:768px){
+  .tb-tag{font-size:7.5px!important;letter-spacing:.08em!important;max-width:64vw!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important}
 }
 </style>
 </head>
