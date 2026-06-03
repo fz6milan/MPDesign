@@ -3751,6 +3751,10 @@ viewer.addEventListener('click', e=>{
       var po = document.getElementById('pageOut');
       if(po){ po.style.transition='opacity .5s'; po.style.opacity='1'; }
       setTimeout(function(){ window.location.href = card.dataset.url; }, 450);
+    } else if(action === 'goPrinted' && card.dataset.folder) {
+      var files = [];
+      try{ files = JSON.parse(card.dataset.files || '[]'); }catch(_){}
+      openPrintedDetail(card.dataset.folder, card.dataset.name || '', files, card.dataset.nameSr || card.dataset.name || '');
     }
   });
 
