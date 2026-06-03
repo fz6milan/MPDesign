@@ -714,19 +714,6 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
 body > .topbar{top:52px!important;z-index:300!important}
 body > #scroller{top:104px!important}
 /* ── Mobile ── */
-@media(max-width:768px){
-  .global-nav{height:44px!important;padding:0 8px!important}
-  .gn-brand-logo{height:22px!important}
-  .gn-links{gap:2px!important}
-  .gn-link{font-size:8px!important;padding:5px 5px!important;letter-spacing:.1em!important}
-  .lang-toggle{padding:4px 6px!important}
-  .lang-opt{font-size:8px!important;padding:2px 4px!important}
-  body > .topbar{top:44px!important}
-  body > #scroller{top:96px!important}
-  .scan-wrap{aspect-ratio:4/3!important}
-  .cmp-wrap{aspect-ratio:16/9!important}
-  .mob-scan-print{object-fit:cover!important;object-position:center center!important}
-}
 /* ═══════════ END VEHICLE NAV ═══════════ */
 
 /* ── tb-tag mobile font size fix ── */
@@ -734,28 +721,15 @@ body > #scroller{top:104px!important}
   .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
 }
 
-
-
-
 @media(max-width:768px){
   .scan-wrap,.cmp-wrap{
     aspect-ratio:16/9!important;width:100%!important;
     max-height:56vh!important;overflow:hidden!important;
   }
-  .scan-base{
+  .scan-base,.mob-scan-print,.cmp-before,.cmp-after{
     object-fit:contain!important;
-    transform:scale(1.5)!important;
-    transform-origin:center 54%!important;
-  }
-  .mob-scan-print{
-    object-fit:contain!important;
-    transform:scale(2.6)!important;
-    transform-origin:center 52%!important;
-  }
-  .cmp-before,.cmp-after{
-    object-fit:contain!important;
-    transform:scale(1.5)!important;
-    transform-origin:center 60%!important;
+    transform:scale(1.4)!important;
+    transform-origin:center 57%!important;
   }
 }
 </style>
@@ -815,7 +789,7 @@ body > #scroller{top:104px!important}
         <span class="ss-print">3D Print</span>
       </div>
       <div class="scan-hint-r">hover to inspect splitter</div>
-      <img class="mob-scan-print" src="../Folder - telefon/Peugeot 508/peugeot_3dprint.png" alt="3D Print">
+      <img class="mob-scan-print" src="front/01_3dprint.png" alt="3D Print">
       <div class="mob-tap-badge"><span>◈ tap · reveal</span></div>
     </div>
     <div class="scroll-down-cue">
@@ -1516,9 +1490,9 @@ try{
   if(window.innerWidth > 768) return;
   const map = {
     "front/01_scanonly.png": "../Folder - telefon/Peugeot 508/peugeot_scan.png",
-    "front/01_3dprint.png": "../Folder - telefon/Peugeot 508/peugeot_3dprint.png",
+    "front/01_3dprint.png": "front/01_3dprint.png",
     "front/01_zoomneutral.png": "../Folder - telefon/Peugeot 508/peugeot_scan.png",
-    "front/02_zoomeffect.png": "../Folder - telefon/Peugeot 508/peugeot_3dprint.png",
+    "front/02_zoomeffect.png": "front/01_3dprint.png",
     "front/product_01.png": "../Folder - telefon/Peugeot 508/product_1.png",
     "front/product_02.png": "../Folder - telefon/Peugeot 508/product_2.png",
     "front/product_03.png": "../Folder - telefon/Peugeot 508/product_3.png",

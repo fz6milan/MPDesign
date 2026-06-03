@@ -734,27 +734,12 @@ body.scrolled .scroll-down-cue{opacity:0;pointer-events:none;transition:opacity 
 body > .topbar{top:52px!important;z-index:300!important}
 body > #scroller{top:104px!important}
 /* ── Mobile ── */
-@media(max-width:768px){
-  .global-nav{height:44px!important;padding:0 8px!important}
-  .gn-brand-logo{height:22px!important}
-  .gn-links{gap:2px!important}
-  .gn-link{font-size:8px!important;padding:5px 5px!important;letter-spacing:.1em!important}
-  .lang-toggle{padding:4px 6px!important}
-  .lang-opt{font-size:8px!important;padding:2px 4px!important}
-  body > .topbar{top:44px!important}
-  body > #scroller{top:96px!important}
-  .scan-wrap{aspect-ratio:4/3!important}
-  .cmp-wrap{aspect-ratio:16/9!important}
-  .mob-scan-print{object-fit:cover!important;object-position:center center!important}
-}
 /* ═══════════ END VEHICLE NAV ═══════════ */
 
 /* ── tb-tag mobile font size fix ── */
 @media(max-width:768px){
   .tb-tag{font-size:9px!important;letter-spacing:.16em!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:55vw!important}
 }
-
-
 
 @media(max-width:768px){
   .scan-wrap,.cmp-wrap{
@@ -763,7 +748,7 @@ body > #scroller{top:104px!important}
   }
   .scan-base,.mob-scan-print,.cmp-before,.cmp-after{
     object-fit:contain!important;
-    transform:scale(1.3)!important;
+    transform:scale(1.25)!important;
     transform-origin:center 51%!important;
   }
 }
@@ -824,7 +809,7 @@ body > #scroller{top:104px!important}
         <span class="ss-print">3D Print</span>
       </div>
       <div class="scan-hint-r">hover to inspect rear</div>
-      <img class="mob-scan-print" src="../Folder - telefon/Citroen c2/rear/rear_3dprint.png" alt="3D Print">
+      <img class="mob-scan-print" src="rear/rear_newslider.png" alt="3D Print">
       <div class="mob-tap-badge"><span>◈ tap · reveal</span></div>
     </div>
     <div class="scroll-down-cue">
@@ -1526,7 +1511,7 @@ try{
   if(window.innerWidth > 768) return;
   const map = {
     "rear/rear_scan.png": "../Folder - telefon/Citroen c2/rear/rear_scan.png",
-    "rear/rear_newslider.png": "../Folder - telefon/Citroen c2/rear/rear_3dprint.png",
+    "rear/rear_newslider.png": "rear/rear_newslider.png",
     "rear/product_01.png": "../Folder - telefon/Citroen c2/rear/product_1.png",
     "rear/product_02.png": "../Folder - telefon/Citroen c2/rear/product_2.png",
     "rear/product_03.png": "../Folder - telefon/Citroen c2/rear/product_3.png",
