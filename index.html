@@ -1982,6 +1982,67 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 }
 .sdcar-sep{color:rgba(255,255,255,.15)}
 
+
+/* ══ SCAN LIST — SCROLL-SNAP GCARDS (matching screenshot) ══ */
+#scanList{display:flex;flex-direction:column}
+.scan-grid-hdr{padding:14px 24px 10px;text-align:center}
+.scan-grid-hdr h2{font-family:var(--fd);font-size:clamp(20px,5.5vw,30px);letter-spacing:.06em;margin:0 0 4px;color:#fff}
+.scan-grid-hdr p{font-size:10px;letter-spacing:.28em;color:var(--silver-3);font-family:var(--fm)}
+
+.scan-scroll{
+  flex:1;
+  display:flex;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  gap:10px;
+  padding:0 6vw;
+  align-items:stretch;
+  min-height:0;
+}
+.scan-scroll::-webkit-scrollbar{display:none}
+
+.gcard{
+  flex:0 0 88vw;
+  scroll-snap-align:center;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:#060606;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.gcard-img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  display:block;
+  transition:transform .5s ease;
+}
+.gcard:active .gcard-img{transform:scale(1.02)}
+.gcard-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  justify-content:space-between;
+  padding:16px 18px;
+  background:linear-gradient(to bottom,rgba(0,0,0,.1) 40%,rgba(0,0,0,.82) 100%);
+}
+.gcard-num{
+  font-family:var(--fm);font-size:11px;
+  letter-spacing:.22em;color:rgba(255,255,255,.35);
+}
+.gcard-footer{}
+.gcard-name{
+  font-family:var(--fd);font-size:clamp(22px,6vw,34px);
+  letter-spacing:.04em;color:#fff;line-height:1;
+}
+.gcard-sub{
+  font-family:var(--fm);font-size:10px;
+  letter-spacing:.25em;color:rgba(255,255,255,.45);
+  margin-top:5px;text-transform:uppercase;
+}
+
 </style>
 </head>
 <body>
@@ -2099,7 +2160,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 </div>
 
 <!-- ══════ SCAN LIST (grid of vehicles) ══════ -->
-<div id="scanList" class="screen hidden">
+<div id="scanList" class="screen grid-screen hidden">
   <div class="topbar">
     <button class="tb-back nav-back">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 4L6 8l4 4"/></svg>
@@ -2108,21 +2169,89 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     <div class="tb-divider"></div>
     <div class="tb-section" data-i18n-orig="3D Scan Archive">3D Scan Archive</div>
   </div>
-
-  <div class="scar-header">
+  <div class="scan-grid-hdr">
     <h2 data-i18n-orig="ARHIVA 3D SKENOVA">ARHIVA 3D SKENOVA</h2>
     <p data-i18n-orig="IZABERITE DEO">IZABERITE DEO</p>
   </div>
+  <div class="scan-scroll" id="scanScroll">
 
-  <div class="scar-track" id="scarTrack"></div>
+    <div class="gcard" data-action="scanDetail"
+         data-name="Audi A6 — Front Splitter" data-name-sr="Audi A6 — Prednji splitter"
+         data-folder="scan files/audi a6" data-files='["01.png","02.png","03.png"]'>
+      <img class="gcard-img" src="scan files/audi a6/01.png" alt="Audi A6">
+      <div class="gcard-overlay">
+        <div class="gcard-num">01</div>
+        <div class="gcard-footer">
+          <div class="gcard-name">AUDI A6</div>
+          <div class="gcard-sub" data-i18n-orig="3 scan files">3 SKEN FAJLA</div>
+        </div>
+      </div>
+    </div>
 
-  <div class="scar-info">
-    <div class="scar-name" id="scarName"></div>
-    <div class="scar-sub"  id="scarSub"></div>
-    <div class="scar-cta"  id="scarCta" data-i18n-orig="tap to view">tap to view</div>
+    <div class="gcard" data-action="scanDetail"
+         data-name="BMW S 1000 R — Body Scan" data-name-sr="BMW S 1000 R — Sken karoserije"
+         data-folder="scan files/bmw s 1000 r" data-files='["01.png","02.png"]'>
+      <img class="gcard-img" src="scan files/bmw s 1000 r/01.png" alt="BMW S 1000 R">
+      <div class="gcard-overlay">
+        <div class="gcard-num">02</div>
+        <div class="gcard-footer">
+          <div class="gcard-name">BMW S 1000 R</div>
+          <div class="gcard-sub" data-i18n-orig="2 scan files">2 SKEN FAJLA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="scanDetail"
+         data-name="Citroen C2 — Body Scan" data-name-sr="Citroen C2 — Sken karoserije"
+         data-folder="scan files/c2" data-files='["01.png","02.png","03.png"]'>
+      <img class="gcard-img" src="scan files/c2/01.png" alt="Citroen C2">
+      <div class="gcard-overlay">
+        <div class="gcard-num">03</div>
+        <div class="gcard-footer">
+          <div class="gcard-name">CITROEN C2</div>
+          <div class="gcard-sub" data-i18n-orig="3 scan files">3 SKEN FAJLA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="peugeotParts"
+         data-name="Peugeot 508 SW" data-name-sr="Peugeot 508 SW">
+      <img class="gcard-img" src="scan files/peugeot 508 sw/prednji branik/01.png" alt="Peugeot 508 SW">
+      <div class="gcard-overlay">
+        <div class="gcard-num">04</div>
+        <div class="gcard-footer">
+          <div class="gcard-name">PEUGEOT 508 SW</div>
+          <div class="gcard-sub" data-i18n-orig="multiple parts">VIŠE DELOVA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="scanDetail"
+         data-name="VW Golf 7 GTI — Rear Diffuser" data-name-sr="VW Golf 7 GTI — Zadnji difuzor"
+         data-folder="scan files/vw 7" data-files='["01.png","02.png","03.png"]'>
+      <img class="gcard-img" src="scan files/vw 7/01.png" alt="VW Golf 7">
+      <div class="gcard-overlay">
+        <div class="gcard-num">05</div>
+        <div class="gcard-footer">
+          <div class="gcard-name">VW GOLF 7 GTI</div>
+          <div class="gcard-sub" data-i18n-orig="3 scan files">3 SKEN FAJLA</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard" data-action="fz6Parts"
+         data-name="Yamaha FZ6" data-name-sr="Yamaha FZ6">
+      <img class="gcard-img" src="scan files/yamaha fz6/01.png" alt="Yamaha FZ6">
+      <div class="gcard-overlay">
+        <div class="gcard-num">06</div>
+        <div class="gcard-footer">
+          <div class="gcard-name">YAMAHA FZ6</div>
+          <div class="gcard-sub" data-i18n-orig="multiple parts">VIŠE DELOVA</div>
+        </div>
+      </div>
+    </div>
+
   </div>
-
-  <div class="scar-dots" id="scarDots"></div>
 </div>
 
 <!-- ══════ PEUGEOT PARTS ══════ -->
@@ -3642,6 +3771,20 @@ viewer.addEventListener('click', e=>{
     applyLang(saved);
     applyTextNodes(saved);
   }
+  // Scan archive gcard click handler
+  document.getElementById('scanScroll').addEventListener('click', function(e){
+    var card = e.target.closest('.gcard');
+    if(!card) return;
+    var action = card.dataset.action;
+    var folder = card.dataset.folder || '';
+    var name   = card.dataset.name   || '';
+    var nameSr = card.dataset.nameSr || name;
+    var files  = JSON.parse(card.dataset.files || '[]');
+    if(action==='scanDetail')    openScanDetail(folder, name, files, nameSr);
+    else if(action==='peugeotParts') go('peugeotParts');
+    else if(action==='fz6Parts')     go('fz6Parts');
+  });
+
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);
   } else {
