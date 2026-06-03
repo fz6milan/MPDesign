@@ -2008,9 +2008,9 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 /* Scan archive cards — scoped so design list 3D carousel is not affected */
 #scanScroll .gcard{
   flex:0 0 88vw;
-  min-height:65vh;
-  height:calc(100vh - 180px);
-  max-height:calc(100vh - 180px);
+  min-height:0;
+  height:100%;
+  max-height:100%;
   scroll-snap-align:center;
   position:relative;
   overflow:hidden;
@@ -2047,6 +2047,24 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   margin-top:5px;text-transform:uppercase;
 }
 
+
+/* ── CROSS-PHONE FIX: intro flow layout (no absolute overlap in short/webview viewports) ── */
+@media(max-width:768px){
+  #intro{ display:flex !important; flex-direction:column !important; }
+  #intro .hero-center{
+    position:relative !important; inset:auto !important;
+    flex:1 1 auto !important;
+    justify-content:center !important;
+    padding:24px 24px 8px !important;
+    padding-bottom:8px !important;
+  }
+  #intro .hero-bottom{
+    position:relative !important; bottom:auto !important; left:auto !important; right:auto !important;
+    flex:0 0 auto !important;
+    padding:0 20px calc(20px + env(safe-area-inset-bottom)) !important;
+    gap:18px !important;
+  }
+}
 </style>
 </head>
 <body>
