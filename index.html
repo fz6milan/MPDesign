@@ -2319,6 +2319,29 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     box-shadow:0 0 0 1px rgba(26,159,255,.4), 0 10px 30px -8px rgba(26,159,255,.4);
   }
 }
+
+/* ═══ DESKTOP intro — flow layout so ENTER never overlaps bottom story on short laptops ═══ */
+@media (min-width:769px){
+  #intro{ display:flex !important; flex-direction:column !important; }
+  #intro .hero-center{
+    position:relative !important; inset:auto !important;
+    flex:1 1 auto !important; justify-content:center !important;
+    padding-bottom:0 !important; min-height:0;
+  }
+  #intro .hero-bottom{
+    position:relative !important; bottom:auto !important; left:auto !important; right:auto !important;
+    flex:0 0 auto !important; margin-top:auto !important;
+  }
+}
+/* short desktop/laptop heights: shrink logo so nothing clips or collides */
+@media (min-width:769px) and (max-height:840px){
+  #intro .intro-logo{ width:clamp(220px,26vw,380px) !important; }
+  #intro .hero-center{ padding-top:2vh; gap:18px; }
+}
+@media (min-width:769px) and (max-height:680px){
+  #intro .intro-logo{ width:clamp(170px,20vw,280px) !important; }
+  #intro .hero-bottom{ padding-bottom:3vh !important; }
+}
 </style>
 </head>
 <body>
