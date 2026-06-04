@@ -2135,7 +2135,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   font-family:var(--fm); font-size:10px; letter-spacing:.28em; text-transform:uppercase;
   color:var(--silver-3); margin:0 0 14px; display:flex; align-items:center; gap:12px;
 }
-.bypass-tee{ display:inline-block; width:34px; height:14px; border-left:2px solid rgba(26,159,255,.55); border-bottom:2px solid rgba(26,159,255,.55); border-bottom-left-radius:6px; margin-top:-14px; }
+.bypass-label::before{ content:''; display:inline-block; width:34px; height:14px; border-left:2px solid rgba(26,159,255,.55); border-bottom:2px solid rgba(26,159,255,.55); border-bottom-left-radius:6px; margin-top:-14px; flex:0 0 auto; }
 .bypass-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.06); }
 .bypass-card{ background:#0a0a0a; padding:22px 20px 20px; position:relative; display:flex; flex-direction:column; gap:8px; }
 .bypass-card::before{ content:''; position:absolute; top:0; left:0; width:24px; height:2px; background:rgba(26,159,255,.5); }
@@ -2164,6 +2164,20 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .bypass-grid{ grid-template-columns:1fr; }
 }
 
+
+/* ── Services desktop fit (fill width better, vertical balance) ── */
+@media (min-width:769px){
+  .services-inner{ justify-content:center; padding-top:80px; padding-bottom:40px; }
+  .proc{ max-width:1280px; padding:10px 48px 0; }
+  .proc-main::before{ left:5%; right:5%; }
+  .pstep-num{ font-size:clamp(40px,3.4vw,56px); }
+  .pstep-name{ font-size:13px; margin:22px 0 12px; }
+  .pstep-desc{ font-size:13.5px; max-width:220px; }
+  .bypass{ max-width:1000px; margin:46px auto 0; }
+  .bypass-card{ padding:26px 24px 22px; }
+  .bypass-name{ font-size:14px; }
+  .bypass-desc{ font-size:13.5px; }
+}
 </style>
 </head>
 <body>
@@ -2701,7 +2715,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
     <!-- ═══ BYPASS (specialized services branching off the main line) ═══ -->
     <div class="bypass">
-      <div class="bypass-label"><span class="bypass-tee"></span>Other Services</div>
+      <div class="bypass-label">Other Services</div>
       <div class="bypass-grid">
         <div class="bypass-card" data-case-study="custom">
           <div class="bypass-name">Composite Molds</div>
@@ -3446,6 +3460,8 @@ viewer.addEventListener('click', e=>{
     "Final Print": "Finalna Štampa",
     "Produce the final part — in-house or in a professional 3D workshop.": "Izrada finalnog dela — kod mene ili u profesionalnoj 3D radionici.",
     "Other Services": "Ostale usluge",
+    "— Have a project in mind? —": "— Imate projekat na umu? —",
+    "Get in touch →": "Kontaktiraj →",
     "Composite Molds": "Kompozitni Kalupi",
     "Design and 3D-printed molds for fiberglass, carbon fiber, and other composite parts.": "Dizajn i 3D-štampani kalupi za delove od stakloplastike, karbona i drugih kompozita.",
     "Part Replication": "Replikacija Delova",
@@ -3724,7 +3740,7 @@ viewer.addEventListener('click', e=>{
       '.service-num,.service-name,.service-desc,.service-tag,.services-cta-btn,'+
       '.cs-eyebrow,.cs-title,.case-study-btn span,'+
       '.contact-method-icon,.contact-method-label,.contact-method-value,.contact-footer-note,'+
-      '.pstep-name,.pstep-desc,.bypass-label,.bypass-name,.bypass-desc,.bypass-tap,'+
+      '.pstep-name,.pstep-desc,.bypass-label,.bypass-name,.bypass-desc,.bypass-tap,.services-cta-tag,'+
       '.gn-link'
     );
     candidates.forEach(el=>{
