@@ -2191,6 +2191,53 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     padding:0 20px !important;
   }
 }
+
+/* ═══ DESKTOP scan archive — centered coverflow + arrows (mobile untouched) ═══ */
+.scan-arrow, .scan-counter{ display:none; }
+@media (min-width:769px){
+  #scanList .scan-scroll{
+    gap:32px !important;
+    padding:0 calc(50vw - 30vw) !important;   /* center one ~60vw card with peek */
+    scroll-behavior:smooth;
+    align-items:center !important;
+  }
+  #scanScroll .gcard{
+    flex:0 0 60vw !important;
+    max-width:920px;
+    aspect-ratio:16/9 !important;
+    height:auto !important;
+    opacity:.34;
+    filter:saturate(.65) brightness(.7);
+    transform:scale(.92);
+    transition:opacity .45s, transform .45s, filter .45s;
+  }
+  #scanScroll .gcard.is-active{
+    opacity:1; filter:none; transform:scale(1);
+    border-color:rgba(26,159,255,.35);
+    box-shadow:0 24px 70px rgba(0,0,0,.6), 0 0 90px -20px rgba(26,159,255,.25);
+  }
+  /* arrows */
+  .scan-arrow{
+    display:flex; align-items:center; justify-content:center;
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:54px; height:54px; z-index:60;
+    background:rgba(10,10,12,.6); border:1px solid rgba(255,255,255,.14);
+    color:#fff; cursor:pointer; backdrop-filter:blur(6px);
+    transition:background .25s, border-color .25s, transform .25s;
+  }
+  .scan-arrow svg{ width:22px; height:22px; }
+  .scan-arrow:hover{ background:rgba(26,159,255,.22); border-color:rgba(26,159,255,.55); }
+  .scan-arrow-prev{ left:max(24px, 4vw); }
+  .scan-arrow-next{ right:max(24px, 4vw); }
+  .scan-arrow:active{ transform:translateY(-50%) scale(.94); }
+  /* counter */
+  .scan-counter{
+    display:block; position:absolute; left:50%; bottom:38px; transform:translateX(-50%);
+    z-index:60; font-family:var(--fm); font-size:13px; letter-spacing:.3em; color:rgba(255,255,255,.7);
+  }
+  .scan-counter-sep{ color:rgba(255,255,255,.3); }
+  #scanNow{ color:var(--blue); }
+}
 </style>
 </head>
 <body>
@@ -2402,6 +2449,14 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     </div>
 
   </div>
+    <button class="scan-arrow scan-arrow-prev" id="scanPrev" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button class="scan-arrow scan-arrow-next" id="scanNext" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <div class="scan-counter"><span id="scanNow">01</span><span class="scan-counter-sep"> / </span><span id="scanTotal">06</span></div>
+
 </div>
 
 <!-- ══════ PEUGEOT PARTS ══════ -->
@@ -4289,6 +4344,61 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
 // ── TOUCH SWIPE on scan/printed detail slide stage ──
 </script>
 
+
+
+<script>
+/* Desktop scan-archive coverflow: arrows + active-card highlight + counter */
+(function(){
+  function init(){
+    var scroll = document.getElementById('scanScroll');
+    if(!scroll) return;
+    var prev = document.getElementById('scanPrev');
+    var next = document.getElementById('scanNext');
+    var nowEl = document.getElementById('scanNow');
+    var totEl = document.getElementById('scanTotal');
+    function cards(){ return Array.prototype.slice.call(scroll.querySelectorAll('.gcard')); }
+    if(totEl) totEl.textContent = String(cards().length).padStart(2,'0');
+
+    function activeIndex(){
+      var cs = cards(); if(!cs.length) return 0;
+      var center = scroll.scrollLeft + scroll.clientWidth/2;
+      var best=0, bestD=Infinity;
+      cs.forEach(function(c,i){
+        var cc = c.offsetLeft + c.clientWidth/2;
+        var d = Math.abs(cc-center);
+        if(d<bestD){bestD=d; best=i;}
+      });
+      return best;
+    }
+    function update(){
+      var cs = cards(); var idx = activeIndex();
+      cs.forEach(function(c,i){ c.classList.toggle('is-active', i===idx); });
+      if(nowEl) nowEl.textContent = String(idx+1).padStart(2,'0');
+    }
+    function goTo(i){
+      var cs = cards(); if(!cs.length) return;
+      i = Math.max(0, Math.min(cs.length-1, i));
+      var c = cs[i];
+      var left = c.offsetLeft - (scroll.clientWidth - c.clientWidth)/2;
+      scroll.scrollTo({left:left, behavior:'smooth'});
+    }
+    if(prev) prev.addEventListener('click', function(){ goTo(activeIndex()-1); });
+    if(next) next.addEventListener('click', function(){ goTo(activeIndex()+1); });
+    var t;
+    scroll.addEventListener('scroll', function(){ clearTimeout(t); t=setTimeout(update, 60); }, {passive:true});
+    // initial + when scanList becomes visible
+    setTimeout(update, 200);
+    var sl = document.getElementById('scanList');
+    if(sl){
+      new MutationObserver(function(){
+        if(!sl.classList.contains('hidden')){ setTimeout(function(){ goTo(activeIndex()); update(); }, 250); }
+      }).observe(sl, {attributes:true, attributeFilter:['class']});
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 
 </body>
 </html>
