@@ -1998,8 +1998,8 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
-  gap:40px;
-  padding:0 20px;
+  gap:28px;
+  padding:0 8vw;
   align-items:center;
   min-height:0;
 }
@@ -2007,10 +2007,9 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
 /* Scan archive cards — scoped so design list 3D carousel is not affected */
 #scanScroll .gcard{
-  flex:0 0 calc(100vw - 40px);
-  aspect-ratio:auto !important;
-  height:calc(100vh - 200px);
-  height:calc(100dvh - 200px);
+  flex:0 0 clamp(460px, 42vw, 680px);
+  aspect-ratio:16/10;
+  height:auto;
   scroll-snap-align:center;
   position:relative;
   overflow:hidden;
@@ -2177,6 +2176,20 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .bypass-card{ padding:26px 24px 22px; }
   .bypass-name{ font-size:14px; }
   .bypass-desc{ font-size:13.5px; }
+}
+
+/* ── Scan archive: MOBILE sizing (one full card + swipe). Desktop uses carousel in base rule. ── */
+@media (max-width:768px){
+  #scanScroll .gcard{
+    flex:0 0 calc(100vw - 40px) !important;
+    aspect-ratio:auto !important;
+    height:calc(100vh - 200px) !important;
+    height:calc(100dvh - 200px) !important;
+  }
+  .scan-scroll{
+    gap:40px !important;
+    padding:0 20px !important;
+  }
 }
 </style>
 </head>
