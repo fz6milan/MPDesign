@@ -3936,6 +3936,10 @@ viewer.addEventListener('click', e=>{
   document.getElementById('scanScroll').addEventListener('click', function(e){
     var card = e.target.closest('.gcard');
     if(!card) return;
+    // Desktop coverflow: clicking a non-centered card brings it to center instead of opening
+    if(window.innerWidth >= 769 && typeof window.__scanFocus === 'function'){
+      if(!window.__scanFocus(card)) return;
+    }
     var action = card.dataset.action;
     var folder = card.dataset.folder || '';
     var name   = card.dataset.name   || '';
@@ -4386,6 +4390,15 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
       var left = c.offsetLeft - (scroll.clientWidth - c.clientWidth)/2;
       scroll.scrollTo({left:left, behavior:'smooth'});
     }
+    // Expose: focus a card. Returns true if it was already centered (=> open it), false if we just centered it.
+    window.__scanFocus = function(cardEl){
+      var cs = cards();
+      var idx = cs.indexOf(cardEl);
+      if(idx < 0) return true;
+      if(idx === activeIndex()) return true;
+      goTo(idx);
+      return false;
+    };
     if(prev) prev.addEventListener('click', function(){ goTo(activeIndex()-1); });
     if(next) next.addEventListener('click', function(){ goTo(activeIndex()+1); });
     var t;
