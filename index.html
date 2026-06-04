@@ -2238,6 +2238,24 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .scan-counter-sep{ color:rgba(255,255,255,.3); }
   #scanNow{ color:var(--blue); }
 }
+
+/* ═══ Gallery arrows (scanDetail + printedDetail) — DESKTOP only; mobile keeps swipe ═══ */
+.gal-arrow{ display:none; }
+@media (min-width:769px){
+  .gal-arrow{
+    display:flex; align-items:center; justify-content:center;
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:56px; height:56px; z-index:80;
+    background:rgba(10,10,12,.55); border:1px solid rgba(255,255,255,.14);
+    color:#fff; cursor:pointer; backdrop-filter:blur(6px);
+    transition:background .25s, border-color .25s, transform .2s;
+  }
+  .gal-arrow svg{ width:24px; height:24px; }
+  .gal-arrow:hover{ background:rgba(26,159,255,.22); border-color:rgba(26,159,255,.55); }
+  .gal-arrow:active{ transform:translateY(-50%) scale(.94); }
+  .gal-arrow-prev{ left:max(24px,3vw); }
+  .gal-arrow-next{ right:max(24px,3vw); }
+}
 </style>
 </head>
 <body>
@@ -2500,6 +2518,8 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     <div class="tb-section" id="sdTitle">Scan</div>
   </div>
   <div class="sdcar-track" id="sdcarTrack"></div>
+  <button class="gal-arrow gal-arrow-prev" id="sdPrev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <button class="gal-arrow gal-arrow-next" id="sdNext" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg></button>
   <div class="sdcar-counter">
     <span id="sdcarCur">01</span>
     <span class="sdcar-sep"> / </span>
@@ -2691,6 +2711,8 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     <div class="tb-section" id="printedTitle">—</div>
   </div>
   <div class="sdcar-track" id="pdcarTrack"></div>
+  <button class="gal-arrow gal-arrow-prev" id="pdPrev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <button class="gal-arrow gal-arrow-next" id="pdNext" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg></button>
   <div class="sdcar-counter">
     <span id="printedNow">01</span>
     <span class="sdcar-sep"> / </span>
@@ -4346,6 +4368,21 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
 
 
 // ── TOUCH SWIPE on scan/printed detail slide stage ──
+
+/* Desktop gallery arrows — same scope as sdcarGoTo/pdcarGoTo (read current index from DOM data-pos="0") */
+(function(){
+  function curIdx(trackId){
+    var s=document.querySelectorAll('#'+trackId+' .sdcar-slide');
+    for(var i=0;i<s.length;i++){ if(s[i].dataset.pos==='0') return i; }
+    return 0;
+  }
+  var sp=document.getElementById('sdPrev'), sn=document.getElementById('sdNext');
+  if(sp) sp.addEventListener('click', function(){ sdcarGoTo(curIdx('sdcarTrack')-1); });
+  if(sn) sn.addEventListener('click', function(){ sdcarGoTo(curIdx('sdcarTrack')+1); });
+  var pp=document.getElementById('pdPrev'), pn=document.getElementById('pdNext');
+  if(pp) pp.addEventListener('click', function(){ pdcarGoTo(curIdx('pdcarTrack')-1); });
+  if(pn) pn.addEventListener('click', function(){ pdcarGoTo(curIdx('pdcarTrack')+1); });
+})();
 </script>
 
 
