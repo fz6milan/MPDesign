@@ -2101,6 +2101,69 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 @media (max-width:768px){
   .topbar .tb-section{ display:none !important; }
 }
+
+/* ═══════════ PROCESS DIAGRAM + BYPASS (Services) ═══════════ */
+.proc{ max-width:1100px; margin:10px auto 0; padding:10px 24px 0; width:100%; box-sizing:border-box; }
+.proc-main{ display:flex; flex-direction:row; align-items:flex-start; gap:0; position:relative; }
+/* main spine line behind the steps (desktop horizontal) */
+.proc-main::before{
+  content:''; position:absolute; left:6%; right:6%; top:26px; height:2px;
+  background:linear-gradient(90deg, transparent, rgba(26,159,255,.55) 8%, rgba(26,159,255,.55) 92%, transparent);
+  z-index:0;
+}
+.pstep{ flex:1 1 0; position:relative; padding:0 16px; text-align:center; z-index:1; }
+.pstep-num{
+  font-family:var(--fd); font-size:clamp(30px,3.6vw,48px); line-height:1; color:#fff;
+  display:inline-block; padding:0 12px; background:var(--bg);
+  position:relative;
+}
+.pstep-num::after{
+  content:''; position:absolute; left:50%; bottom:-9px; transform:translateX(-50%);
+  width:7px; height:7px; border-radius:50%; background:var(--blue); box-shadow:0 0 0 4px var(--bg);
+}
+.pstep-name{ font-family:var(--fm); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--blue); margin:20px 0 10px; }
+.pstep-desc{ font-family:var(--fb); font-weight:300; font-size:12.5px; line-height:1.6; color:rgba(220,220,220,.55); max-width:200px; margin:0 auto; }
+/* arrow connector between steps */
+.pstep:not(:last-child)::after{
+  content:'→'; position:absolute; right:-9px; top:14px; transform:translateY(0);
+  color:var(--blue); opacity:.7; font-size:16px; z-index:2;
+}
+
+/* ── BYPASS ── */
+.bypass{ max-width:1100px; margin:34px auto 0; padding:0 24px; width:100%; box-sizing:border-box; }
+.bypass-label{
+  font-family:var(--fm); font-size:10px; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--silver-3); margin:0 0 14px; display:flex; align-items:center; gap:12px;
+}
+.bypass-tee{ display:inline-block; width:34px; height:14px; border-left:2px solid rgba(26,159,255,.55); border-bottom:2px solid rgba(26,159,255,.55); border-bottom-left-radius:6px; margin-top:-14px; }
+.bypass-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.06); }
+.bypass-card{ background:#0a0a0a; padding:22px 20px 20px; position:relative; display:flex; flex-direction:column; gap:8px; }
+.bypass-card::before{ content:''; position:absolute; top:0; left:0; width:24px; height:2px; background:rgba(26,159,255,.5); }
+.bypass-name{ font-family:var(--fm); font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:#fff; }
+.bypass-desc{ font-family:var(--fb); font-weight:300; font-size:12.5px; line-height:1.6; color:rgba(220,220,220,.55); flex:1; }
+.bypass-tap{ font-family:var(--fm); font-size:10px; letter-spacing:.1em; color:rgba(26,159,255,.7); margin-top:4px; }
+.bypass-card .case-study-btn{ margin-top:6px; }
+
+/* ── MOBILE: vertical process, scroll reveals steps ── */
+@media (max-width:768px){
+  .proc{ padding:10px 20px 0; }
+  .proc-main{ flex-direction:column; align-items:stretch; gap:0; }
+  .proc-main::before{ display:none; } /* horizontal spine off */
+  /* vertical spine */
+  .pstep{ text-align:left; padding:0 0 28px 56px; }
+  .pstep:last-child{ padding-bottom:0; }
+  .pstep::before{ content:''; position:absolute; left:18px; top:8px; bottom:-8px; width:2px; background:rgba(26,159,255,.4); }
+  .pstep:last-child::before{ display:none; }
+  .pstep-num{ position:absolute; left:0; top:0; padding:0; font-size:30px; background:transparent; }
+  .pstep-num::after{ left:9px; bottom:auto; top:38px; box-shadow:0 0 0 3px var(--bg); }
+  .pstep-name{ margin:2px 0 6px; }
+  .pstep-desc{ max-width:none; margin:0; }
+  /* vertical arrow between steps */
+  .pstep:not(:last-child)::after{ content:'↓'; right:auto; left:13px; top:auto; bottom:6px; font-size:14px; }
+
+  .bypass-grid{ grid-template-columns:1fr; }
+}
+
 </style>
 </head>
 <body>
@@ -2601,97 +2664,60 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 <div id="services" class="screen services-screen hidden">
   <div class="services-inner">
     <div class="services-hero">
-      <div class="sec-ey">— Equipment & Services</div>
-      <h1>Services</h1>
-      <p>Personal workshop equipped with prosumer-grade scanning and printing hardware. Below — the actual tools behind every project, and what each one delivers.</p>
+      <div class="sec-ey">— The Process</div>
+      <h1>How It Works</h1>
+      <p>From your part to a finished piece — one clear main line, with specialized bypass services branching off where a project needs them.</p>
     </div>
 
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-num">01</div>
-        <div class="service-content">
-          <div class="service-name">Shining 3D Einstar — Handheld Scanning</div>
-          <div class="service-desc">Handheld structured-light scanner with 0.1 mm precision and built-in color capture. Built for shiny, dark, and reflective car panels — exactly where most scanners fail.</div>
-          <div class="service-tags">
-            <span class="service-tag">Point distance 0.1 mm</span>
-            <span class="service-tag">14 FPS scan rate</span>
-            <span class="service-tag">VCSEL infrared</span>
-            <span class="service-tag">Color capture</span>
-          </div>
+    <!-- ═══ PROCESS DIAGRAM (main line) ═══ -->
+    <div class="proc">
+      <div class="proc-main">
+        <div class="pstep">
+          <div class="pstep-num">01</div>
+          <div class="pstep-name">Scan</div>
+          <div class="pstep-desc">Capture your part, engine, or medium-to-large object in high-detail 3D.</div>
+        </div>
+        <div class="pstep">
+          <div class="pstep-num">02</div>
+          <div class="pstep-name">Software</div>
+          <div class="pstep-desc">Mesh cleanup and model optimization for maximum precision.</div>
+        </div>
+        <div class="pstep">
+          <div class="pstep-num">03</div>
+          <div class="pstep-name">Design</div>
+          <div class="pstep-desc">Model a new aero part or reconstruct a damaged one for OEM-quality fit.</div>
+        </div>
+        <div class="pstep">
+          <div class="pstep-num">04</div>
+          <div class="pstep-name">Fitment Test</div>
+          <div class="pstep-desc">Print a trial part to verify fit and refine any corrections.</div>
+        </div>
+        <div class="pstep">
+          <div class="pstep-num">05</div>
+          <div class="pstep-name">Final Print</div>
+          <div class="pstep-desc">Produce the final part — in-house or in a professional 3D workshop.</div>
         </div>
       </div>
+    </div>
 
-      <div class="service-card">
-        <div class="service-num">02</div>
-        <div class="service-content">
-          <div class="service-name">Creality K1 Max — FDM 3D Printing</div>
-          <div class="service-desc">Enclosed CoreXY printer with 300×300×300 mm build volume. Runs PLA, PETG, ABS, ASA, PA, and PC at up to 600 mm/s. Big enough for splitters and full trim pieces in one shot.</div>
-          <div class="service-tags">
-            <span class="service-tag">300×300×300 mm</span>
-            <span class="service-tag">600 mm/s max</span>
-            <span class="service-tag">Hotend ≤300°C</span>
-            <span class="service-tag">PLA · PETG · ABS · ASA · PA · PC</span>
-          </div>
+    <!-- ═══ BYPASS (specialized services branching off the main line) ═══ -->
+    <div class="bypass">
+      <div class="bypass-label"><span class="bypass-tee"></span>Bypass — Specialized Services</div>
+      <div class="bypass-grid">
+        <div class="bypass-card">
+          <div class="bypass-name">Reverse Engineering</div>
+          <div class="bypass-desc">Raw scan mesh converted into clean parametric CAD geometry, print-ready.</div>
+          <div class="bypass-tap">↳ taps after Scan</div>
         </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-num">03</div>
-        <div class="service-content">
-          <div class="service-name" data-i18n-orig="Reverse Engineering — Scan to CAD">Reverse Engineering — Scan to CAD</div>
-          <div class="service-desc" data-i18n-orig="Raw scan mesh converted into clean parametric CAD geometry. Focused on medium to large automotive body panels and trim pieces — splitters, bumpers, diffusers. No fine-detail or small-part work.">Raw scan mesh converted into clean parametric CAD geometry. Focused on medium to large automotive body panels and trim pieces — splitters, bumpers, diffusers. No fine-detail or small-part work.</div>
-          <div class="service-tags">
-            <span class="service-tag">Mesh → CAD</span>
-            <span class="service-tag">Surface reconstruction</span>
-            <span class="service-tag">Print-ready output</span>
-          </div>
+        <div class="bypass-card" data-case-study="custom">
+          <div class="bypass-name">Composite Molds</div>
+          <div class="bypass-desc">Design and 3D-printed molds for fiberglass, carbon fiber, and other composite parts.</div>
+          <button class="case-study-btn" data-case="custom"><span>View case study</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
-      </div>
-
-      <div class="service-card" data-case-study="custom">
-        <div class="service-num">04</div>
-        <div class="service-content">
-          <div class="service-name">Complete design and manufacturing service for composite molds</div>
-          <div class="service-desc">Complete design and manufacturing service for composite molds. The process includes 3D modeling, geometry optimization, production preparation, and 3D printing of functional molds intended for the fabrication of fiberglass, carbon fiber, and other composite components..</div>
-          <div class="service-tags">
-            <span class="service-tag">Custom aftermarket</span>
-            <span class="service-tag">OEM modification</span>
-            <span class="service-tag">Bolt-on fitment</span>
-          </div>
-          <button class="case-study-btn" data-case="custom">
-            <span>View case study</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="service-card" data-case-study="replica">
-        <div class="service-num">05</div>
-        <div class="service-content">
-          <div class="service-name">Replication of Broken or Discontinued Parts</div>
-          <div class="service-desc">Broken, lost, or no longer in production? Scan whatever remains of the original, rebuild it in CAD, print a working replacement. Ideal for older, rare, or out-of-stock parts.</div>
-          <div class="service-tags">
-            <span class="service-tag">Damaged part recovery</span>
-            <span class="service-tag">Legacy parts</span>
-            <span class="service-tag">CAD rebuild</span>
-          </div>
-          <button class="case-study-btn" data-case="replica">
-            <span>View case study</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-num">06</div>
-        <div class="service-content">
-          <div class="service-name">Consultations &amp; Project Planning</div>
-          <div class="service-desc">Talk through your project before committing. Material, feasibility, approach — honest assessment from a fellow enthusiast.</div>
-          <div class="service-tags">
-            <span class="service-tag">Project planning</span>
-            <span class="service-tag">Feasibility</span>
-            <span class="service-tag">Material advice</span>
-          </div>
+        <div class="bypass-card" data-case-study="replica">
+          <div class="bypass-name">Part Replication</div>
+          <div class="bypass-desc">Rebuild broken, lost, or discontinued parts from whatever remains of the original.</div>
+          <button class="case-study-btn" data-case="replica"><span>View case study</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
       </div>
     </div>
@@ -3412,6 +3438,28 @@ viewer.addEventListener('click', e=>{
     "Categories": "Kategorije",
     "Services": "Usluge",
     "Contact": "Kontakt",
+    // ── Services process diagram ──
+    "— The Process": "— Proces",
+    "How It Works": "Kako Funkcioniše",
+    "From your part to a finished piece — one clear main line, with specialized bypass services branching off where a project needs them.": "Od vašeg dela do gotovog komada — jedan jasan glavni vod, sa specijalizovanim bajpas uslugama koje se granaju gde projekat to zahteva.",
+    "Scan": "Skeniranje",
+    "Capture your part, engine, or medium-to-large object in high-detail 3D.": "Snimanje vašeg dela, motora ili srednjeg do većeg objekta u detaljnom 3D-u.",
+    "Software": "Softver",
+    "Mesh cleanup and model optimization for maximum precision.": "Čišćenje mreže i optimizacija modela za maksimalnu preciznost.",
+    "Design": "Dizajniranje",
+    "Model a new aero part or reconstruct a damaged one for OEM-quality fit.": "Modelovanje novog aero dela ili rekonstrukcija oštećenog za OEM kvalitet pristajanja.",
+    "Fitment Test": "Fitment Testiranje",
+    "Print a trial part to verify fit and refine any corrections.": "Štampa probnog dela radi provere pristajanja i eventualnih korekcija.",
+    "Final Print": "Finalna Štampa",
+    "Produce the final part — in-house or in a professional 3D workshop.": "Izrada finalnog dela — kod mene ili u profesionalnoj 3D radionici.",
+    "Bypass — Specialized Services": "Bajpas — Specijalizovane Usluge",
+    "Reverse Engineering": "Reverzni Inženjering",
+    "Raw scan mesh converted into clean parametric CAD geometry, print-ready.": "Sirova skenirana mreža pretvorena u čistu parametarsku CAD geometriju, spremnu za štampu.",
+    "↳ taps after Scan": "↳ grana se posle skeniranja",
+    "Composite Molds": "Kompozitni Kalupi",
+    "Design and 3D-printed molds for fiberglass, carbon fiber, and other composite parts.": "Dizajn i 3D-štampani kalupi za delove od stakloplastike, karbona i drugih kompozita.",
+    "Part Replication": "Replikacija Delova",
+    "Rebuild broken, lost, or discontinued parts from whatever remains of the original.": "Rekonstrukcija polomljenih, izgubljenih ili više nedostupnih delova od onoga što je ostalo od originala.",
         // ── New / updated translations ──
     "Handheld structured-light scanner with 0.1 mm precision and built-in color capture. Built for shiny, dark, and reflective car panels — exactly where most scanners fail.":
       "Ručni 3D skener sa strukturisanom svetlošću, preciznost 0.1 mm i ugrađeno snimanje u boji. Pravljen za sjajne, tamne i reflektujuće karoserije — tačno tamo gde većina skenera otkaže.",
