@@ -1998,8 +1998,8 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
-  gap:10px;
-  padding:0 6vw;
+  gap:12px;
+  padding:0 16px;
   align-items:center;
   min-height:0;
 }
@@ -2007,7 +2007,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
 /* Scan archive cards — scoped so design list 3D carousel is not affected */
 #scanScroll .gcard{
-  flex:0 0 88vw;
+  flex:0 0 calc(100vw - 32px);
   min-height:0;
   height:100%;
   max-height:100%;
