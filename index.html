@@ -4370,14 +4370,18 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
       });
       return best;
     }
-    function update(){
-      var cs = cards(); var idx = activeIndex();
+    function setActive(idx){
+      var cs = cards();
       cs.forEach(function(c,i){ c.classList.toggle('is-active', i===idx); });
       if(nowEl) nowEl.textContent = String(idx+1).padStart(2,'0');
     }
+    function update(){ setActive(activeIndex()); }
+    var lockUntil = 0;
     function goTo(i){
       var cs = cards(); if(!cs.length) return;
       i = Math.max(0, Math.min(cs.length-1, i));
+      setActive(i);                              // highlight immediately, no lag
+      lockUntil = Date.now() + 600;              // ignore scroll-driven updates during smooth scroll
       var c = cs[i];
       var left = c.offsetLeft - (scroll.clientWidth - c.clientWidth)/2;
       scroll.scrollTo({left:left, behavior:'smooth'});
@@ -4385,7 +4389,8 @@ document.querySelectorAll('.case-study-btn').forEach(btn=>{
     if(prev) prev.addEventListener('click', function(){ goTo(activeIndex()-1); });
     if(next) next.addEventListener('click', function(){ goTo(activeIndex()+1); });
     var t;
-    scroll.addEventListener('scroll', function(){ clearTimeout(t); t=setTimeout(update, 60); }, {passive:true});
+    // during manual scroll/drag, keep it snappy
+    scroll.addEventListener('scroll', function(){ if(Date.now()<lockUntil) return; clearTimeout(t); t=setTimeout(update, 40); }, {passive:true});
     // initial + when scanList becomes visible
     setTimeout(update, 200);
     var sl = document.getElementById('scanList');
