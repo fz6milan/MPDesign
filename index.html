@@ -2256,6 +2256,69 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   .gal-arrow-prev{ left:max(24px,3vw); }
   .gal-arrow-next{ right:max(24px,3vw); }
 }
+
+/* ═══ Gallery: stage wrapper + below-fold thumbs ═══ */
+.gal-stage{ flex:1; position:relative; display:flex; min-height:0; overflow:hidden; }
+.gal-stage .sdcar-track{ flex:1; }
+.gal-below{ display:none; }
+
+@media (min-width:769px){
+  /* scrollable page with visible scrollbar */
+  #scanDetail, #printedDetail{ overflow-y:auto !important; overflow-x:hidden; scroll-behavior:smooth; }
+  #scanDetail::-webkit-scrollbar, #printedDetail::-webkit-scrollbar{ width:14px; }
+  #scanDetail::-webkit-scrollbar-track, #printedDetail::-webkit-scrollbar-track{
+    background:rgba(255,255,255,.04); border-left:1px solid rgba(255,255,255,.06);
+  }
+  #scanDetail::-webkit-scrollbar-thumb, #printedDetail::-webkit-scrollbar-thumb{
+    background:rgba(26,159,255,.45); border:3px solid transparent; background-clip:padding-box;
+  }
+  #scanDetail::-webkit-scrollbar-thumb:hover, #printedDetail::-webkit-scrollbar-thumb:hover{
+    background:rgba(26,159,255,.75); background-clip:padding-box;
+  }
+  #scanDetail, #printedDetail{ scrollbar-color:rgba(26,159,255,.5) rgba(255,255,255,.05); scrollbar-width:thin; }
+
+  /* image stage: fixed height, framed (less black) */
+  .gal-stage{
+    flex:0 0 auto; display:block; height:72vh; position:relative;
+    width:min(1180px, 90vw); margin:22px auto 0;
+    border:1px solid rgba(255,255,255,.1);
+    background:#070708;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+  }
+  .gal-stage .sdcar-track{ height:100%; }
+  /* corner accents on the stage */
+  .gal-stage::before, .gal-stage::after{
+    content:""; position:absolute; width:18px; height:18px; z-index:5; pointer-events:none;
+    border-color:rgba(26,159,255,.6);
+  }
+  .gal-stage::before{ top:-1px; left:-1px; border-top:2px solid; border-left:2px solid; }
+  .gal-stage::after{ bottom:-1px; right:-1px; border-bottom:2px solid; border-right:2px solid; }
+
+  /* below-fold: thumbnails of every image, framed */
+  .gal-below{
+    display:block; width:min(1180px,90vw); margin:0 auto 60px; padding:24px 0 0;
+  }
+  .gal-below-label{
+    font-family:var(--fm); font-size:11px; letter-spacing:.34em; color:rgba(255,255,255,.4);
+    padding:0 2px 14px; border-bottom:1px solid rgba(255,255,255,.08); margin-bottom:18px;
+  }
+  .gal-thumbs{ display:flex; flex-wrap:wrap; gap:14px; }
+  .gal-thumb{
+    flex:0 0 calc(25% - 11px); aspect-ratio:16/10; position:relative;
+    border:1px solid rgba(255,255,255,.1); background:#0b0b0d; cursor:pointer; overflow:hidden;
+    transition:border-color .25s, transform .25s, box-shadow .25s; opacity:.6;
+  }
+  .gal-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .gal-thumb .gal-thumb-n{
+    position:absolute; top:6px; left:8px; font-family:var(--fm); font-size:10px;
+    letter-spacing:.2em; color:rgba(255,255,255,.7); z-index:2; text-shadow:0 1px 4px #000;
+  }
+  .gal-thumb:hover{ opacity:.9; border-color:rgba(255,255,255,.3); transform:translateY(-2px); }
+  .gal-thumb.is-active{
+    opacity:1; border-color:rgba(26,159,255,.7);
+    box-shadow:0 0 0 1px rgba(26,159,255,.4), 0 10px 30px -8px rgba(26,159,255,.4);
+  }
+}
 </style>
 </head>
 <body>
@@ -2517,13 +2580,19 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     <div class="tb-divider"></div>
     <div class="tb-section" id="sdTitle">Scan</div>
   </div>
-  <div class="sdcar-track" id="sdcarTrack"></div>
+  <div class="gal-stage" id="sdStage">
+    <div class="sdcar-track" id="sdcarTrack"></div>
   <button class="gal-arrow gal-arrow-prev" id="sdPrev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg></button>
   <button class="gal-arrow gal-arrow-next" id="sdNext" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
   <div class="sdcar-counter">
     <span id="sdcarCur">01</span>
     <span class="sdcar-sep"> / </span>
     <span id="sdcarTotal">01</span>
+  </div>
+  <div class="gal-below" id="sdBelow">
+    <div class="gal-below-label" data-i18n-orig="ALL SCANS">ALL SCANS</div>
+    <div class="gal-thumbs" id="sdThumbs"></div>
   </div>
 </div>
 
@@ -2710,13 +2779,19 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     <div class="tb-divider"></div>
     <div class="tb-section" id="printedTitle">—</div>
   </div>
-  <div class="sdcar-track" id="pdcarTrack"></div>
+  <div class="gal-stage" id="pdStage">
+    <div class="sdcar-track" id="pdcarTrack"></div>
   <button class="gal-arrow gal-arrow-prev" id="pdPrev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 6l-6 6 6 6"/></svg></button>
   <button class="gal-arrow gal-arrow-next" id="pdNext" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
   <div class="sdcar-counter">
     <span id="printedNow">01</span>
     <span class="sdcar-sep"> / </span>
     <span id="printedTotal">01</span>
+  </div>
+  <div class="gal-below" id="pdBelow">
+    <div class="gal-below-label" data-i18n-orig="ALL PRINTS">ALL PRINTS</div>
+    <div class="gal-thumbs" id="pdThumbs"></div>
   </div>
 </div>
 
@@ -3197,6 +3272,7 @@ function buildPrintedCarousel(){
     slide.appendChild(img);
     track.appendChild(slide);
   });
+  buildThumbs('pdThumbs', pFiles, pFolder, pdcarGoTo);
   pdcarGoTo(0);
   initPdcarSwipe();
 }
@@ -3208,6 +3284,7 @@ function pdcarGoTo(idx){
     s.dataset.pos=String(Math.max(-2,Math.min(2,diff)));
   });
   document.getElementById('printedNow').textContent=String(pIdx+1).padStart(2,'0');
+  syncThumbs('pdThumbs', pIdx);
 }
 function showPrinted(i){ pdcarGoTo(i); }
 let _pdSwipeBound=false;
@@ -3344,6 +3421,25 @@ function openScanDetail(folder,name,files,nameSr){
   go('scanDetail');
 }
 
+function buildThumbs(containerId, files, folder, goToFn){
+  const c=document.getElementById(containerId);
+  if(!c) return;
+  c.innerHTML='';
+  files.forEach((f,i)=>{
+    const t=document.createElement('div');
+    t.className='gal-thumb'; t.dataset.idx=i;
+    const im=document.createElement('img'); im.src=folder+'/'+f; im.alt=f; im.loading='lazy'; im.draggable=false;
+    const n=document.createElement('div'); n.className='gal-thumb-n'; n.textContent=String(i+1).padStart(2,'0');
+    t.appendChild(im); t.appendChild(n);
+    t.addEventListener('click', function(){ goToFn(i); var sc=c.closest('.screen'); if(sc) sc.scrollTo({top:0,behavior:'smooth'}); });
+    c.appendChild(t);
+  });
+}
+function syncThumbs(containerId, activeIdx){
+  document.querySelectorAll('#'+containerId+' .gal-thumb').forEach(function(t,i){
+    t.classList.toggle('is-active', i===activeIdx);
+  });
+}
 function buildImageCarousel(){
   const track=document.getElementById('sdcarTrack');
   if(!track) return;
@@ -3357,6 +3453,7 @@ function buildImageCarousel(){
     slide.appendChild(img);
     track.appendChild(slide);
   });
+  buildThumbs('sdThumbs', slideFiles, slideFolder, sdcarGoTo);
   sdcarGoTo(0);
   initSdcarSwipe();
 }
@@ -3368,6 +3465,7 @@ function sdcarGoTo(idx){
     slide.dataset.pos=String(Math.max(-2,Math.min(2,diff)));
   });
   document.getElementById('sdcarCur').textContent=String(slideIdx+1).padStart(2,'0');
+  syncThumbs('sdThumbs', slideIdx);
 }
 
 function initSdcarSwipe(){
@@ -3532,6 +3630,9 @@ viewer.addEventListener('click', e=>{
 // ═══════════════ LANGUAGE SWITCHER ═══════════════
 (function(){
   const T = {
+    // ── Gallery thumbs ──
+    "ALL SCANS": "SVI SKENOVI",
+    "ALL PRINTS": "SVE ŠTAMPE",
     // ── Homepage texts ──
     "Categories": "Kategorije",
     "Services": "Usluge",
