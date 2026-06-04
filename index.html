@@ -2066,14 +2066,6 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   }
 }
 
-/* ── CROSS-PHONE FIX: tight header nav for ALL phones up to 768px (was only <=640, so 641-768px phones got big stretched links) ── */
-@media (max-width:768px){
-  .gn-link{padding:8px 10px !important;font-size:10px !important;letter-spacing:.18em !important}
-  .gn-brand{font-size:14px !important}
-  .gn-links{gap:4px !important}
-  .gn-right{gap:10px !important}
-}
-
 /* ── CROSS-PHONE FIX: part-pick card images (C2/Peugeot) match 16:9 source + robust on older webviews ── */
 @media (max-width:768px){
   .peugeot-part, .c2-part{ aspect-ratio:16/9 !important; }
@@ -2087,6 +2079,22 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   @media (max-width:768px){
     .peugeot-part, .c2-part{ height:54vw !important; min-height:0 !important; }
   }
+}
+
+/* ── CROSS-PHONE FIX: compact mobile header — fits brand + 3 EN nav links + EN/SR toggle on narrow phones, toggle never pushed off-screen ── */
+@media (max-width:768px){
+  .global-nav{ padding:0 10px !important; gap:4px !important; justify-content:space-between !important; }
+  .gn-brand-logo{ height:20px !important; }
+  .gn-links{ gap:2px !important; flex-shrink:1 !important; min-width:0 !important; }
+  .gn-link{ padding:6px 5px !important; font-size:9px !important; letter-spacing:.06em !important; white-space:nowrap !important; }
+  .gn-right{ flex-shrink:0 !important; gap:0 !important; }
+  .lang-toggle{ margin-left:6px !important; padding:5px 8px !important; gap:4px !important; }
+  .lang-opt{ font-size:9px !important; }
+  .lang-sep{ font-size:9px !important; }
+}
+@media (max-width:400px){
+  .gn-link{ padding:6px 3px !important; font-size:8px !important; letter-spacing:.03em !important; }
+  .gn-links{ gap:0 !important; }
 }
 </style>
 </head>
