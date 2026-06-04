@@ -2068,7 +2068,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 
 /* ── CROSS-PHONE FIX: part-pick card images (C2/Peugeot) match 16:9 source + robust on older webviews ── */
 @media (max-width:768px){
-  .peugeot-part, .c2-part{ aspect-ratio:16/9 !important; }
+  .peugeot-part, .c2-part{ aspect-ratio:4/3 !important; }
   .peugeot-part img, .c2-part img{
     object-fit:contain !important; object-position:center !important;
     width:100% !important; height:100% !important;
@@ -2077,7 +2077,7 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
 /* Fallback for webviews without aspect-ratio support: reserve height so image never stretches */
 @supports not (aspect-ratio: 1){
   @media (max-width:768px){
-    .peugeot-part, .c2-part{ height:54vw !important; min-height:0 !important; }
+    .peugeot-part, .c2-part{ height:68vw !important; min-height:0 !important; }
   }
 }
 
