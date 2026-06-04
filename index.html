@@ -2342,6 +2342,15 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
   #intro .intro-logo{ width:clamp(170px,20vw,280px) !important; }
   #intro .hero-bottom{ padding-bottom:3vh !important; }
 }
+
+/* ═══ Category cards: narrow/mid desktop (769–1200px) — shrink title+padding so words don't clip ═══ */
+@media (min-width:769px) and (max-width:1200px){
+  .cat-name{ font-size:clamp(28px, 5vw, 56px) !important; }
+  .cat-card{ padding:30px 26px 28px !important; }
+  .cat-desc{ font-size:13px !important; line-height:1.6; max-width:100% !important; margin-top:18px; }
+  .cat-enter{ margin-top:20px !important; }
+  .cat-split{ gap:14px !important; padding:0 24px 4vh !important; }
+}
 </style>
 </head>
 <body>
