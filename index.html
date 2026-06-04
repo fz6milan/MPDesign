@@ -2065,6 +2065,29 @@ body:has(.global-nav:not(.hidden-nav)) #printedDetail .topbar{
     gap:18px !important;
   }
 }
+
+/* ── CROSS-PHONE FIX: tight header nav for ALL phones up to 768px (was only <=640, so 641-768px phones got big stretched links) ── */
+@media (max-width:768px){
+  .gn-link{padding:8px 10px !important;font-size:10px !important;letter-spacing:.18em !important}
+  .gn-brand{font-size:14px !important}
+  .gn-links{gap:4px !important}
+  .gn-right{gap:10px !important}
+}
+
+/* ── CROSS-PHONE FIX: part-pick card images (C2/Peugeot) match 16:9 source + robust on older webviews ── */
+@media (max-width:768px){
+  .peugeot-part, .c2-part{ aspect-ratio:16/9 !important; }
+  .peugeot-part img, .c2-part img{
+    object-fit:cover !important; object-position:center !important;
+    width:100% !important; height:100% !important;
+  }
+}
+/* Fallback for webviews without aspect-ratio support: reserve height so image never stretches */
+@supports not (aspect-ratio: 1){
+  @media (max-width:768px){
+    .peugeot-part, .c2-part{ height:54vw !important; min-height:0 !important; }
+  }
+}
 </style>
 </head>
 <body>
